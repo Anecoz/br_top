@@ -1,5 +1,8 @@
 package utils;
 
+import tiled.core.Tile;
+import tiled.core.TileLayer;
+
 import java.util.ArrayList;
 
 public class LevelUtils {
@@ -14,47 +17,73 @@ public class LevelUtils {
         return output;
     }
 
-    public static float[] calcTexCoords(int width, int height) {
-        float[] tco = new float[(width + 1) * (height + 1) * 2];
+    public static float[] calcTexCoords(TileLayer layer, int width, int height) {
 
-        // Loop through tiles and set normalized texture coordinates for each point
-        for (int y = 0; y < (height + 1); y++) {
-            for (int x = 0; x < (width + 1); x++) {
-                tco[(y * (width + 1) + x) * 2 + 0] = (float) x / (float) width;
-                tco[(y * (width + 1) + x) * 2 + 1] = (float) y / (float) height;
-            }
-        }
+        ArrayList<Float> texCoordsList = new ArrayList<>();
 
-        return tco;
-    }
-
-    public static byte[] calcIndices(int width, int height) {
-        byte[] ibo = new byte[6 * width * height];
-
-        for (int y = 0; y < height; y++) {
+        // Loop over tiles to get texture coordinates (within atlas) and create vertices
+        for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++) {
-
+                Tile tile = layer.getTileAt(x, y);
+                float[] texCoords = tile.getTexCoords();
                 // First triangle
-                ibo[(y * width + x) * 6 + 0] = (byte)(x + (width + 1) * (y + 1));
-                ibo[(y * width + x) * 6 + 1] = (byte)(x + (width + 1) * y);
-                ibo[(y * width + x) * 6 + 2] = (byte)((x + 1) + (width + 1) * (y + 1));
+                texCoordsList.add(texCoords[0]);
+                texCoordsList.add(texCoords[1]);
 
+                texCoordsList.add(texCoords[2]);
+                texCoordsList.add(texCoords[3]);
+
+                texCoordsList.add(texCoords[4]);
+                texCoordsList.add(texCoords[5]);
                 // Second triangle
-                ibo[(y * width + x) * 6 + 3] = (byte)((x + 1) + (width + 1) * (y + 1));
-                ibo[(y * width + x) * 6 + 4] = (byte)(x + (width + 1) * y);
-                ibo[(y * width + x) * 6 + 5] = (byte)((x + 1) + (width + 1) * y);
-            }
-        }
+                texCoordsList.add(texCoords[4]);
+                texCoordsList.add(texCoords[5]);
 
-        return ibo;
+                texCoordsList.add(texCoords[2]);
+                texCoordsList.add(texCoords[3]);
+
+                texCoordsList.add(texCoords[6]);
+                texCoordsList.add(texCoords[7]);
+            }
+
+        return LevelUtils.floatListToArray(texCoordsList);
     }
 
     public static float[] calcVertices(int width, int height) {
-        float[] vbo = new float[(width + 1) * (height + 1) * 3];
+        ArrayList<Float> verticesList = new ArrayList<>();
+        float z = 0.0f;
 
-        float z = 0.0f; // Use the same depth value for every tile
+        // Loop over tiles to get texture coordinates (within atlas) and create vertices
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++) {
+                // First triangle
+                verticesList.add((float) x);
+                verticesList.add((float) y);
+                verticesList.add(z);
 
-        return vbo;
+                verticesList.add((float) x);
+                verticesList.add((float) (y + 1));
+                verticesList.add(z);
+
+                verticesList.add((float) (x + 1));
+                verticesList.add((float) y);
+                verticesList.add(z);
+                // Second triangle
+                verticesList.add((float) (x + 1));
+                verticesList.add((float) y);
+                verticesList.add(z);
+
+                verticesList.add((float) x);
+                verticesList.add((float) (y + 1));
+                verticesList.add(z);
+
+                verticesList.add((float) (x + 1));
+                verticesList.add((float) (y + 1));
+                verticesList.add(z);
+            }
+
+        // Create a float array from the arraylist
+        return LevelUtils.floatListToArray(verticesList);
     }
 
 }
