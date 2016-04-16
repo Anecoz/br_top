@@ -1,6 +1,5 @@
 package logic;
 
-
 import graphics.Camera;
 import graphics.IndexedVertexArray;
 import graphics.Shader;
@@ -29,7 +28,7 @@ public class Player {
     private Matrix4f rotation;
 
     public Player(String texFilePath) {
-        position = new Vector2f(0);
+        position = new Vector2f(10);
         forward = new Vector2f(0);
         rotation = new Matrix4f();
         texture = new Texture(FileUtils.RES_DIR + texFilePath);

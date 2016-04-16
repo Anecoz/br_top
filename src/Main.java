@@ -115,7 +115,7 @@ public class Main {
     private void update() {
         glfwPollEvents();
         player.update(cam, level, projMatrix);
-        cam.update(player.getPosition(), player.getSpeed());
+        cam.update(player.getPosition(), player.getSpeed(), level);
         projMatrix = cam.getProjection();
     }
 
@@ -131,5 +131,4 @@ public class Main {
     public static void main(String[] args) {
         new Main().run();
     }
-
 }

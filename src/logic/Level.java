@@ -11,13 +11,8 @@ import tiled.io.TMXMapReader;
 import utils.FileUtils;
 import utils.LevelUtils;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 // Holds information about the tiled level
 public class Level {
@@ -56,6 +51,14 @@ public class Level {
         }
 
         return (isColl != null && isColl.equals("1"));
+    }
+
+    public Rectangle getBounds(){
+        return map.getBounds();
+    }
+
+    public boolean InBounds(int x,int y){
+        return map.inBounds(x,y);
     }
 
     public void render(Matrix4f projMatrix) {
