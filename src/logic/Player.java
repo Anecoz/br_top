@@ -53,21 +53,31 @@ public class Player {
     public void update(Camera cam, Level level) {
         Vector2f tmp = new Vector2f(position.x, position.y);
 
-        if (Input.isKeyDown(GLFW_KEY_W))
+        if (Input.isKeyDown(GLFW_KEY_W)) {
             position.y -= SPEED;
-        if (Input.isKeyDown(GLFW_KEY_S))
-            position.y += SPEED;
-        if (Input.isKeyDown(GLFW_KEY_A))
-            position.x -= SPEED;
-        if (Input.isKeyDown(GLFW_KEY_D))
-            position.x += SPEED;
-
-        if (CollisionHandler.checkPlayerCollision(this, level)) {
-            position = tmp;
+            if (CollisionHandler.checkPlayerCollision(this, level)) {
+                position.y = tmp.y;
+            }
         }
-
+        if (Input.isKeyDown(GLFW_KEY_S)) {
+            position.y += SPEED;
+            if (CollisionHandler.checkPlayerCollision(this, level)) {
+                position.y = tmp.y;
+            }
+        }
+        if (Input.isKeyDown(GLFW_KEY_A)) {
+            position.x -= SPEED;
+            if (CollisionHandler.checkPlayerCollision(this, level)) {
+                position.x = tmp.x;
+            }
+        }
+        if (Input.isKeyDown(GLFW_KEY_D)) {
+            position.x += SPEED;
+            if (CollisionHandler.checkPlayerCollision(this, level)) {
+                position.x = tmp.x;
+            }
+        }
     }
 
     public Vector2f getPosition() {return position;}
-
 }

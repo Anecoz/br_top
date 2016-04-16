@@ -72,6 +72,7 @@ public class Main {
     }
 
     private void gameInit() {
+        // TODO: Add aspect ratio to camera constructor
         cam = new Camera();
         projMatrix = cam.getProjection();
         level = new Level("testMap.tmx");
@@ -106,6 +107,7 @@ public class Main {
         }
     }
 
+    // Called 60 times per second
     private void update() {
         glfwPollEvents();
         player.update(cam, level);
@@ -113,6 +115,7 @@ public class Main {
         projMatrix = cam.getProjection();
     }
 
+    // Called as often as possible (if VSYNC is off)
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
