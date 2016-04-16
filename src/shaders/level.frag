@@ -7,4 +7,7 @@ uniform sampler2D atlas;
 
 void main() {
     outColor = texture(atlas, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y));
+    if (outColor.a < 0.5) {
+        discard;
+    }
 }
