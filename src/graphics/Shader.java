@@ -16,6 +16,8 @@ public class Shader {
 
     private int id;
 
+    public int getId() {return id;}
+
     public Shader(String vertex, String frag) {
         id = ShaderUtils.load(SHADERS_DIR + vertex, SHADERS_DIR + frag);
 

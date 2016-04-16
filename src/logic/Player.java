@@ -35,7 +35,9 @@ public class Player {
         texture = new Texture(FileUtils.RES_DIR + texFilePath);
         mesh = GraphicsUtils.createModelQuad();
         shader = new Shader("player.vert", "player.frag");
+        shader.comeHere();
         shader.uploadTexture(0, "tex");
+        shader.pissOff();
         this.width = texture.getWidth();
         this.height = texture.getHeight();
         this.size = 0.5f;
@@ -54,7 +56,7 @@ public class Player {
         shader.uploadMatrix(new Matrix4f().translate(position.x, position.y, 0f), "modelMatrix");
         mesh.draw();
 
-        texture.bind();
+        texture.unbind();
         shader.pissOff();
     }
 
