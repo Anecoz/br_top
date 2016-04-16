@@ -124,7 +124,6 @@ public class Main {
 
         level.render(projMatrix);
         player.render(projMatrix);
-        cam.render(projMatrix);
 
         glfwSwapBuffers(window);
     }
