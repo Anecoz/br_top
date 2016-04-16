@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL13.*;
 import org.joml.Matrix4f;
 import tiled.core.*;
 import tiled.io.TMXMapReader;
+import utils.FileUtils;
 import utils.LevelUtils;
 
 import javax.imageio.ImageIO;
@@ -23,13 +24,13 @@ public class Level {
 
     private Map map;
     private VertexArray vertexArray;
-    private static final String RES_DIR = "res/";
     private Shader shader;
     private Texture textureAtlas;
+    private TileLayer tileLayer;
 
     public Level(String filename) {
         try {
-            File mapFile = new File(RES_DIR + filename);
+            File mapFile = new File(FileUtils.RES_DIR + filename);
             map = new TMXMapReader().readMap(mapFile.getAbsolutePath());
             initMap();
             initTexture();
@@ -42,6 +43,19 @@ public class Level {
             e.printStackTrace();
             System.err.println("Map loading failed!");
         }
+    }
+
+    public boolean getCollAt(int x, int y) {
+        Tile tile = tileLayer.getTileAt(x, y);
+        String isColl = null;
+        try {
+            isColl = tile.getProperties().getProperty("isCollision");
+        }
+        catch (Exception e) {
+            System.err.println("Moved outside: " + e.getMessage());
+        }
+
+        return (isColl != null && isColl.equals("1"));
     }
 
     public void render(Matrix4f projMatrix) {
@@ -61,7 +75,7 @@ public class Level {
     }
 
     private void initShader() {
-        shader = new Shader("src/shaders/level.vert", "src/shaders/level.frag");
+        shader = new Shader("level.vert", "level.frag");
     }
 
     private void initMap() {
@@ -69,17 +83,11 @@ public class Level {
         MapLayer layer = map.getLayer(0);
 
         if (layer instanceof TileLayer) {
-            TileLayer tileLayer = (TileLayer) layer;
-
-            // Create VAO
+            tileLayer = (TileLayer) layer;
             int width = tileLayer.getWidth();
             int height = tileLayer.getHeight();
-
-            // Create a float array from the arraylist
             float[] tco = LevelUtils.calcTexCoords(tileLayer, width, height);
             float[] vbo = LevelUtils.calcVertices(width, height);
-
-            // Create the VAO
             vertexArray = new VertexArray(vbo, tco);
         }
     }

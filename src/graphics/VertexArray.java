@@ -12,8 +12,8 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class VertexArray {
-    private int vao, vbo, tbo;
-    private int count;
+    protected int vao, vbo, tbo;
+    protected int count;
 
     public VertexArray(float[] vertices, float[] texCoords) {
         count = vertices.length/3;
@@ -49,11 +49,11 @@ public class VertexArray {
         glDeleteBuffers(tbo);
     }
 
-    private void bind() {
+    protected void bind() {
         glBindVertexArray(vao);
     }
 
-    private void unbind() {
+    protected void unbind() {
         glBindVertexArray(0);
     }
 

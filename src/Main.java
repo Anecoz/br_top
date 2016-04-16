@@ -1,5 +1,7 @@
+import graphics.Camera;
 import input.Input;
 import logic.Level;
+import logic.Player;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -12,10 +14,13 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
     private GLFWErrorCallback errorCallback;
+    private static Input input;
 
     private long window;
     private Matrix4f projMatrix;
     private Level level;
+    private Camera cam;
+    private Player player;
 
     public void run() {
         System.out.println("Using LWJGL " + Version.getVersion() + "!");
@@ -50,7 +55,7 @@ public class Main {
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
-        glfwSetKeyCallback(window, new Input());
+        glfwSetKeyCallback(window, input = new Input());
 
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
@@ -67,8 +72,10 @@ public class Main {
     }
 
     private void gameInit() {
-        projMatrix = new Matrix4f().ortho(-1.0f, 13.0f, -9.0f, 1.0f, -1.0f, 1.0f).lookAt(0f, 0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
+        cam = new Camera();
+        projMatrix = cam.getProjection();
         level = new Level("testMap.tmx");
+        player = new Player("player.png");
     }
 
     private void loop() {
@@ -101,12 +108,16 @@ public class Main {
 
     private void update() {
         glfwPollEvents();
+        player.update(cam, level);
+        cam.update();
+        projMatrix = cam.getProjection();
     }
 
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         level.render(projMatrix);
+        player.render(projMatrix);
 
         glfwSwapBuffers(window);
     }

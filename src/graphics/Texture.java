@@ -18,6 +18,9 @@ public class Texture {
         texture = load(path);
     }
 
+    public int getWidth() {return width;}
+    public int getHeight() {return height;}
+
     private int load(String path) {
         int[] pixels = null;
         try {

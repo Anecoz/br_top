@@ -9,6 +9,8 @@ import java.net.URL;
 
 public class FileUtils {
 
+    public static final String RES_DIR = "res/";
+
     private FileUtils() {
     }
 

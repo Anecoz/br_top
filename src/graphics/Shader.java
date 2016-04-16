@@ -12,11 +12,12 @@ public class Shader {
     // Make these ints so that we can create general VAOs without a loaded specific shader program
     public static final int VERTEX_ATTRIB = 0;
     public static final int TEX_ATTRIB = 1;
+    private static final String SHADERS_DIR = "src/shaders/";
 
     private int id;
 
     public Shader(String vertex, String frag) {
-        id = ShaderUtils.load(vertex, frag);
+        id = ShaderUtils.load(SHADERS_DIR + vertex, SHADERS_DIR + frag);
 
         if (id == -1)
             System.err.println("Shaders failed to load!");
