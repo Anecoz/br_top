@@ -14,14 +14,14 @@ import utils.GraphicsUtils;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Player {
-    private static final float SPEED = 0.05f;
+    private static final float SPEED = 0.1f;
     private Vector2f position;
     private Texture texture;
     private IndexedVertexArray mesh;
     private Shader shader;
     private int width;
     private int height;
-    private int size;
+    private float size;
 
     public Player(String texFilePath) {
         position = new Vector2f(0);
@@ -31,10 +31,10 @@ public class Player {
         shader.uploadTexture(0, "tex");
         this.width = texture.getWidth();
         this.height = texture.getHeight();
-        this.size = 1;
+        this.size = 0.5f;
     }
 
-    public int getSize() {return size;}
+    public float getSize() {return size;}
     public int getWidth() {return width;}
     public int getHeight() {return height;}
 
