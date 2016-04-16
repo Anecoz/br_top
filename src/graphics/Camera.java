@@ -12,7 +12,6 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Camera {
     private Matrix4f projection;
     private Vector2f position;
-    private final static float SPEED_TERM = 0.1f;
     private final static float INV_AR = 9.0f/16.0f;
     private final static float WIN_SIZE = 20.0f;
     private static final Matrix4f lookAt = new Matrix4f().lookAt(0f, 0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
