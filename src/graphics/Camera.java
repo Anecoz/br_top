@@ -82,19 +82,19 @@ public class Camera {
         }
 
         if(position.x < level.getBounds().x) {
-            System.out.println("Outside Left");
+            //System.out.println("Outside Left");
             position.x = tempPos.x;
         }
         if(position.y < level.getBounds().y) {
-            System.out.println("Outside Top");
+            //System.out.println("Outside Top");
             position.y = tempPos.y;
         }
         if((position.x + WIN_SIZE_X) > level.getBounds().width) {
-            System.out.println("Outside Right");
+            //System.out.println("Outside Right");
             position.x = tempPos.x;
         }
         if((position.y + WIN_SIZE_Y) > level.getBounds().height) {
-            System.out.println("Outside Bottom");
+            //System.out.println("Outside Bottom");
             position.y = tempPos.y;
         }
     }
