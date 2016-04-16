@@ -1,5 +1,6 @@
 package graphics;
 
+import org.joml.Interpolationf;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.FileUtils;
@@ -13,6 +14,7 @@ public class Camera {
     private float invAr;
     private final static float WIN_SIZE = 20.0f;
     private static final Matrix4f lookAt = new Matrix4f().lookAt(0f, 0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
+
     private Texture texture;
     private Shader shader;
     private IndexedVertexArray mesh;
@@ -65,29 +67,49 @@ public class Camera {
         shader.pissOff();
     }
 
-    public void updateCameraMovement(Vector2f playerPos, float playerSpeed) {
+    private void updateCameraMovement(Vector2f playerPos, float playerSpeed) {
         this.topLeft = new Vector2f(position.x + (WIN_SIZE / 3), position.y + (WIN_SIZE * invAr / 3));
         this.topRight = new Vector2f(position.x + ((WIN_SIZE * 2) / 3), position.y + (WIN_SIZE * invAr / 3));
         this.bottomRight = new Vector2f(position.x + ((WIN_SIZE * 2) / 3), position.y + ((WIN_SIZE * invAr * 2) / 3));
-        this.bottomLeft = new Vector2f(position.x + (position.x / 3), position.y + ((WIN_SIZE * invAr * 2) / 3));
+        this.bottomLeft = new Vector2f(position.x + (WIN_SIZE / 3), position.y + ((WIN_SIZE * invAr * 2) / 3));
 
+        // Side Check
         if(playerPos.y <= topLeft.y && playerPos.x >= topLeft.x && playerPos.x <= topRight.x) {
             //System.out.println("Outside Top");
             position.y += -playerSpeed;
         }
-
         if(playerPos.x >= topRight.x && playerPos.y >= topRight.y && playerPos.y <= bottomRight.y) {
             //System.out.println("Outside Right");
             position.x += playerSpeed;
         }
-
         if(playerPos.x >= bottomLeft.x && playerPos.x <= bottomRight.x && playerPos.y >= bottomRight.y) {
             //System.out.println("Outside Bottom");
             position.y += playerSpeed;
         }
-
         if(playerPos.x <= topLeft.x && playerPos.y >= topLeft.y && playerPos.y <= bottomLeft.y) {
             //System.out.println("Outside Left");
+            position.x += -playerSpeed;
+        }
+
+        // Diagonal Check
+        if(playerPos.x <= topLeft.x && playerPos.y <= topLeft.y) {
+            //System.out.println("Outside Top");
+            position.y += -playerSpeed;
+            position.x += -playerSpeed;
+        }
+        if(playerPos.x >= topRight.x && playerPos.y <= topRight.y) {
+            //System.out.println("Outside Top");
+            position.y += -playerSpeed;
+            position.x += playerSpeed;
+        }
+        if(playerPos.x >= bottomRight.x && playerPos.y >= bottomRight.y) {
+            //System.out.println("Outside Top");
+            position.y += playerSpeed;
+            position.x += playerSpeed;
+        }
+        if(playerPos.x <= bottomLeft.x && playerPos.y >= bottomLeft.y) {
+            //System.out.println("Outside Top");
+            position.y += playerSpeed;
             position.x += -playerSpeed;
         }
     }
