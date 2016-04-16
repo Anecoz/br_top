@@ -1,5 +1,7 @@
 import graphics.Camera;
-import input.Input;
+import input.KeyInput;
+import input.MouseButtonInput;
+import input.MousePosInput;
 import logic.Level;
 import logic.Player;
 import org.lwjgl.*;
@@ -14,7 +16,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
     private GLFWErrorCallback errorCallback;
-    private static Input input;
+    private static KeyInput keyInput;
+    private static MouseButtonInput mouseButtonInput;
+    private static MousePosInput mousePosInput;
 
     private long window;
     private Matrix4f projMatrix;
@@ -55,7 +59,9 @@ public class Main {
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
-        glfwSetKeyCallback(window, input = new Input());
+        glfwSetKeyCallback(window, keyInput = new KeyInput());
+        glfwSetMouseButtonCallback(window, mouseButtonInput = new MouseButtonInput());
+        glfwSetCursorPosCallback(window, mousePosInput = new MousePosInput());
 
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
@@ -110,7 +116,7 @@ public class Main {
     // Called 60 times per second
     private void update() {
         glfwPollEvents();
-        player.update(cam, level);
+        player.update(cam, level, projMatrix);
         cam.update();
         projMatrix = cam.getProjection();
     }

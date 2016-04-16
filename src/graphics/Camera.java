@@ -1,13 +1,8 @@
 package graphics;
 
 
-import input.Input;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-
-import javax.print.DocFlavor;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
     private Matrix4f projection;

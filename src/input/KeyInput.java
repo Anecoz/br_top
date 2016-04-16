@@ -4,9 +4,9 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 // TODO: Add Mouse support
-public class Input extends GLFWKeyCallback {
+public class KeyInput extends GLFWKeyCallback {
 
-    public static boolean[] keys = new boolean[65536];
+    private static boolean[] keys = new boolean[65536];
 
     @Override
     public void invoke(long window, int key, int scancode, int action, int mods) {

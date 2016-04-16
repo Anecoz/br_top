@@ -7,8 +7,9 @@ out vec2 fragTexCoords;
 
 uniform mat4 projMatrix;
 uniform mat4 modelMatrix;
+uniform mat4 rotationMatrix = mat4(1.0f);
 
 void main() {
     fragTexCoords = texCoords;
-    gl_Position = projMatrix * modelMatrix * vec4(inPosition, 1.0);
+    gl_Position = projMatrix * rotationMatrix * modelMatrix * vec4(inPosition, 1.0);
 }
