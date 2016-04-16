@@ -57,10 +57,6 @@ public class Level {
         return map.getBounds();
     }
 
-    public boolean InBounds(int x,int y){
-        return map.inBounds(x,y);
-    }
-
     public void render(Matrix4f projMatrix) {
         shader.comeHere();
 

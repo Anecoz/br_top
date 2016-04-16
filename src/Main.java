@@ -80,7 +80,7 @@ public class Main {
     private void gameInit() {
         cam = new Camera(WIDTH, HEIGHT);
         projMatrix = cam.getProjection();
-        level = new Level("openMap.tmx");
+        level = new Level("map_01.tmx");
         player = new Player("player.png");
     }
 
