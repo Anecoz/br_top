@@ -26,6 +26,9 @@ public class Main {
     private Camera cam;
     private Player player;
 
+    private static final int WIDTH = 1280;
+    private static final int HEIGHT = 720;
+
     public void run() {
         System.out.println("Using LWJGL " + Version.getVersion() + "!");
 
@@ -52,9 +55,6 @@ public class Main {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-        int WIDTH = 1280;
-        int HEIGHT = 720;
-
         window = glfwCreateWindow(WIDTH, HEIGHT, "3D Game Engine", NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
@@ -78,10 +78,9 @@ public class Main {
     }
 
     private void gameInit() {
-        // TODO: Add aspect ratio to camera constructor
-        cam = new Camera();
+        cam = new Camera(WIDTH, HEIGHT);
         projMatrix = cam.getProjection();
-        level = new Level("testMap.tmx");
+        level = new Level("openMap.tmx");
         player = new Player("player.png");
     }
 
@@ -113,15 +112,13 @@ public class Main {
         }
     }
 
-    // Called 60 times per second
     private void update() {
         glfwPollEvents();
         player.update(cam, level, projMatrix);
-        cam.update();
+        cam.update(player.getPosition(), player.getSpeed());
         projMatrix = cam.getProjection();
     }
 
-    // Called as often as possible (if VSYNC is off)
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -89,13 +89,13 @@ public class Player {
         // Size is already "halved" because of a smaller bounding box for collision detection
         double centerX = this.position.x + this.size;
         double centerY = this.position.y + this.size;
-        Vector2f worldMouse = MathUtils.screenSpaceToWorld(new Vector2f((float)mouseX, (float)mouseY), 1280, 720, proj);
+        Vector2f worldMouse = MathUtils.screenSpaceToWorld(new Vector2f((float) mouseX, (float) mouseY), 1280, 720, proj);
         // Get vector
-        this.forward.x = worldMouse.x - (float)centerX;
-        this.forward.y = worldMouse.y - (float)centerY;
+        this.forward.x = worldMouse.x - (float) centerX;
+        this.forward.y = worldMouse.y - (float) centerY;
         this.forward.normalize();
         // Update rotation matrix
-        Vector3f center = new Vector3f((float)centerX, (float)centerY, -0.3f);
+        Vector3f center = new Vector3f((float) centerX, (float) centerY, -0.3f);
         Vector2f up = new Vector2f(0.0f, -1.0f);
         rotation = new Matrix4f()
                 .translate(center)
@@ -104,4 +104,5 @@ public class Player {
     }
 
     public Vector2f getPosition() {return position;}
+    public float getSpeed() {return SPEED;}
 }
