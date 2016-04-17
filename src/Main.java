@@ -1,4 +1,6 @@
 import graphics.Camera;
+import graphics.Shader;
+import graphics.Texture;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;

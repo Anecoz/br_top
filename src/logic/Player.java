@@ -5,7 +5,10 @@ import graphics.IndexedVertexArray;
 import graphics.Shader;
 import graphics.Texture;
 import input.KeyInput;
+import input.MouseButtonInput;
 import input.MousePosInput;
+import logic.weapons.Pistol;
+import logic.weapons.Weapon;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -27,6 +30,9 @@ public class Player {
     private float size;
     private Matrix4f rotation;
 
+    private Pistol pistol;
+    private Texture pistolTexture;
+
     public Player(String texFilePath) {
         position = new Vector2f(10);
         forward = new Vector2f(0);
@@ -40,6 +46,10 @@ public class Player {
         this.width = texture.getWidth();
         this.height = texture.getHeight();
         this.size = 0.5f;
+
+        //TESTING
+        pistolTexture = new Texture(FileUtils.RES_DIR + "pistol.png");
+        pistol = new Pistol(shader, pistolTexture, position, 0.5f, 15, 50);
     }
 
     public float getSize() {return size;}
@@ -57,6 +67,8 @@ public class Player {
 
         texture.unbind();
         shader.pissOff();
+
+        pistol.render(projection);
     }
 
     public void update(Camera cam, Level level, Matrix4f proj) {
@@ -81,6 +93,18 @@ public class Player {
             if (CollisionHandler.checkPlayerCollision(this, level))
                 position.x = tmp.x;
         }
+
+        if(MouseButtonInput.isLeftDown()){
+            pistol.fire();
+            System.out.println("Magazine: " + pistol.getMagazine());
+            System.out.println("Magazine Size: " + pistol.getMagazineSize());
+        }
+
+        if(KeyInput.isKeyDown(GLFW_KEY_R)){
+            pistol.reload();
+            System.out.println("Ammo: " + pistol.getAmmo());
+        }
+
         updateFoward(proj);
     }
 
