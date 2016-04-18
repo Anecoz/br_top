@@ -26,7 +26,7 @@ public class Player extends DrawableEntity {
 
         //TESTING
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
-        pistol = new Pistol(pistolTexture, position, -0.5f, 0.5f, 1, 50);
+        pistol = new Pistol(pistolTexture, position, -0.2f, 0.5f, 100, 50);
     }
 
     @Override
