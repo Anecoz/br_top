@@ -24,7 +24,7 @@ public class Player extends DrawableEntity {
     private Texture pistolTexture;
 
     public Player(String texFilePath) {
-        super(texFilePath, new Vector2f(10));
+        super(texFilePath, new Vector2f(10), -0.3f);
         forward = new Vector2f(0);
         this.width = this.texture.getWidth();
         this.height = texture.getHeight();
@@ -32,7 +32,7 @@ public class Player extends DrawableEntity {
 
         //TESTING
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
-        pistol = new Pistol(pistolTexture, position, 0.5f, 15, 50);
+        pistol = new Pistol(pistolTexture, position, -0.5f, 0.5f, 15, 50);
     }
 
     public float getSize() {return size;}
@@ -97,6 +97,7 @@ public class Player extends DrawableEntity {
                 .translate(center)
                 .rotate(forward.angle(up), 0.0f, 0.0f, -1.0f)
                 .translate(center.negate());
+        pistol.rotation = rotation;
     }
 
     public float getSpeed() {return SPEED;}

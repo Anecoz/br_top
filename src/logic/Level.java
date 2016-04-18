@@ -109,7 +109,7 @@ public class Level {
             int width = tileLayer.getWidth();
             int height = tileLayer.getHeight();
             float[] tco = LevelUtils.calcTexCoords(tileLayer, width, height);
-            float[] vbo = LevelUtils.calcVertices(width, height);
+            float[] vbo = LevelUtils.calcVertices(width, height, 0.0f);
             vertexArray = new VertexArray(vbo, tco);
         }
     }

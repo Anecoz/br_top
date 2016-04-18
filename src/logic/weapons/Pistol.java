@@ -13,8 +13,8 @@ public class Pistol extends Weapon {
     private Texture sprite;
     private Vector2f position;
 
-    public Pistol(Texture sprite, Vector2f position, float reloadTime, int magazineSize, int roundsPerMinute) {
-        super(sprite, position);
+    public Pistol(Texture sprite, Vector2f position, float layer, float reloadTime, int magazineSize, int roundsPerMinute) {
+        super(sprite, position, layer);
 
         this.reloadTime = reloadTime;
         this.magazineSize = magazineSize;
