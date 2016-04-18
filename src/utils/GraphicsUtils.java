@@ -15,8 +15,7 @@ public class GraphicsUtils {
         }
     }
 
-    public static IndexedVertexArray createModelQuad() {
-        float z = -0.3f;
+    public static IndexedVertexArray createModelQuad(float z) {
         float[] vertices = new float[] {
                 0.0f, 0.0f, z,
                 0.0f, 1.0f, z,

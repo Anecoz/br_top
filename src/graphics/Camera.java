@@ -5,13 +5,16 @@ import org.joml.Vector2f;
 
 import logic.Level;
 
+// FRIENDLY REMINDER:
+// Z: LAYER -1.1f IS CLOSEST TO CAMERA
+// Z: LAYER < 0.9 IS FURTHEST AWAY
 public class Camera {
     private Matrix4f projection;
     private Vector2f position;
     private float invAr;
     public static float WIN_SIZE_X = 20.0f;
     private float WIN_SIZE_Y;
-    private static final Matrix4f lookAt = new Matrix4f().lookAt(0f, 0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
+    private static final Matrix4f lookAt = new Matrix4f().lookAt(0f, 0f, -0.1f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
 
     public Camera(int Width, int Height) {
         invAr = (float) Height / (float) Width;

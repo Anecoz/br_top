@@ -18,17 +18,19 @@ public class DrawableEntity {
 
     public Vector2f getPosition() {return position;}
 
-    public DrawableEntity(String texFilePath, Vector2f initPos) {
+    public DrawableEntity(String texFilePath, Vector2f initPos, float layer) {
         this.texture = new Texture(FileUtils.RES_DIR + texFilePath);
-        this.position = initPos;
-        mesh = GraphicsUtils.createModelQuad();
-        this.rotation = new Matrix4f();
+        init(layer, initPos);
     }
 
-    public DrawableEntity(Texture texture, Vector2f initPos) {
+    public DrawableEntity(Texture texture, Vector2f initPos, float layer) {
         this.texture = texture;
+        init(layer, initPos);
+    }
+
+    private void init(float layer, Vector2f initPos) {
         this.position = initPos;
-        mesh = GraphicsUtils.createModelQuad();
+        mesh = GraphicsUtils.createModelQuad(layer);
         this.rotation = new Matrix4f();
     }
 

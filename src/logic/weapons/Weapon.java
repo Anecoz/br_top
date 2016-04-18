@@ -17,8 +17,8 @@ public class Weapon extends DrawableEntity {
     protected int ammo;             // Current reserve ammunition
     protected int roundsPerMinute;
 
-    public Weapon(Texture sprite, Vector2f position) {
-        super(sprite, position);
+    public Weapon(Texture sprite, Vector2f position, float layer) {
+        super(sprite, position, layer);
     }
 
     public void update(){

@@ -49,9 +49,8 @@ public class LevelUtils {
         return LevelUtils.floatListToArray(texCoordsList);
     }
 
-    public static float[] calcVertices(int width, int height) {
+    public static float[] calcVertices(int width, int height, float z) {
         ArrayList<Float> verticesList = new ArrayList<>();
-        float z = 0.0f;
 
         // Loop over tiles to get texture coordinates (within atlas) and create vertices
         for (int y = 0; y < height; y++)
