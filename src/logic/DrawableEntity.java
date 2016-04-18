@@ -15,7 +15,11 @@ public class DrawableEntity {
     protected Vector2f position;
     protected IndexedVertexArray mesh;
     protected Matrix4f rotation;
+    protected float width;
+    protected float height;
 
+    public float getWidth() {return width;}
+    public float getHeight() {return height;}
     public Vector2f getPosition() {return position;}
 
     public DrawableEntity(String texFilePath, Vector2f initPos, float layer) {
@@ -29,8 +33,22 @@ public class DrawableEntity {
     }
 
     private void init(float layer, Vector2f initPos) {
+        this.width = this.texture.getWidth();
+        this.height = this.texture.getHeight();
+
+        if (width > 1.0 || height > 1.0) {
+            if (width >= height) {
+                height = height / width;
+                width = 1.0f;
+            }
+            else {
+                width = width/height;
+                height = 1.0f;
+            }
+        }
+
         this.position = initPos;
-        mesh = GraphicsUtils.createModelQuad(layer);
+        mesh = GraphicsUtils.createModelQuad(width, height, layer);
         this.rotation = new Matrix4f();
     }
 

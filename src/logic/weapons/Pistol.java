@@ -28,7 +28,7 @@ public class Pistol extends Weapon {
     @Override
     public void fire(){
         super.fire();
-        bulletList.add(new Bullet(sprite, position, new Vector2f(2), -0.5f, 10));
+        bulletList.add(new Bullet(sprite, position, new Vector2f(2), -0.8f, 10));
     }
 
     @Override

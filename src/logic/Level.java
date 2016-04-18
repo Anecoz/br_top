@@ -77,7 +77,7 @@ public class Level {
         ShaderHandler.levelShader.comeHere();
 
         ShaderHandler.levelShader.uploadMatrix(projMatrix, "projMatrix");
-        ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getSize(), player.getPosition().y + player.getSize()), "lightPos");
+        ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getWidth()/2.0f, player.getPosition().y + player.getHeight()/2.0f), "lightPos");
         ShaderHandler.levelShader.uploadInt(getBounds().width, "worldWidth");
         ShaderHandler.levelShader.uploadInt(getBounds().height, "worldHeight");
         ShaderHandler.levelShader.uploadInt((int)Camera.WIN_SIZE_X, "windowSize");

@@ -15,14 +15,16 @@ public class GraphicsUtils {
         }
     }
 
-    public static IndexedVertexArray createModelQuad(float z) {
+    public static IndexedVertexArray createModelQuad(float width, float height, float z) {
+        // Local model space coordinates
         float[] vertices = new float[] {
                 0.0f, 0.0f, z,
-                0.0f, 1.0f, z,
-                1.0f, 0.0f, z,
-                1.0f, 1.0f, z
+                0.0f, height, z,
+                width, 0.0f, z,
+                width, height, z
         };
 
+        // ST coordinates, 1,1 is upper right
         float[] texCoords = new float[] {
                 0.0f, 1.0f,
                 0.0f, 0.0f,

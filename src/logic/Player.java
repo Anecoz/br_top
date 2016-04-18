@@ -17,27 +17,17 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Player extends DrawableEntity {
     private static final float SPEED = 0.1f;
     private Vector2f forward;
-    private int width;
-    private int height;
-    private float size;
     private Pistol pistol;
     private Texture pistolTexture;
 
     public Player(String texFilePath) {
         super(texFilePath, new Vector2f(10), -0.3f);
         forward = new Vector2f(0);
-        this.width = this.texture.getWidth();
-        this.height = texture.getHeight();
-        this.size = 0.5f;
 
         //TESTING
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
         pistol = new Pistol(pistolTexture, position, -0.5f, 0.5f, 15, 50);
     }
-
-    public float getSize() {return size;}
-    public int getWidth() {return width;}
-    public int getHeight() {return height;}
 
     @Override
     public void render(Matrix4f projection) {
@@ -76,15 +66,15 @@ public class Player extends DrawableEntity {
             pistol.reload();
         }
 
-        updateFoward(proj);
+        updateForward(proj);
     }
 
-    private void updateFoward(Matrix4f proj) {
+    private void updateForward(Matrix4f proj) {
         double mouseX = MousePosInput.getX();
         double mouseY = MousePosInput.getY();
         // Size is already "halved" because of a smaller bounding box for collision detection
-        double centerX = this.position.x + this.size;
-        double centerY = this.position.y + this.size;
+        double centerX = this.position.x + this.width/2.0f;
+        double centerY = this.position.y + this.height/2.0f;
         Vector2f worldMouse = MathUtils.screenSpaceToWorld(new Vector2f((float) mouseX, (float) mouseY), 1280, 720, proj);
         // Get vector
         this.forward.x = worldMouse.x - (float) centerX;
