@@ -81,6 +81,7 @@ public class Camera {
             position.x += -playerSpeed;
         }
 
+        // Check camera map bounds
         if(position.x < level.getBounds().x) {
             //System.out.println("Outside Left");
             position.x = tempPos.x;

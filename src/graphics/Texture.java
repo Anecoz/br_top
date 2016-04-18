@@ -12,6 +12,14 @@ import static org.lwjgl.opengl.GL11.*;
 public class Texture {
     private int width, height;
     private int texture;
+    private int type = GL_TEXTURE_2D;
+
+    public Texture(int width, int height, int id, int type) {
+        this.width = width;
+        this.height = height;
+        this.texture = id;
+        this.type = type;
+    }
 
     public Texture(String path) {
         texture = load(path);
@@ -48,18 +56,19 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, BufferHelpers.createIntBuffer(data));
         glBindTexture(GL_TEXTURE_2D, 0);
+
         return result;
-    }
-
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, texture);
-    }
-
-    public void unbind() {
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public void cleanUp() {
         glDeleteTextures(texture);
+    }
+
+    public void bind() {
+        glBindTexture(type, texture);
+    }
+
+    public void unbind() {
+        glBindTexture(type, 0);
     }
 }

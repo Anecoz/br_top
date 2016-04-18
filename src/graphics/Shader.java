@@ -1,6 +1,7 @@
 package graphics;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import utils.ShaderUtils;
 
@@ -25,6 +26,13 @@ public class Shader {
             System.err.println("Shaders failed to load!");
     }
 
+    public void uploadVec(Vector2f vec, String uniformName) {
+        int loc = glGetUniformLocation(id, uniformName);
+        FloatBuffer fb = BufferUtils.createFloatBuffer(2);
+        vec.get(fb);
+        glUniform2fv(loc, fb);
+    }
+
     public void uploadMatrix(Matrix4f mat, String uniformName) {
         int loc = glGetUniformLocation(id, uniformName);
         FloatBuffer fb = BufferUtils.createFloatBuffer(16);
@@ -35,6 +43,11 @@ public class Shader {
     public void uploadTexture(int texUnit, String uniformName) {
         int loc = glGetUniformLocation(id, uniformName);
         glUniform1i(loc, texUnit);
+    }
+
+    public void uploadInt(int val, String uniformName) {
+        int loc = glGetUniformLocation(id, uniformName);
+        glUniform1i(loc, val);
     }
 
     public void comeHere() {
