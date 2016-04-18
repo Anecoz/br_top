@@ -91,7 +91,7 @@ public class Main {
 
     private void gameInit() {
         cam = new Camera(WIDTH, HEIGHT);
-        level = new Level("maps/map_01.tmx");
+        level = new Level("maps/64res.tmx");
         player = new Player("characters/player.png");
         projMatrix = cam.getProjection();
         shadowHandler = new ShadowHandler();

@@ -13,6 +13,8 @@ uniform int worldWidth;
 uniform int worldHeight;
 uniform int windowSize;
 
+const float DAMP_FACTOR = 0.2;
+
 // Determines if a world position is inside a shadow caster or not
 int posInsideShadow(vec2 coords) {
     float shadow = texture(shadowTex, coords).r*255.0;
@@ -36,8 +38,8 @@ float intbounds(float s, float ds)
 }
 
 // Smarter ray traversal algorithm
-int amanatideTraverse(vec2 lightPos) {
-	vec2 currPos = fragWorldCoords;
+int amanatideTraverse(vec2 initPos, vec2 lightPos) {
+	vec2 currPos = initPos;
 	// Init phase
 	int X = int(floor(currPos.x));
 	int Y = int(floor(currPos.y));
@@ -90,10 +92,29 @@ void main() {
     if (distance(fragWorldCoords, lightPos) < windowSize*2) {
         // Check if current frag is on a shadow caster
         if (posInsideShadow(vec2(fragWorldCoords.x/float(worldWidth), fragWorldCoords.y/float(worldHeight))) == 1) {
-            outColor = col*0.2;
+            outColor = col*DAMP_FACTOR;
         }
-        else if (amanatideTraverse(lightPos) == 1) {
-            outColor = col*0.2;
+        else if (amanatideTraverse(fragWorldCoords, lightPos) == 1) {
+            // Sample several closeby points as well
+            /*float dist = distance(lightPos, fragWorldCoords)/30.0;
+            float blur = (1.0 / float(windowSize)) * smoothstep(0.0, 1.0, dist);
+
+            float sum = 0.0;
+
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.05, 0.0), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.09, 0.0), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(-0.05, 0.0), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(-0.09, 0.0), lightPos);
+
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, 0.05), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, 0.09), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, -0.05), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, -0.09), lightPos);
+
+            sum = sum/8.0;
+
+            outColor = col * (1.0/sum);*/
+            outColor = col*DAMP_FACTOR;
         }
     }
 }
