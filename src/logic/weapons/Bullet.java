@@ -1,7 +1,7 @@
 package logic.weapons;
 
-import graphics.shaders.Shader;
 import graphics.lowlevel.Texture;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 public class Bullet extends Ammunition {

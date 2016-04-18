@@ -16,13 +16,14 @@ public class Weapon extends DrawableEntity {
     protected int magazine;         // Ammunition loaded in weapon
     protected int ammo;             // Current reserve ammunition
     protected int roundsPerMinute;
+    protected Vector2f forward;
 
     public Weapon(Texture sprite, Vector2f position, float layer) {
         super(sprite, position, layer);
     }
 
-    public void update(){
-
+    public void update(Vector2f forward){
+        this.forward = forward;
     }
 
     public void fire(){

@@ -27,12 +27,19 @@ public class Pistol extends Weapon {
 
     @Override
     public void fire(){
+        if (magazine < 1) {
+            // TODO: do something l0l
+            return;
+        }
         super.fire();
-        bulletList.add(new Bullet(sprite, position, new Vector2f(2), -0.8f, 10));
+        Vector2f bulletPos = new Vector2f(position.x, position.y);
+        Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
+        bulletList.add(new Bullet(sprite, bulletPos, bulletVel.mul(0.6f), -0.8f, 10));
     }
 
     @Override
-    public void update(){
+    public void update(Vector2f forward){
+        this.forward = forward;
         for(Bullet bullet: bulletList){
             bullet.update();
         }

@@ -26,7 +26,7 @@ public class Player extends DrawableEntity {
 
         //TESTING
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
-        pistol = new Pistol(pistolTexture, position, -0.5f, 0.5f, 15, 50);
+        pistol = new Pistol(pistolTexture, position, -0.5f, 0.5f, 1, 50);
     }
 
     @Override
@@ -67,6 +67,7 @@ public class Player extends DrawableEntity {
         }
 
         updateForward(proj);
+        pistol.update(new Vector2f(forward));
     }
 
     private void updateForward(Matrix4f proj) {

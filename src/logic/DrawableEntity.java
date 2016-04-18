@@ -3,6 +3,7 @@ package logic;
 import graphics.lowlevel.IndexedVertexArray;
 import graphics.lowlevel.Texture;
 import graphics.shaders.ShaderHandler;
+import logic.weapons.Bullet;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.FileUtils;
