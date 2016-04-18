@@ -1,6 +1,8 @@
 import audio.AudioMaster;
 import audio.AudioSource;
 import graphics.Camera;
+import graphics.shadows.ShadowHandler;
+import graphics.shadows.ShadowTexture;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
@@ -13,6 +15,7 @@ import org.lwjgl.opengl.*;
 import org.joml.*;
 import utils.FileUtils;
 
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -23,16 +26,19 @@ public class Main {
     private static KeyInput keyInput;
     private static MouseButtonInput mouseButtonInput;
     private static MousePosInput mousePosInput;
+    private static final int VSYNC = 0;
 
     private long window;
     private Matrix4f projMatrix;
     private Level level;
     private Camera cam;
     private Player player;
+    private ShadowHandler shadowHandler;
+    private ShadowTexture shadowTexture;
     private AudioSource ambienceSound;
 
-    private static final int WIDTH = 1280;
-    private static final int HEIGHT = 720;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
 
     public void run() {
         System.out.println("Using LWJGL " + Version.getVersion() + "!");
@@ -72,7 +78,7 @@ public class Main {
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(0);
+        glfwSwapInterval(VSYNC);
         glfwShowWindow(window);
 
         GL.createCapabilities();
@@ -85,9 +91,11 @@ public class Main {
 
     private void gameInit() {
         cam = new Camera(WIDTH, HEIGHT);
-        projMatrix = cam.getProjection();
-        level = new Level("maps/map_01.tmx");
+        level = new Level("maps/64res.tmx");
         player = new Player("characters/player.png");
+        projMatrix = cam.getProjection();
+        shadowHandler = new ShadowHandler();
+        shadowTexture = shadowHandler.calcShadowTexture(level);
         AudioMaster.init();
         AudioMaster.setListenerData(player.getPosition(),new Vector2f(player.getSpeed(), player.getSpeed()));
         int ambienceSoundBuffer = AudioMaster.loadSound(FileUtils.RES_DIR + "sounds/Ambience_Bird.wav");
@@ -107,6 +115,8 @@ public class Main {
         int updates = 0;
         int frames = 0;
 
+        // DO an initial update
+        update();
         while ( glfwWindowShouldClose(window) == GLFW_FALSE ) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
@@ -137,7 +147,8 @@ public class Main {
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        level.render(projMatrix);
+        //Texture shadowMap = shadowFrameBuffer.calcShadowMap(shadowTexture, level, player.getPosition(), projMatrix);
+        level.render(projMatrix, shadowTexture, player);
         player.render(projMatrix);
 
         glfwSwapBuffers(window);
@@ -146,25 +157,6 @@ public class Main {
     private void cleanUp(){
         ambienceSound.delete();
         AudioMaster.cleanUp();
-    }
-
-    public static String getALErrorString(int err) {
-        switch (err) {
-            case AL10.AL_NO_ERROR:
-                return "AL_NO_ERROR";
-            case AL10.AL_INVALID_NAME:
-                return "AL_INVALID_NAME";
-            case AL10.AL_INVALID_ENUM:
-                return "AL_INVALID_ENUM";
-            case AL10.AL_INVALID_VALUE:
-                return "AL_INVALID_VALUE";
-            case AL10.AL_INVALID_OPERATION:
-                return "AL_INVALID_OPERATION";
-            case AL10.AL_OUT_OF_MEMORY:
-                return "AL_OUT_OF_MEMORY";
-            default:
-                return "No such error code";
-        }
     }
 
     public static void main(String[] args) {

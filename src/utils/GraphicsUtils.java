@@ -3,7 +3,17 @@ package utils;
 
 import graphics.IndexedVertexArray;
 
+import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL11.glGetError;
+
 public class GraphicsUtils {
+
+    public static void printError(String message) {
+        int error;
+        if ((error = glGetError()) != GL_NO_ERROR) {
+            System.out.println("Error: " + message + ", code: " + error);
+        }
+    }
 
     public static IndexedVertexArray createModelQuad() {
         float z = -0.3f;

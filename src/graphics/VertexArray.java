@@ -62,4 +62,10 @@ public class VertexArray {
         glDrawArrays(GL_TRIANGLES, 0, count);
         unbind();
     }
+
+    public void drawPoints() {
+        bind();
+        glDrawArrays(GL_POINTS, 0, count);
+        unbind();
+    }
 }

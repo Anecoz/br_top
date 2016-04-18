@@ -9,7 +9,7 @@ public class Camera {
     private Matrix4f projection;
     private Vector2f position;
     private float invAr;
-    private float WIN_SIZE_X = 20.0f;
+    public static float WIN_SIZE_X = 20.0f;
     private float WIN_SIZE_Y;
     private static final Matrix4f lookAt = new Matrix4f().lookAt(0f, 0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
 
@@ -81,6 +81,7 @@ public class Camera {
             position.x += -playerSpeed;
         }
 
+        // Check camera map bounds
         if(position.x < level.getBounds().x) {
             //System.out.println("Outside Left");
             position.x = tempPos.x;
