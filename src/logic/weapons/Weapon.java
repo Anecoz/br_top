@@ -47,8 +47,10 @@ public class Weapon {
 
     public void fire(){
         //TODO:Add rounds per minute (rpm) limit.
-        if(magazine > 0)
+        if(magazine > 0) {
             magazine--;
+            System.out.println(magazine + "/" + ammo);
+        }
     }
 
     public void reload(){
@@ -56,9 +58,11 @@ public class Weapon {
         if(magazine != magazineSize) {
             if(ammo > 0) {
                 ammo -= (magazineSize - magazine);
+                magazine += (magazineSize - magazine);
                 if(ammo <= 0) {
                     magazine += ammo;
                     ammo = 0;
+                    System.out.println(magazine + "/" + ammo);
                 }
                 if(magazine >= magazineSize)
                     magazine = magazineSize;
