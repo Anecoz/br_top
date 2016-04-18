@@ -11,6 +11,7 @@ uniform sampler2D shadowTex;
 uniform vec2 lightPos;
 uniform int worldWidth;
 uniform int worldHeight;
+uniform int windowSize;
 
 // Determines if a world position is inside a shadow caster or not
 int posInsideShadow(vec2 coords) {
@@ -37,7 +38,6 @@ float intbounds(float s, float ds)
 // Smarter ray traversal algorithm
 int amanatideTraverse(vec2 lightPos) {
 	vec2 currPos = fragWorldCoords;
-
 	// Init phase
 	int X = int(floor(currPos.x));
 	int Y = int(floor(currPos.y));
@@ -69,7 +69,6 @@ int amanatideTraverse(vec2 lightPos) {
             Y= Y + StepY;
             tMaxY= tMaxY + tDeltaY;
 		}
-
 		int inside = posInsideShadow(vec2(float(X)/float(worldWidth - 1.0), float(Y)/float(worldHeight - 1.0)));
 		if (inside == 1) {
 			return 1;
@@ -88,7 +87,7 @@ void main() {
     outColor = col;
     // Shadows
     // Only do it if we are within some bounds of light
-    if (distance(fragWorldCoords, lightPos) < 15) {
+    if (distance(fragWorldCoords, lightPos) < windowSize*2) {
         // Check if current frag is on a shadow caster
         if (posInsideShadow(vec2(fragWorldCoords.x/float(worldWidth), fragWorldCoords.y/float(worldHeight))) == 1) {
             outColor = col*0.2;

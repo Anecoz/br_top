@@ -1,5 +1,6 @@
 package logic;
 
+import graphics.Camera;
 import graphics.Shader;
 import graphics.shadows.ShadowTexture;
 import graphics.Texture;
@@ -80,6 +81,7 @@ public class Level {
         shader.uploadVec(new Vector2f(player.getPosition().x + player.getSize(), player.getPosition().y + player.getSize()), "lightPos");
         shader.uploadInt(getBounds().width, "worldWidth");
         shader.uploadInt(getBounds().height, "worldHeight");
+        shader.uploadInt((int)Camera.WIN_SIZE_X, "windowSize");
 
         // Textures
         glActiveTexture(GL_TEXTURE0);
