@@ -1,48 +1,28 @@
 package logic.weapons;
 
-import graphics.IndexedVertexArray;
-import graphics.Shader;
-import graphics.Texture;
+import graphics.lowlevel.IndexedVertexArray;
+import graphics.shaders.Shader;
+import graphics.lowlevel.Texture;
+import graphics.shaders.ShaderHandler;
+import logic.DrawableEntity;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.GraphicsUtils;
 
-public class Weapon {
+public class Weapon extends DrawableEntity {
 
-    protected Texture sprite;
-    protected Vector2f position;
     protected float reloadTime;
     protected int magazineSize;     // Max magazine size
     protected int magazine;         // Ammunition loaded in weapon
     protected int ammo;             // Current reserve ammunition
     protected int roundsPerMinute;
-    private IndexedVertexArray mesh;
-    private Shader shader;
-    private Matrix4f rotation;
 
-    public Weapon(Shader shader, Texture sprite, Vector2f position){
-        this.shader = shader;
-        this.sprite = sprite;
-        this.position = position;
-        rotation = new Matrix4f();
-        mesh = GraphicsUtils.createModelQuad();
+    public Weapon(Texture sprite, Vector2f position) {
+        super(sprite, position);
     }
 
     public void update(){
 
-    }
-
-    public void render(Matrix4f projection){
-        shader.comeHere();
-        sprite.bind();
-
-        shader.uploadMatrix(projection, "projMatrix");
-        shader.uploadMatrix(rotation, "rotationMatrix");
-        shader.uploadMatrix(new Matrix4f().translate(position.x, position.y, 0f), "modelMatrix");
-        mesh.draw();
-
-        sprite.unbind();
-        shader.pissOff();
     }
 
     public void fire(){
@@ -84,9 +64,5 @@ public class Weapon {
 
     public int getAmmo(){
         return ammo;
-    }
-
-    public void cleanUp(){
-        sprite.cleanUp();
     }
 }

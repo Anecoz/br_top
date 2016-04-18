@@ -1,4 +1,4 @@
-package graphics;
+package graphics.shaders;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;

@@ -1,6 +1,7 @@
 import audio.AudioMaster;
 import audio.AudioSource;
 import graphics.Camera;
+import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowHandler;
 import graphics.shadows.ShadowTexture;
 import input.KeyInput;
@@ -10,7 +11,6 @@ import logic.Level;
 import logic.Player;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.*;
 import org.joml.*;
 import utils.FileUtils;
@@ -36,6 +36,7 @@ public class Main {
     private ShadowHandler shadowHandler;
     private ShadowTexture shadowTexture;
     private AudioSource ambienceSound;
+    private ShaderHandler shaderHandler;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -90,6 +91,8 @@ public class Main {
     }
 
     private void gameInit() {
+        shaderHandler = new ShaderHandler();
+        shaderHandler.init();
         cam = new Camera(WIDTH, HEIGHT);
         level = new Level("maps/64res.tmx");
         player = new Player("characters/player.png");
@@ -104,7 +107,6 @@ public class Main {
         ambienceSound.setLooping(true);
         ambienceSound.setVolume(1);
         ambienceSound.play(ambienceSoundBuffer);
-
     }
 
     private void loop() {
@@ -147,7 +149,6 @@ public class Main {
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Texture shadowMap = shadowFrameBuffer.calcShadowMap(shadowTexture, level, player.getPosition(), projMatrix);
         level.render(projMatrix, shadowTexture, player);
         player.render(projMatrix);
 

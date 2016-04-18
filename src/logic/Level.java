@@ -1,10 +1,11 @@
 package logic;
 
 import graphics.Camera;
-import graphics.Shader;
+import graphics.shaders.Shader;
+import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowTexture;
-import graphics.Texture;
-import graphics.VertexArray;
+import graphics.lowlevel.Texture;
+import graphics.lowlevel.VertexArray;
 
 import static org.lwjgl.opengl.GL13.*;
 
@@ -23,7 +24,6 @@ public class Level {
 
     private Map map;
     private VertexArray vertexArray;
-    private Shader shader;
     private Texture textureAtlas;
     private TileLayer tileLayer;
 
@@ -33,7 +33,6 @@ public class Level {
             map = new TMXMapReader().readMap(mapFile.getAbsolutePath());
             initMap();
             initTexture();
-            initShader();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -75,13 +74,13 @@ public class Level {
     }
 
     public void render(Matrix4f projMatrix, ShadowTexture shadowMap, Player player) {
-        shader.comeHere();
+        ShaderHandler.levelShader.comeHere();
 
-        shader.uploadMatrix(projMatrix, "projMatrix");
-        shader.uploadVec(new Vector2f(player.getPosition().x + player.getSize(), player.getPosition().y + player.getSize()), "lightPos");
-        shader.uploadInt(getBounds().width, "worldWidth");
-        shader.uploadInt(getBounds().height, "worldHeight");
-        shader.uploadInt((int)Camera.WIN_SIZE_X, "windowSize");
+        ShaderHandler.levelShader.uploadMatrix(projMatrix, "projMatrix");
+        ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getSize(), player.getPosition().y + player.getSize()), "lightPos");
+        ShaderHandler.levelShader.uploadInt(getBounds().width, "worldWidth");
+        ShaderHandler.levelShader.uploadInt(getBounds().height, "worldHeight");
+        ShaderHandler.levelShader.uploadInt((int)Camera.WIN_SIZE_X, "windowSize");
 
         // Textures
         glActiveTexture(GL_TEXTURE0);
@@ -93,22 +92,12 @@ public class Level {
         textureAtlas.unbind();
         shadowMap.unbind();
         glActiveTexture(GL_TEXTURE0);
-        shader.pissOff();
+        ShaderHandler.levelShader.pissOff();
     }
 
     private void initTexture() {
         TileSet tileSet = map.getTileSets().get(0);
         textureAtlas = new Texture(tileSet.getTilebmpFile());
-    }
-
-    private void initShader() {
-        shader = new Shader("level.vert", "level.frag");
-        shader.comeHere();
-        glActiveTexture(GL_TEXTURE0);
-        shader.uploadTexture(0, "atlas");
-        glActiveTexture(GL_TEXTURE1);
-        shader.uploadTexture(1, "shadowTex");
-        shader.pissOff();
     }
 
     private void initMap() {

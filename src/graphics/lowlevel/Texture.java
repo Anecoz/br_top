@@ -1,4 +1,4 @@
-package graphics;
+package graphics.lowlevel;
 
 import utils.BufferHelpers;
 

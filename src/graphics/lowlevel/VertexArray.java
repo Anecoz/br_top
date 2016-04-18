@@ -1,9 +1,9 @@
-package graphics;
+package graphics.lowlevel;
 
+import graphics.shaders.Shader;
 import org.lwjgl.BufferUtils;
-import tiled.core.Map;
+import org.lwjgl.opengl.GL20;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -27,7 +27,7 @@ public class VertexArray {
         vertBuffer.put(vertices);
         vertBuffer.flip();
         glBufferData(GL_ARRAY_BUFFER, vertBuffer, GL_STATIC_DRAW);
-        glVertexAttribPointer(Shader.VERTEX_ATTRIB, 3, GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(Shader.VERTEX_ATTRIB, 3, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(Shader.VERTEX_ATTRIB);
 
         tbo = glGenBuffers();

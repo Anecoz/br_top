@@ -1,4 +1,4 @@
-package graphics;
+package graphics.lowlevel;
 
 import org.lwjgl.BufferUtils;
 
@@ -6,8 +6,6 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 public class IndexedVertexArray extends VertexArray {
     private int ibo;

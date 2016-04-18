@@ -1,7 +1,7 @@
 package utils;
 
 
-import graphics.IndexedVertexArray;
+import graphics.lowlevel.IndexedVertexArray;
 
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glGetError;
