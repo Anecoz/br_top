@@ -1,6 +1,6 @@
+import audio.AudioMaster;
+import audio.AudioSource;
 import graphics.Camera;
-import graphics.Shader;
-import graphics.Texture;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
@@ -8,8 +8,10 @@ import logic.Level;
 import logic.Player;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.*;
 import org.joml.*;
+import utils.FileUtils;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -27,6 +29,7 @@ public class Main {
     private Level level;
     private Camera cam;
     private Player player;
+    private AudioSource ambienceSound;
 
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
@@ -38,6 +41,7 @@ public class Main {
             glInit();
             gameInit();
             loop();
+            cleanUp();
 
             glfwDestroyWindow(window);
         } finally {
@@ -82,8 +86,17 @@ public class Main {
     private void gameInit() {
         cam = new Camera(WIDTH, HEIGHT);
         projMatrix = cam.getProjection();
-        level = new Level("map_01.tmx");
-        player = new Player("player.png");
+        level = new Level("maps/map_01.tmx");
+        player = new Player("characters/player.png");
+        AudioMaster.init();
+        AudioMaster.setListenerData(player.getPosition(),new Vector2f(player.getSpeed(), player.getSpeed()));
+        int ambienceSoundBuffer = AudioMaster.loadSound(FileUtils.RES_DIR + "sounds/Ambience_Bird.wav");
+        ambienceSound = new AudioSource();
+        ambienceSound.setPosition(player.getPosition());
+        ambienceSound.setLooping(false);
+        ambienceSound.setVolume(1);
+        ambienceSound.play(ambienceSoundBuffer);
+
     }
 
     private void loop() {
@@ -128,6 +141,30 @@ public class Main {
         player.render(projMatrix);
 
         glfwSwapBuffers(window);
+    }
+
+    private void cleanUp(){
+        ambienceSound.delete();
+        AudioMaster.cleanUp();
+    }
+
+    public static String getALErrorString(int err) {
+        switch (err) {
+            case AL10.AL_NO_ERROR:
+                return "AL_NO_ERROR";
+            case AL10.AL_INVALID_NAME:
+                return "AL_INVALID_NAME";
+            case AL10.AL_INVALID_ENUM:
+                return "AL_INVALID_ENUM";
+            case AL10.AL_INVALID_VALUE:
+                return "AL_INVALID_VALUE";
+            case AL10.AL_INVALID_OPERATION:
+                return "AL_INVALID_OPERATION";
+            case AL10.AL_OUT_OF_MEMORY:
+                return "AL_OUT_OF_MEMORY";
+            default:
+                return "No such error code";
+        }
     }
 
     public static void main(String[] args) {

@@ -48,7 +48,7 @@ public class Player {
         this.size = 0.5f;
 
         //TESTING
-        pistolTexture = new Texture(FileUtils.RES_DIR + "pistol.png");
+        pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
         pistol = new Pistol(shader, pistolTexture, position, 0.5f, 15, 50);
     }
 
