@@ -93,7 +93,7 @@ public class Main {
         int ambienceSoundBuffer = AudioMaster.loadSound(FileUtils.RES_DIR + "sounds/Ambience_Bird.wav");
         ambienceSound = new AudioSource();
         ambienceSound.setPosition(player.getPosition());
-        ambienceSound.setLooping(false);
+        ambienceSound.setLooping(true);
         ambienceSound.setVolume(1);
         ambienceSound.play(ambienceSoundBuffer);
 

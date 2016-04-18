@@ -96,13 +96,12 @@ public class Player {
 
         if(MouseButtonInput.isLeftDown()){
             pistol.fire();
-            System.out.println("Magazine: " + pistol.getMagazine());
-            System.out.println("Magazine Size: " + pistol.getMagazineSize());
+            System.out.println(pistol.getMagazine() + "/" + pistol.getAmmo());
         }
 
         if(KeyInput.isKeyDown(GLFW_KEY_R)){
             pistol.reload();
-            System.out.println("Ammo: " + pistol.getAmmo());
+            System.out.println(pistol.getMagazine() + "/" + pistol.getAmmo());
         }
 
         updateFoward(proj);

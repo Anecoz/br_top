@@ -40,7 +40,7 @@ public class AudioMaster {
         int buffer = AL10.alGenBuffers();
         buffers.add(buffer);
         WaveData waveFile = WaveData.create(file);
-        AL10.alBufferData(buffer, AL10.AL_FORMAT_MONO16, waveFile.data, waveFile.samplerate);
+        AL10.alBufferData(buffer, waveFile.format, waveFile.data, waveFile.samplerate);
         waveFile.dispose();
         return buffer;
     }

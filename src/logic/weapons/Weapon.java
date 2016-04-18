@@ -56,7 +56,12 @@ public class Weapon {
         if(magazine != magazineSize) {
             if(ammo > 0) {
                 ammo -= (magazineSize - magazine);
-                magazine = magazineSize;
+                if(ammo <= 0) {
+                    magazine += ammo;
+                    ammo = 0;
+                }
+                if(magazine >= magazineSize)
+                    magazine = magazineSize;
             }
         }
     }
