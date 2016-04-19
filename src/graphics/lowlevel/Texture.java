@@ -11,24 +11,51 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
     private int width, height;
+    private float widthAfterScale;
+    private float heightAfterScale;
+    private float scale = 1.0f;
     private int texture;
     private int type = GL_TEXTURE_2D;
 
-    public Texture(int width, int height, int id, int type) {
+    /*public Texture(int width, int height, int id, int type) {
         this.width = width;
         this.height = height;
         this.texture = id;
         this.type = type;
-    }
+    }*/
 
-    public Texture(String path) {
+    public Texture(String path, float scale) {
+        this.scale = scale;
         texture = load(path);
+        setSizes();
     }
 
     public Texture(BufferedImage image) {
         texture = load(image);
+        setSizes();
     }
 
+    private void setSizes() {
+        if (width > 1.0 || height > 1.0) {
+            if (width >= height) {
+                heightAfterScale = height / width;
+                widthAfterScale = 1.0f;
+            }
+            else {
+                widthAfterScale = width/height;
+                heightAfterScale = 1.0f;
+            }
+        }
+
+        widthAfterScale *= scale;
+        heightAfterScale *= scale;
+    }
+
+    public float getWidthAfterScale() {return widthAfterScale;}
+
+    public float getHeightAfterScale() {return heightAfterScale;}
+
+    public float getScale() {return scale;}
     public int getWidth() {return width;}
     public int getHeight() {return height;}
 

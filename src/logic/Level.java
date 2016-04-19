@@ -97,7 +97,7 @@ public class Level {
 
     private void initTexture() {
         TileSet tileSet = map.getTileSets().get(0);
-        textureAtlas = new Texture(tileSet.getTilebmpFile());
+        textureAtlas = new Texture(tileSet.getTilebmpFile(), 1.0f);
     }
 
     private void initMap() {

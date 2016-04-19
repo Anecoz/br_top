@@ -10,4 +10,6 @@ void main() {
     if (outColor.a < 0.5) {
         discard;
     }
+
+    //outColor = vec4(1.0);
 }

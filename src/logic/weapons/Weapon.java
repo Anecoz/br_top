@@ -1,13 +1,8 @@
 package logic.weapons;
 
-import graphics.lowlevel.IndexedVertexArray;
-import graphics.shaders.Shader;
 import graphics.lowlevel.Texture;
-import graphics.shaders.ShaderHandler;
 import logic.DrawableEntity;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import utils.GraphicsUtils;
 
 public class Weapon extends DrawableEntity {
 

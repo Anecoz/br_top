@@ -27,9 +27,9 @@ public class ResourceHandler {
 
     public void init(){
         // Textures
-        playerTexture = new Texture(FileUtils.RES_DIR + "characters/player.png");
-        pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
-        bulletTexture = new Texture(FileUtils.RES_DIR + "weapons/bullet.png");
+        playerTexture = new Texture(FileUtils.RES_DIR + "characters/player.png", 1.0f);
+        pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png", 1.0f);
+        bulletTexture = new Texture(FileUtils.RES_DIR + "weapons/bullet.png", 0.2f);
 
         // Sound Buffers
         ambienceSoundBuffer = AudioMaster.loadSound(FileUtils.RES_DIR + "sounds/Ambience_Bird.wav");
