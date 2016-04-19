@@ -158,6 +158,7 @@ public class Main {
     private void cleanUp(){
         ambienceSound.delete();
         AudioMaster.cleanUp();
+        player.cleanUp();
     }
 
     public static void main(String[] args) {

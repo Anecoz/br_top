@@ -1,6 +1,7 @@
 package logic;
 
 import graphics.Camera;
+import graphics.animation.Animation;
 import graphics.lowlevel.Texture;
 import input.KeyInput;
 import input.MouseButtonInput;
@@ -19,10 +20,13 @@ public class Player extends DrawableEntity {
     private Vector2f forward;
     private Pistol pistol;
     private Texture pistolTexture;
+    private Animation walkingAnimation;
 
     public Player(String texFilePath) {
         super(texFilePath, new Vector2f(10), -0.3f);
         forward = new Vector2f(0);
+        walkingAnimation = new Animation(FileUtils.RES_DIR + "characters/playerSpriteSheet.png", 100, 100, 8);
+        walkingAnimation.start();
 
         //TESTING
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
@@ -66,6 +70,7 @@ public class Player extends DrawableEntity {
             pistol.reload();
         }
 
+        this.texture = walkingAnimation.getFrame();
         updateForward(proj);
         pistol.update(new Vector2f(forward));
     }
@@ -89,6 +94,12 @@ public class Player extends DrawableEntity {
                 .rotate(forward.angle(up), 0.0f, 0.0f, -1.0f)
                 .translate(center.negate());
         pistol.rotation = rotation;
+    }
+
+    @Override
+    public void cleanUp() {
+        super.cleanUp();
+        walkingAnimation.cleanUp();
     }
 
     public float getSpeed() {return SPEED;}
