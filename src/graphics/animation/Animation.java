@@ -45,6 +45,7 @@ public class Animation {
 
     public void stop() {
         timer.cancel();
+        currFrameIndex = 0;
     }
 
     public Texture getFrame() {
@@ -52,6 +53,10 @@ public class Animation {
     }
 
     public void cleanUp() {
+        // Clean up all the textures
+        for (Texture tex: frameList) {
+            tex.cleanUp();
+        }
         // This'll just go on otherwise
         timer.cancel();
     }

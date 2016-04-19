@@ -78,7 +78,6 @@ public class Player extends DrawableEntity {
     private void updateForward(Matrix4f proj) {
         double mouseX = MousePosInput.getX();
         double mouseY = MousePosInput.getY();
-        // Size is already "halved" because of a smaller bounding box for collision detection
         double centerX = this.position.x + this.width/2.0f;
         double centerY = this.position.y + this.height/2.0f;
         Vector2f worldMouse = MathUtils.screenSpaceToWorld(new Vector2f((float) mouseX, (float) mouseY), 1280, 720, proj);
