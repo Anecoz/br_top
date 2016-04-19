@@ -38,25 +38,21 @@ public class Player extends DrawableEntity {
         Vector2f tmp = new Vector2f(position.x, position.y);
         if (KeyInput.isKeyDown(GLFW_KEY_W)) {
             position.y -= SPEED;
-            walkingAnimation.start();
             if (CollisionHandler.checkPlayerCollision(this, level))
                 position.y = tmp.y;
         }
         if (KeyInput.isKeyDown(GLFW_KEY_S)) {
             position.y += SPEED;
-            walkingAnimation.start();
             if (CollisionHandler.checkPlayerCollision(this, level))
                 position.y = tmp.y;
         }
         if (KeyInput.isKeyDown(GLFW_KEY_A)) {
             position.x -= SPEED;
-            walkingAnimation.start();
             if (CollisionHandler.checkPlayerCollision(this, level))
                 position.x = tmp.x;
         }
         if (KeyInput.isKeyDown(GLFW_KEY_D)) {
             position.x += SPEED;
-            walkingAnimation.start();
             if (CollisionHandler.checkPlayerCollision(this, level))
                 position.x = tmp.x;
         }
@@ -69,7 +65,6 @@ public class Player extends DrawableEntity {
             pistol.reload();
         }
 
-        walkingAnimation.stop();
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
         pistol.update(new Vector2f(forward));

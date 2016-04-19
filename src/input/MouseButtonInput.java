@@ -14,11 +14,11 @@ public class MouseButtonInput extends GLFWMouseButtonCallback {
     private static boolean RIGHT_DOWN = false;
 
     private static List<Integer> pressed = new ArrayList<>();
-    private static boolean[] keys = new boolean[128];
+    private static boolean[] buttons = new boolean[128];
 
     @Override
     public void invoke(long window, int button, int action, int mods) {
-        keys[button] = action != GLFW_RELEASE;
+        buttons[button] = action != GLFW_RELEASE;
         if(action == GLFW_RELEASE && pressed.contains(button))
             pressed.remove(new Integer(button));
 
@@ -42,7 +42,7 @@ public class MouseButtonInput extends GLFWMouseButtonCallback {
     public static boolean isRightDown() {return RIGHT_DOWN;}
 
     public static boolean isMouseButtonClicked(int button) {
-        if (!keys[button])
+        if (!buttons[button])
             return false;
         if (pressed.contains(button))
             return false;
