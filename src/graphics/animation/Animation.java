@@ -28,10 +28,10 @@ public class Animation {
         }
 
         this.currFrameIndex = 0;
-        this.timer = new Timer();
     }
 
     public void start() {
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
