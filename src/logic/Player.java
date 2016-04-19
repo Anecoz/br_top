@@ -18,6 +18,7 @@ public class Player extends DrawableEntity {
     private Vector2f forward;
     private Pistol pistol;
     private Animation walkingAnimation;
+    private boolean running = false;
 
     public Player() {
         super(ResourceHandler.playerTexture, new Vector2f(10), -0.3f);
@@ -35,6 +36,16 @@ public class Player extends DrawableEntity {
     }
 
     public void update(Level level, Matrix4f proj) {
+        updateMovement(level);
+        checkRunningStatus();
+        checkFire();
+
+        this.texture = walkingAnimation.getFrame();
+        updateForward(proj);
+        pistol.update(new Vector2f(forward));
+    }
+
+    private void updateMovement(Level level) {
         Vector2f tmp = new Vector2f(position.x, position.y);
         if (KeyInput.isKeyDown(GLFW_KEY_W)) {
             position.y -= SPEED;
@@ -56,18 +67,39 @@ public class Player extends DrawableEntity {
             if (CollisionHandler.checkPlayerCollision(this, level))
                 position.x = tmp.x;
         }
+    }
 
+    private void checkRunningStatus() {
+        if (anyRunningKeysDown())
+            if (!running) {
+                running = true;
+                walkingAnimation.start();
+            }
+
+        if (noRunningKeysDown()) {
+            running = false;
+            walkingAnimation.stop();
+        }
+    }
+
+    private void checkFire() {
         if(MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_1)){
             pistol.fire();
         }
 
-        if(KeyInput.isKeyDown(GLFW_KEY_R)){
+        if(KeyInput.isKeyDown(GLFW_KEY_R)) {
             pistol.reload();
         }
+    }
 
-        this.texture = walkingAnimation.getFrame();
-        updateForward(proj);
-        pistol.update(new Vector2f(forward));
+    private boolean anyRunningKeysDown() {
+        return (KeyInput.isKeyDown(GLFW_KEY_A) || KeyInput.isKeyDown(GLFW_KEY_S) ||
+                KeyInput.isKeyDown(GLFW_KEY_D) || KeyInput.isKeyDown(GLFW_KEY_W));
+    }
+
+    private boolean noRunningKeysDown() {
+        return (!KeyInput.isKeyDown(GLFW_KEY_A) && !KeyInput.isKeyDown(GLFW_KEY_S) &&
+                !KeyInput.isKeyDown(GLFW_KEY_D) && !KeyInput.isKeyDown(GLFW_KEY_W));
     }
 
     private void updateForward(Matrix4f proj) {

@@ -27,7 +27,7 @@ public class Main {
     private static KeyInput keyInput;
     private static MouseButtonInput mouseButtonInput;
     private static MousePosInput mousePosInput;
-    private static final int VSYNC = 1;
+    private static final int VSYNC = 0;
 
     private long window;
     private Matrix4f projMatrix;
