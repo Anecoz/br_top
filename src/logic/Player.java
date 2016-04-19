@@ -34,7 +34,7 @@ public class Player extends DrawableEntity {
 
         forward = new Vector2f(0);
         walkingAnimation = ResourceHandler.playerAnimation;
-        pistol = new Pistol(position, -0.2f, 0.5f, 15, 24);
+        pistol = new Pistol(position, -0.2f, 1.5f, 15, 24);
         assaultRifle = new AssaultRifle(position, -0.2f, 3.5f, 40, 600);
         weaponList.add(pistol);
         weaponList.add(assaultRifle);
