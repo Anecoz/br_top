@@ -2,6 +2,7 @@ package logic.weapons;
 
 import graphics.lowlevel.Texture;
 import logic.DrawableEntity;
+import logic.Level;
 import org.joml.Vector2f;
 
 import java.util.Timer;
@@ -26,7 +27,7 @@ public class Weapon extends DrawableEntity {
         shootTimer = new Timer();
     }
 
-    public void update(Vector2f forward){
+    public void update(Vector2f forward, Level level){
         this.forward = forward;
     }
 

@@ -1,13 +1,11 @@
 package logic.weapons;
 
+import logic.Level;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.ResourceHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class AssaultRifle  extends Weapon {
 
@@ -37,9 +35,13 @@ public class AssaultRifle  extends Weapon {
             return;
         }
         if(!isReloading) {
-            AssaultRifle.super.fire();
-            Vector2f bulletPos = new Vector2f(position.x, position.y);
-            Vector2f bulletVel = new Vector2f(AssaultRifle.this.forward.x, AssaultRifle.this.forward.y);
+            super.fire();
+            Vector2f bulletPos = new Vector2f(
+                    position.x + this.width / 2.0f
+                            - ResourceHandler.bulletTexture.getWidthAfterScale() / 2.0f,
+                    position.y + this.height / 2.0f
+                            - ResourceHandler.bulletTexture.getHeightAfterScale() / 2.0f);
+            Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
             bulletList.add(new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10));
         }
     }
@@ -53,16 +55,24 @@ public class AssaultRifle  extends Weapon {
             public void run() {
                 AssaultRifle.super.reload();
                 isReloading = false;
-                System.err.println("Reloaded!");
+                System.out.println("Reloaded!");
             }
         }, (long)(reloadTime*1000));
     }
 
     @Override
-    public void update(Vector2f forward){
+    public void update(Vector2f forward, Level level){
         this.forward = forward;
-        for(Bullet bullet: bulletList){
-            bullet.update();
+        // Using iterator so that we can remove bullets
+        Iterator<Bullet> i = bulletList.iterator();
+        while (i.hasNext()){
+            Bullet bullet = i.next();
+            if (bullet.dead) {
+                i.remove();
+            }
+            else {
+                bullet.update(level);
+            }
         }
     }
 

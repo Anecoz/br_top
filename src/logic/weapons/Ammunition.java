@@ -2,23 +2,62 @@ package logic.weapons;
 
 import graphics.lowlevel.Texture;
 import logic.DrawableEntity;
+import logic.Level;
+import logic.collision.CollisionBox;
+import logic.collision.CollisionHandler;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import tiled.core.Tile;
+
+import java.awt.*;
 
 public class Ammunition extends DrawableEntity {
 
     protected Vector2f velocity;
     protected int damage;
+    protected boolean dead = false;
 
     public Ammunition(Texture sprite, Vector2f position, float layer) {
         super(sprite, position, layer);
     }
 
-    public void update(){
-        position.add(velocity);
+    public void update(Level level){
+        // Do a collision test with 8 adjacent tiles
+        CollisionBox box = new CollisionBox(
+                position.x,
+                position.y,
+                this.width,
+                this.height,
+                new Vector2f(this.velocity.x, this.velocity.y));
 
-        // Update rotation matrix
+        int tileX = (int)this.position.x;
+        int tileY = (int)this.position.y;
+        boolean didCollide = false;
+        outerloop:
+        for (int x = -1; x <= 1; x++)
+            for (int y = -1; y <= 1; y++) {
+                // Is there even a collision here?
+                if (level.getCollAt(tileX + x, tileY + y)) {
+                    Rectangle tileRect = new Rectangle(tileX + x, tileY + y, 1, 1);
+                    float collTime = CollisionHandler.sweptAABBCollision(box, tileRect);
+                    // if collision
+                    if (collTime > 0.0f && collTime < 1.0f) {
+                        position.add(velocity.mul(collTime));
+                        didCollide = true;
+                        this.dead = true;
+                        break outerloop;
+                    }
+                }
+            }
+
+        if (!didCollide) {
+            position.add(velocity);
+        }
+        updateRotation();
+    }
+
+    private void updateRotation() {
         double centerX = this.position.x + this.width/2.0f;
         double centerY = this.position.y + this.height/2.0f;
 

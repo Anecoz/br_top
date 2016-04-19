@@ -5,6 +5,7 @@ import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
 import logic.weapons.AssaultRifle;
+import logic.collision.CollisionHandler;
 import logic.weapons.Pistol;
 import logic.weapons.Weapon;
 import org.joml.Matrix4f;
@@ -56,7 +57,7 @@ public class Player extends DrawableEntity {
 
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
-        equipedWeapon.update(new Vector2f(forward));
+        equipedWeapon.update(new Vector2f(forward), level);
     }
 
     private void updateMovement(Level level) {

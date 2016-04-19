@@ -1,10 +1,12 @@
 package logic.weapons;
 
+import logic.Level;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.ResourceHandler;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -61,10 +63,18 @@ public class Pistol extends Weapon {
     }
 
     @Override
-    public void update(Vector2f forward){
+    public void update(Vector2f forward, Level level){
         this.forward = forward;
-        for(Bullet bullet: bulletList){
-            bullet.update();
+        // Using iterator so that we can remove bullets
+        Iterator<Bullet> i = bulletList.iterator();
+        while (i.hasNext()){
+            Bullet bullet = i.next();
+            if (bullet.dead) {
+                i.remove();
+            }
+            else {
+                bullet.update(level);
+            }
         }
     }
 
