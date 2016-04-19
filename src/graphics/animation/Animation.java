@@ -43,6 +43,10 @@ public class Animation {
         }, 1000/(frameRate), 1000/(frameRate));
     }
 
+    public void pause() {
+        timer.cancel();
+    }
+
     public void stop() {
         timer.cancel();
         currFrameIndex = 0;
