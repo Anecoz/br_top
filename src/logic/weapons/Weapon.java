@@ -4,6 +4,8 @@ import graphics.lowlevel.Texture;
 import logic.DrawableEntity;
 import org.joml.Vector2f;
 
+import java.util.Timer;
+
 public class Weapon extends DrawableEntity {
 
     protected float reloadTime;
@@ -14,9 +16,14 @@ public class Weapon extends DrawableEntity {
     protected boolean isReloading;
     protected boolean automatic;
     protected Vector2f forward;
+    protected Timer reloadTimer;
+    protected Timer shootTimer;
 
     public Weapon(Texture sprite, Vector2f position, float layer) {
         super(sprite, position, layer);
+
+        reloadTimer = new Timer();
+        shootTimer = new Timer();
     }
 
     public void update(Vector2f forward){
@@ -70,5 +77,10 @@ public class Weapon extends DrawableEntity {
 
     public boolean isAutomatic(){
         return automatic;
+    }
+
+    public void cleanUp(){
+        reloadTimer.cancel();
+        shootTimer.cancel();
     }
 }

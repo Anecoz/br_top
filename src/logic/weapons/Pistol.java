@@ -13,7 +13,6 @@ public class Pistol extends Weapon {
 
     private List<Bullet> bulletList = new ArrayList<>();
     private Vector2f position;
-    private Timer timer;
 
     public Pistol(Vector2f position, float layer, float reloadTime, int magazineSize, int roundsPerMinute) {
         super(ResourceHandler.pistolTexture, position, layer);
@@ -24,9 +23,9 @@ public class Pistol extends Weapon {
         this.ammo = magazineSize;
         this.roundsPerMinute = roundsPerMinute;
         this.position = position;
-        automatic = false;
-        isReloading = false;
-        timer = new Timer();
+        this.automatic = false;
+        this.isReloading = false;
+        this.reloadTimer = new Timer();
     }
 
     @Override
@@ -51,7 +50,7 @@ public class Pistol extends Weapon {
     public void reload(){
         isReloading = true;
         // TODO: Play animation vid reloadTime duration.
-        timer.schedule(new TimerTask() {
+        reloadTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Pistol.super.reload();
@@ -75,5 +74,12 @@ public class Pistol extends Weapon {
         for(Bullet bullet: bulletList){
             bullet.render(projection);
         }
+    }
+
+    @Override
+    public void cleanUp(){
+        super.cleanUp();
+        reloadTimer.cancel();
+        shootTimer.cancel();
     }
 }

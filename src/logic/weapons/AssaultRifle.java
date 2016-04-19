@@ -13,8 +13,6 @@ public class AssaultRifle  extends Weapon {
 
     private List<Bullet> bulletList = new ArrayList<>();
     private Vector2f position;
-    private Timer reloadTimer;
-    private Timer shootTimer;
 
     public AssaultRifle(Vector2f position, float layer, float reloadTime, int magazineSize, int roundsPerMinute) {
         super(ResourceHandler.pistolTexture, position, layer);
@@ -26,8 +24,8 @@ public class AssaultRifle  extends Weapon {
         this.roundsPerMinute = roundsPerMinute;
         this.position = position;
 
-        reloadTimer = new Timer();
-        shootTimer = new Timer();
+        this.reloadTimer = new Timer();
+        this.shootTimer = new Timer();
         this.automatic = true;
         this.isReloading = false;
     }
@@ -74,5 +72,12 @@ public class AssaultRifle  extends Weapon {
         for(Bullet bullet: bulletList){
             bullet.render(projection);
         }
+    }
+
+    @Override
+    public void cleanUp(){
+        super.cleanUp();
+        reloadTimer.cancel();
+        shootTimer.cancel();
     }
 }

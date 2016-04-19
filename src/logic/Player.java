@@ -156,6 +156,9 @@ public class Player extends DrawableEntity {
     public void cleanUp() {
         super.cleanUp();
         walkingAnimation.cleanUp();
+        for(Weapon wep : weaponList){
+            wep.cleanUp();
+        }
     }
 
     public float getSpeed() {return SPEED;}
