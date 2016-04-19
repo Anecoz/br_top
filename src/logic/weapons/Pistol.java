@@ -1,13 +1,11 @@
 package logic.weapons;
 
-import graphics.lowlevel.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.ResourceHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class Pistol extends Weapon {
 
