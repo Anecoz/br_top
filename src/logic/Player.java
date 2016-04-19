@@ -62,7 +62,7 @@ public class Player extends DrawableEntity {
                 position.x = tmp.x;
         }
 
-        if(MouseButtonInput.isLeftDown()){
+        if(MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_1)){
             pistol.fire();
         }
 
