@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 // Holds information about frames used for animation.
-// Holds a timer so that it knows which frame is current
+// Holds a time so that it knows which frame is current
 // Minimum framerate is 1 Hz, or 1 frame/second (maybe change?)
 public class Animation {
     private int frameRate;

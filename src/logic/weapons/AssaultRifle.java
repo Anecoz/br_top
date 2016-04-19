@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Pistol extends Weapon {
+public class AssaultRifle  extends Weapon {
 
     private List<Bullet> bulletList = new ArrayList<>();
     private Vector2f position;
-    private Timer timer;
+    private Timer reloadTimer;
+    private Timer shootTimer;
 
-    public Pistol(Vector2f position, float layer, float reloadTime, int magazineSize, int roundsPerMinute) {
+    public AssaultRifle(Vector2f position, float layer, float reloadTime, int magazineSize, int roundsPerMinute) {
         super(ResourceHandler.pistolTexture, position, layer);
 
         this.reloadTime = reloadTime;
@@ -25,9 +26,10 @@ public class Pistol extends Weapon {
         this.roundsPerMinute = roundsPerMinute;
         this.position = position;
 
-        timer = new Timer();
-        automatic = false;
-        isReloading = false;
+        reloadTimer = new Timer();
+        shootTimer = new Timer();
+        this.automatic = true;
+        this.isReloading = false;
     }
 
     @Override
@@ -37,9 +39,9 @@ public class Pistol extends Weapon {
             return;
         }
         if(!isReloading) {
-            super.fire();
+            AssaultRifle.super.fire();
             Vector2f bulletPos = new Vector2f(position.x, position.y);
-            Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
+            Vector2f bulletVel = new Vector2f(AssaultRifle.this.forward.x, AssaultRifle.this.forward.y);
             bulletList.add(new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10));
         }
     }
@@ -47,11 +49,11 @@ public class Pistol extends Weapon {
     @Override
     public void reload(){
         isReloading = true;
-        // TODO: Play animation vid reloadTime duration.
-        timer.schedule(new TimerTask() {
+        // TODO: Play animation with reloadTime duration.
+        reloadTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Pistol.super.reload();
+                AssaultRifle.super.reload();
                 isReloading = false;
                 System.err.println("Reloaded!");
             }

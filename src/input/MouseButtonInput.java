@@ -38,8 +38,8 @@ public class MouseButtonInput extends GLFWMouseButtonCallback {
         }
     }
 
-    public static boolean isLeftDown() {return LEFT_DOWN;}
-    public static boolean isRightDown() {return RIGHT_DOWN;}
+    public static boolean isMouseLeftDown() {return LEFT_DOWN;}
+    public static boolean isMouseRightDown() {return RIGHT_DOWN;}
 
     public static boolean isMouseButtonClicked(int button) {
         if (!buttons[button])

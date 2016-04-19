@@ -1,13 +1,8 @@
 package logic.weapons;
 
-import graphics.lowlevel.IndexedVertexArray;
-import graphics.shaders.Shader;
 import graphics.lowlevel.Texture;
-import graphics.shaders.ShaderHandler;
 import logic.DrawableEntity;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import utils.GraphicsUtils;
 
 public class Weapon extends DrawableEntity {
 
@@ -16,6 +11,8 @@ public class Weapon extends DrawableEntity {
     protected int magazine;         // Ammunition loaded in weapon
     protected int ammo;             // Current reserve ammunition
     protected int roundsPerMinute;
+    protected boolean isReloading;
+    protected boolean automatic;
     protected Vector2f forward;
 
     public Weapon(Texture sprite, Vector2f position, float layer) {
@@ -27,7 +24,7 @@ public class Weapon extends DrawableEntity {
     }
 
     public void fire(){
-        //TODO:Add rounds per minute (rpm) limit.
+        //TODO:Add rounds per minute (rpm) limit in the individual weapon.
         if(magazine > 0) {
             magazine--;
             System.out.println(magazine + "/" + ammo);
@@ -35,7 +32,7 @@ public class Weapon extends DrawableEntity {
     }
 
     public void reload(){
-        // TODO:Add reload time.
+        // Reload time is in the individual weapon,
         if(magazine != magazineSize) {
             if(ammo > 0) {
                 ammo -= (magazineSize - magazine);
@@ -65,5 +62,13 @@ public class Weapon extends DrawableEntity {
 
     public int getAmmo(){
         return ammo;
+    }
+
+    public float getReloadTime() {
+        return reloadTime;
+    }
+
+    public boolean isAutomatic(){
+        return automatic;
     }
 }

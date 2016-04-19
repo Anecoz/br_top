@@ -4,12 +4,17 @@ import graphics.animation.Animation;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
+import logic.weapons.AssaultRifle;
 import logic.weapons.Pistol;
+import logic.weapons.Weapon;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import utils.MathUtils;
 import utils.ResourceHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -17,32 +22,41 @@ public class Player extends DrawableEntity {
     private static final float SPEED = 0.1f;
     private Vector2f forward;
     private Pistol pistol;
+    private AssaultRifle assaultRifle;
     private Animation walkingAnimation;
     private boolean running = false;
+
+    private List<Weapon> weaponList = new ArrayList<>();
+    private Weapon equipedWeapon;
 
     public Player() {
         super(ResourceHandler.playerTexture, new Vector2f(10), -0.3f);
 
         forward = new Vector2f(0);
         walkingAnimation = ResourceHandler.playerAnimation;
-        pistol = new Pistol(position, -0.2f, 0.5f, 100, 50);
+        pistol = new Pistol(position, -0.2f, 0.5f, 15, 24);
+        assaultRifle = new AssaultRifle(position, -0.2f, 3.5f, 40, 600);
+        weaponList.add(pistol);
+        weaponList.add(assaultRifle);
+        equipedWeapon = pistol;
         walkingAnimation.start();
     }
 
     @Override
     public void render(Matrix4f projection) {
         super.render(projection);
-        pistol.render(projection);
+        equipedWeapon.render(projection);
     }
 
     public void update(Level level, Matrix4f proj) {
         updateMovement(level);
+        checkWeaponSwap();
         checkRunningStatus();
         checkFire();
 
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
-        pistol.update(new Vector2f(forward));
+        equipedWeapon.update(new Vector2f(forward));
     }
 
     private void updateMovement(Level level) {
@@ -82,13 +96,29 @@ public class Player extends DrawableEntity {
         }
     }
 
+    private void checkWeaponSwap(){
+        if(KeyInput.isKeyClicked(GLFW_KEY_1)) {
+            equipedWeapon = assaultRifle;
+        }
+        if(KeyInput.isKeyClicked(GLFW_KEY_2)) {
+            equipedWeapon = pistol;
+        }
+    }
+
     private void checkFire() {
-        if(MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_1)){
-            pistol.fire();
+        if(equipedWeapon.isAutomatic()){
+            if (MouseButtonInput.isMouseLeftDown()) {
+                equipedWeapon.fire();
+            }
+        } else {
+
+            if (MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_1)) {
+                equipedWeapon.fire();
+            }
         }
 
-        if(KeyInput.isKeyDown(GLFW_KEY_R)) {
-            pistol.reload();
+        if(KeyInput.isKeyClicked(GLFW_KEY_R)) {
+            equipedWeapon.reload();
         }
     }
 
@@ -119,7 +149,7 @@ public class Player extends DrawableEntity {
                 .translate(center)
                 .rotate(forward.angle(up), 0.0f, 0.0f, -1.0f)
                 .translate(center.negate());
-        pistol.rotation = rotation;
+        equipedWeapon.rotation = rotation;
     }
 
     @Override
