@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 // Takes care of providing the shaders as statics so that we do not have to
-// reinit them
+// reinit them.
 public class ShaderHandler {
 
     public static Shader levelShader;

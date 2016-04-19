@@ -1,8 +1,6 @@
 package logic;
 
-import graphics.Camera;
 import graphics.animation.Animation;
-import graphics.lowlevel.Texture;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
@@ -10,8 +8,8 @@ import logic.weapons.Pistol;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import utils.FileUtils;
 import utils.MathUtils;
+import utils.ResourceHandler;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -19,18 +17,15 @@ public class Player extends DrawableEntity {
     private static final float SPEED = 0.1f;
     private Vector2f forward;
     private Pistol pistol;
-    private Texture pistolTexture;
     private Animation walkingAnimation;
 
-    public Player(String texFilePath) {
-        super(texFilePath, new Vector2f(10), -0.3f);
-        forward = new Vector2f(0);
-        walkingAnimation = new Animation(FileUtils.RES_DIR + "characters/playerSpriteSheet.png", 100, 100, 8);
-        walkingAnimation.start();
+    public Player() {
+        super(ResourceHandler.playerTexture, new Vector2f(10), -0.3f);
 
-        //TESTING
-        pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png");
-        pistol = new Pistol(pistolTexture, position, -0.2f, 0.5f, 100, 50);
+        forward = new Vector2f(0);
+        walkingAnimation = ResourceHandler.playerAnimation;
+        pistol = new Pistol(position, -0.2f, 0.5f, 100, 50);
+        walkingAnimation.start();
     }
 
     @Override
@@ -39,7 +34,7 @@ public class Player extends DrawableEntity {
         pistol.render(projection);
     }
 
-    public void update(Camera cam, Level level, Matrix4f proj) {
+    public void update(Level level, Matrix4f proj) {
         Vector2f tmp = new Vector2f(position.x, position.y);
         if (KeyInput.isKeyDown(GLFW_KEY_W)) {
             position.y -= SPEED;

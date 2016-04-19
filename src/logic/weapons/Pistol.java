@@ -3,25 +3,25 @@ package logic.weapons;
 import graphics.lowlevel.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import utils.ResourceHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class Pistol extends Weapon {
 
     private List<Bullet> bulletList = new ArrayList<>();
-    private Texture sprite;
     private Vector2f position;
 
-    public Pistol(Texture sprite, Vector2f position, float layer, float reloadTime, int magazineSize, int roundsPerMinute) {
-        super(sprite, position, layer);
+    public Pistol(Vector2f position, float layer, float reloadTime, int magazineSize, int roundsPerMinute) {
+        super(ResourceHandler.pistolTexture, position, layer);
 
         this.reloadTime = reloadTime;
         this.magazineSize = magazineSize;
         this.magazine = magazineSize;
         this.ammo = magazineSize;
         this.roundsPerMinute = roundsPerMinute;
-        this.sprite = sprite;
         this.position = position;
     }
 
@@ -34,7 +34,7 @@ public class Pistol extends Weapon {
         super.fire();
         Vector2f bulletPos = new Vector2f(position.x, position.y);
         Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
-        bulletList.add(new Bullet(sprite, bulletPos, bulletVel.mul(0.6f), -0.8f, 10));
+        bulletList.add(new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10));
     }
 
     @Override

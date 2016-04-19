@@ -14,6 +14,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.joml.*;
 import utils.FileUtils;
+import utils.ResourceHandler;
 
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -37,6 +38,7 @@ public class Main {
     private ShadowTexture shadowTexture;
     private AudioSource ambienceSound;
     private ShaderHandler shaderHandler;
+    private ResourceHandler resourceHandler;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -93,20 +95,21 @@ public class Main {
     private void gameInit() {
         shaderHandler = new ShaderHandler();
         shaderHandler.init();
+        AudioMaster.init();
+        resourceHandler = new ResourceHandler();
+        resourceHandler.init();
         cam = new Camera(WIDTH, HEIGHT);
         level = new Level("maps/64res.tmx");
-        player = new Player("characters/player.png");
         projMatrix = cam.getProjection();
         shadowHandler = new ShadowHandler();
         shadowTexture = shadowHandler.calcShadowTexture(level);
-        AudioMaster.init();
+        player = new Player();
         AudioMaster.setListenerData(player.getPosition(),new Vector2f(player.getSpeed(), player.getSpeed()));
-        int ambienceSoundBuffer = AudioMaster.loadSound(FileUtils.RES_DIR + "sounds/Ambience_Bird.wav");
         ambienceSound = new AudioSource();
         ambienceSound.setPosition(player.getPosition());
         ambienceSound.setLooping(true);
         ambienceSound.setVolume(1);
-        ambienceSound.play(ambienceSoundBuffer);
+        ambienceSound.play(ResourceHandler.ambienceSoundBuffer);
     }
 
     private void loop() {
@@ -141,7 +144,7 @@ public class Main {
 
     private void update() {
         glfwPollEvents();
-        player.update(cam, level, projMatrix);
+        player.update(level, projMatrix);
         cam.update(player.getPosition(), player.getSpeed(), level);
         projMatrix = cam.getProjection();
     }
@@ -159,6 +162,7 @@ public class Main {
         ambienceSound.delete();
         AudioMaster.cleanUp();
         player.cleanUp();
+        resourceHandler.cleanUp();
     }
 
     public static void main(String[] args) {
