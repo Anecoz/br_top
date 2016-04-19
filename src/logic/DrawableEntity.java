@@ -18,15 +18,16 @@ public class DrawableEntity {
     protected Matrix4f rotation;
     protected float width;
     protected float height;
+    protected float scale;
 
     public float getWidth() {return width;}
     public float getHeight() {return height;}
     public Vector2f getPosition() {return position;}
 
-    public DrawableEntity(String texFilePath, Vector2f initPos, float layer) {
+    /*public DrawableEntity(String texFilePath, Vector2f initPos, float layer) {
         this.texture = new Texture(FileUtils.RES_DIR + texFilePath);
         init(layer, initPos);
-    }
+    }*/
 
     public DrawableEntity(Texture texture, Vector2f initPos, float layer) {
         this.texture = texture;
@@ -34,19 +35,9 @@ public class DrawableEntity {
     }
 
     private void init(float layer, Vector2f initPos) {
-        this.width = this.texture.getWidth();
-        this.height = this.texture.getHeight();
-
-        if (width > 1.0 || height > 1.0) {
-            if (width >= height) {
-                height = height / width;
-                width = 1.0f;
-            }
-            else {
-                width = width/height;
-                height = 1.0f;
-            }
-        }
+        this.width = this.texture.getWidthAfterScale();
+        this.height = this.texture.getHeightAfterScale();
+        this.scale = this.texture.getScale();
 
         this.position = initPos;
         mesh = GraphicsUtils.createModelQuad(width, height, layer);
