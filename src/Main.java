@@ -118,9 +118,10 @@ public class Main {
 
         // FONTS
         TextMaster.init();
-        FontType font = new FontType(ResourceHandler.fontAtlasTexture, new File(FileUtils.RES_DIR + "fonts/gadugi.fnt"));
-        GUIText text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 4, font, new Vector2f(0f, 0f), 1f, true);
+
+        GUIText text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 4, ResourceHandler.font, new Vector2f(0f, 0f), 1f, true);
         text.setColour(1f, 1f, 1f);
+        text.setRenderParams(0.4f, 0.1f, 0.5f, 0.1f);
     }
 
     private void loop() {

@@ -1,5 +1,6 @@
 package logic.weapons;
 
+import fontMeshCreator.GUIText;
 import graphics.lowlevel.Texture;
 import input.KeyInput;
 import input.MouseButtonInput;
@@ -30,6 +31,7 @@ public class Weapon extends DrawableEntity {
     protected List<Ammunition> ammunitionList = new ArrayList<>();
     protected Vector2f position;
     protected boolean spawnBullet;
+    protected static GUIText text;
 
     public Weapon(Texture sprite, Vector2f position, float layer) {
         super(sprite, position, layer);
@@ -59,6 +61,17 @@ public class Weapon extends DrawableEntity {
 
         if(!isFiring)
             shootTimer.cancel();
+
+        if (text != null)
+            text.remove();
+        text = new GUIText(Integer.toString(magazine) + "/ " + Integer.toString(ammo),
+                2,
+                ResourceHandler.font,
+                new Vector2f(0.05f, 0.9f),
+                0.3f,
+                false);
+        text.setColour(1, 1, 1);
+
     }
 
     @Override

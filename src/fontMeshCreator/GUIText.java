@@ -25,6 +25,10 @@ public class GUIText {
 	private Vector2f position;
 	private float lineMaxSize;
 	private int numberOfLines;
+    private float width = 0.3f;
+    private float edge = 0.3f;
+    private float borderWidth = 0.6f;
+    private float borderEdge = 0.2f;
 
 	private VertexArray mesh;
 
@@ -95,6 +99,18 @@ public class GUIText {
 	public void setColour(float r, float g, float b) {
 		colour.set(r, g, b);
 	}
+
+	public void setRenderParams(float width, float edge, float borderWidth, float borderEdge) {
+        this.width = width;
+        this.edge = edge;
+        this.borderEdge = borderEdge;
+        this.borderWidth = borderWidth;
+    }
+
+    public float getWidth() {return width;}
+    public float getEdge() {return edge;}
+    public float getBorderWidth() {return borderWidth;}
+    public float getBorderEdge() {return borderEdge;}
 
 	/**
 	 * @return the colour of the text.

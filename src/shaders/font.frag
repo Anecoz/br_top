@@ -8,11 +8,11 @@ uniform vec3 colour;
 uniform sampler2D fontAtlas;
 
 // For border effect
-const float width = 0.4;
-const float edge = 0.1;
+uniform float width;
+uniform float edge;
 
-const float borderWidth = 0.5;
-const float borderEdge = 0.1;
+uniform float borderWidth;
+uniform float borderEdge;
 
 const vec3 outlineColour = vec3(0.0);
 
