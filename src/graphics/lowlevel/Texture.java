@@ -30,6 +30,11 @@ public class Texture {
         setSizes();
     }
 
+    public Texture(String path) {
+        texture = load(path);
+        this.scale = 1.0f;
+    }
+
     public Texture(BufferedImage image) {
         texture = load(image);
         setSizes();
@@ -54,6 +59,8 @@ public class Texture {
     public float getWidthAfterScale() {return widthAfterScale;}
 
     public float getHeightAfterScale() {return heightAfterScale;}
+
+    public int getID() {return texture;}
 
     public float getScale() {return scale;}
     public int getWidth() {return width;}

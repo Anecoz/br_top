@@ -12,7 +12,7 @@ public class IndexedVertexArray extends VertexArray {
 
     public IndexedVertexArray(float[] vertices, float[] texCoords, byte[] indices) {
         // Base class takes care of these
-        super(vertices, texCoords);
+        super(vertices, texCoords, 3);
 
         this.count = indices.length;
 

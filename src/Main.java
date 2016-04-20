@@ -1,5 +1,8 @@
 import audio.AudioMaster;
 import audio.AudioSource;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
+import fontRendering.TextMaster;
 import graphics.Camera;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowHandler;
@@ -17,6 +20,8 @@ import utils.FileUtils;
 import utils.ResourceHandler;
 
 
+import java.io.File;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -27,7 +32,7 @@ public class Main {
     private static KeyInput keyInput;
     private static MouseButtonInput mouseButtonInput;
     private static MousePosInput mousePosInput;
-    private static final int VSYNC = 0;
+    private static final int VSYNC = 1;
 
     private long window;
     private Matrix4f projMatrix;
@@ -110,6 +115,12 @@ public class Main {
         ambienceSound.setLooping(true);
         ambienceSound.setVolume(1);
         ambienceSound.play(ResourceHandler.ambienceSoundBuffer);
+
+        // FONTS
+        TextMaster.init();
+        FontType font = new FontType(ResourceHandler.fontAtlasTexture, new File(FileUtils.RES_DIR + "fonts/gadugi.fnt"));
+        GUIText text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 4, font, new Vector2f(0f, 0f), 1f, true);
+        text.setColour(1f, 1f, 1f);
     }
 
     private void loop() {
@@ -155,6 +166,8 @@ public class Main {
         level.render(projMatrix, shadowTexture, player);
         player.render(projMatrix);
 
+        TextMaster.render();
+
         glfwSwapBuffers(window);
     }
 
@@ -163,6 +176,9 @@ public class Main {
         AudioMaster.cleanUp();
         player.cleanUp();
         resourceHandler.cleanUp();
+        shadowTexture.cleanUp();
+        shaderHandler.cleanUp();
+        TextMaster.cleanUp();
     }
 
     public static void main(String[] args) {

@@ -50,6 +50,9 @@ public class ShadowTexture {
         System.out.println("Texture back is: " + Arrays.toString(pixels));*/
     }
 
+    public void cleanUp() {
+        glDeleteTextures(texId);
+    }
     public void bind() {glBindTexture(GL_TEXTURE_2D, texId);}
     public void unbind() {glBindTexture(GL_TEXTURE_2D, 0);}
 }

@@ -2,10 +2,12 @@ package graphics.shaders;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import utils.ShaderUtils;
 
 import java.nio.FloatBuffer;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -15,13 +17,15 @@ public class Shader {
     public static final int TEX_ATTRIB = 1;
     private static final String SHADERS_DIR = "src/shaders/";
 
-    private int id;
+    private int id, vertId, fragId;
 
     public int getId() {return id;}
 
     public Shader(String vertex, String frag) {
-        id = ShaderUtils.load(SHADERS_DIR + vertex, SHADERS_DIR + frag);
-
+        List<Integer> ids = ShaderUtils.load(SHADERS_DIR + vertex, SHADERS_DIR + frag);
+        id = ids.get(0);
+        vertId = ids.get(1);
+        fragId = ids.get(2);
         if (id == -1)
             System.err.println("Shaders failed to load!");
     }
@@ -31,6 +35,13 @@ public class Shader {
         FloatBuffer fb = BufferUtils.createFloatBuffer(2);
         vec.get(fb);
         glUniform2fv(loc, fb);
+    }
+
+    public void uploadVec(Vector3f vec, String uniformName) {
+        int loc = glGetUniformLocation(id, uniformName);
+        FloatBuffer fb = BufferUtils.createFloatBuffer(3);
+        vec.get(fb);
+        glUniform3fv(loc, fb);
     }
 
     public void uploadMatrix(Matrix4f mat, String uniformName) {
@@ -48,6 +59,14 @@ public class Shader {
     public void uploadInt(int val, String uniformName) {
         int loc = glGetUniformLocation(id, uniformName);
         glUniform1i(loc, val);
+    }
+
+    public void cleanUp() {
+        glDetachShader(id, vertId);
+        glDetachShader(id, fragId);
+        glDeleteShader(vertId);
+        glDeleteShader(fragId);
+        glDeleteProgram(id);
     }
 
     public void comeHere() {

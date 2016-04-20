@@ -10,6 +10,7 @@ public class ShaderHandler {
 
     public static Shader levelShader;
     public static Shader standardShader;
+    public static Shader textShader;
 
     private static String WEAPON_DIR = "weapons/";
 
@@ -20,6 +21,11 @@ public class ShaderHandler {
     public void init() {
         levelShader = new Shader("level.vert", "level.frag");
         standardShader = new Shader(WEAPON_DIR + "standard.vert", WEAPON_DIR + "standard.frag");
+        textShader = new Shader("font.vert", "font.frag");
+
+        textShader.comeHere();
+        standardShader.uploadTexture(0, "fontAtlas");
+        standardShader.pissOff();
 
         standardShader.comeHere();
         standardShader.uploadTexture(0, "tex");
@@ -31,5 +37,11 @@ public class ShaderHandler {
         glActiveTexture(GL_TEXTURE1);
         levelShader.uploadTexture(1, "shadowTex");
         levelShader.pissOff();
+    }
+
+    public void cleanUp() {
+        levelShader.cleanUp();
+        standardShader.cleanUp();
+        textShader.cleanUp();
     }
 }

@@ -12,6 +12,7 @@ public class ResourceHandler {
     public static Texture playerTexture;
     public static Texture pistolTexture;
     public static Texture bulletTexture;
+    public static Texture fontAtlasTexture;
 
     // Sound Buffers
     public static int ambienceSoundBuffer;
@@ -30,6 +31,7 @@ public class ResourceHandler {
         playerTexture = new Texture(FileUtils.RES_DIR + "characters/player.png", 1.0f);
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png", 1.0f);
         bulletTexture = new Texture(FileUtils.RES_DIR + "weapons/bullet.png", 0.2f);
+        fontAtlasTexture = new Texture(FileUtils.RES_DIR + "fonts/gadugi.png");
 
         // Sound Buffers
         ambienceSoundBuffer = AudioMaster.loadSound(FileUtils.RES_DIR + "sounds/Ambience_Bird.wav");
@@ -43,6 +45,7 @@ public class ResourceHandler {
         playerTexture.cleanUp();
         pistolTexture.cleanUp();
         bulletTexture.cleanUp();
+        fontAtlasTexture.cleanUp();
 
         // Animations
         playerAnimation.cleanUp();

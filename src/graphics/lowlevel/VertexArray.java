@@ -15,7 +15,7 @@ public class VertexArray {
     protected int vao, vbo, tbo;
     protected int count;
 
-    public VertexArray(float[] vertices, float[] texCoords) {
+    public VertexArray(float[] vertices, float[] texCoords, int floatPerVertex) {
         count = vertices.length/3;
 
         vao = glGenVertexArrays();
@@ -27,7 +27,7 @@ public class VertexArray {
         vertBuffer.put(vertices);
         vertBuffer.flip();
         glBufferData(GL_ARRAY_BUFFER, vertBuffer, GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(Shader.VERTEX_ATTRIB, 3, GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(Shader.VERTEX_ATTRIB, floatPerVertex, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(Shader.VERTEX_ATTRIB);
 
         tbo = glGenBuffers();
@@ -48,6 +48,9 @@ public class VertexArray {
         glDeleteBuffers(vbo);
         glDeleteBuffers(tbo);
     }
+
+    public int getVAOID() {return vao;}
+    public int getCount() {return count;}
 
     protected void bind() {
         glBindVertexArray(vao);
