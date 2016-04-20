@@ -115,7 +115,6 @@ public class Weapon extends DrawableEntity {
                         if(magazine > 0) {
                             spawnBullet = true;
                             magazine--;
-                            System.out.println(magazine + "/" + ammo);
                         }
                     }
                 },0 , (long)(1000/((float)(roundsPerMinute/60))));
@@ -124,7 +123,7 @@ public class Weapon extends DrawableEntity {
     }
 
     public void reload(){
-        if(ammo > 0) {
+        if(ammo > 0 && magazine < magazineSize) {
             isReloading = true;
             // TODO: Play animation with reloadTime duration.
             reloadTimer.schedule(new TimerTask() {

@@ -10,6 +10,7 @@ import graphics.shadows.ShadowTexture;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
+import logic.GameState;
 import logic.Level;
 import logic.Player;
 import org.lwjgl.*;
@@ -48,7 +49,11 @@ public class Main {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
 
-    public void run() {
+    public static void main(String[] args) {
+        new Main().run();
+    }
+
+    /*public void run() {
         System.out.println("Using LWJGL " + Version.getVersion() + "!");
 
         try {
@@ -61,6 +66,19 @@ public class Main {
         } finally {
             glfwTerminate();
             errorCallback.release();
+        }
+    }*/
+
+    public void run() {
+        System.out.println("Using LWJGL " + Version.getVersion() + "!");
+        GameState gameState = new GameState();
+        try {
+            while(gameState.getGameState() != GameState.GameStates.END) {
+                gameState.update();
+            }
+        } finally {
+            glfwTerminate();
+            //errorCallback.release();
         }
     }
 
@@ -121,7 +139,7 @@ public class Main {
 
         GUIText text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 4, ResourceHandler.font, new Vector2f(0f, 0f), 1f, true);
         text.setColour(1f, 1f, 1f);
-        text.setRenderParams(0.4f, 0.1f, 0.5f, 0.1f);
+        text.setRenderParams(0.3f, 0.3f, 0.5f, 0.2f);
     }
 
     private void loop() {
@@ -180,9 +198,5 @@ public class Main {
         shadowTexture.cleanUp();
         shaderHandler.cleanUp();
         TextMaster.cleanUp();
-    }
-
-    public static void main(String[] args) {
-        new Main().run();
     }
 }
