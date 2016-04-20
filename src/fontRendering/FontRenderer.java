@@ -50,6 +50,10 @@ public class FontRenderer {
 		//shader.loadTranslation(text.getPosition());
 		ShaderHandler.textShader.uploadVec(text.getColour(), "colour");
 		ShaderHandler.textShader.uploadVec(text.getPosition(), "translation");
+		ShaderHandler.textShader.uploadFloat(text.getWidth(), "width");
+        ShaderHandler.textShader.uploadFloat(text.getEdge(), "edge");
+        ShaderHandler.textShader.uploadFloat(text.getBorderEdge(), "borderEdge");
+        ShaderHandler.textShader.uploadFloat(text.getBorderWidth(), "borderWidth");
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount()*3);
 		GL30.glBindVertexArray(0);
 	}

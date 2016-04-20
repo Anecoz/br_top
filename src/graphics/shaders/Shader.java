@@ -30,6 +30,11 @@ public class Shader {
             System.err.println("Shaders failed to load!");
     }
 
+    public void uploadFloat(float val, String uniformName) {
+        int loc = glGetUniformLocation(id, uniformName);
+        glUniform1f(loc, val);
+    }
+
     public void uploadVec(Vector2f vec, String uniformName) {
         int loc = glGetUniformLocation(id, uniformName);
         FloatBuffer fb = BufferUtils.createFloatBuffer(2);
