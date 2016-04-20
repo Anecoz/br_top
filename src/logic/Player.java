@@ -36,7 +36,7 @@ public class Player extends DrawableEntity {
         forward = new Vector2f(0);
         walkingAnimation = ResourceHandler.playerAnimation;
         pistol = new Pistol(position, -0.2f, 1.5f, 15, 24);
-        assaultRifle = new AssaultRifle(position, -0.2f, 3.5f, 40, 600);
+        assaultRifle = new AssaultRifle(position, -0.2f, 1.5f, 40, 800);
         weaponList.add(pistol);
         weaponList.add(assaultRifle);
         equipedWeapon = pistol;
@@ -110,11 +110,14 @@ public class Player extends DrawableEntity {
         if(equipedWeapon.isAutomatic()){
             if (MouseButtonInput.isMouseLeftDown()) {
                 equipedWeapon.fire();
+            } else {
+                equipedWeapon.setFiringBool(false);
             }
         } else {
-
             if (MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_1)) {
                 equipedWeapon.fire();
+            } else {
+                equipedWeapon.setFiringBool(false);
             }
         }
 

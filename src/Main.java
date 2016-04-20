@@ -99,7 +99,7 @@ public class Main {
         resourceHandler = new ResourceHandler();
         resourceHandler.init();
         cam = new Camera(WIDTH, HEIGHT);
-        level = new Level("maps/64res.tmx");
+        level = new Level("maps/map_01.tmx");
         projMatrix = cam.getProjection();
         shadowHandler = new ShadowHandler();
         shadowTexture = shadowHandler.calcShadowTexture(level);

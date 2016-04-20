@@ -3,9 +3,11 @@ package logic.weapons;
 import graphics.lowlevel.Texture;
 import logic.DrawableEntity;
 import logic.Level;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import utils.ResourceHandler;
 
-import java.util.Timer;
+import java.util.*;
 
 public class Weapon extends DrawableEntity {
 
@@ -15,10 +17,14 @@ public class Weapon extends DrawableEntity {
     protected int ammo;             // Current reserve ammunition
     protected int roundsPerMinute;
     protected boolean isReloading;
-    protected boolean automatic;
+    protected boolean isFiring;
+    protected boolean isAutomatic;
     protected Vector2f forward;
     protected Timer reloadTimer;
     protected Timer shootTimer;
+    protected List<Ammunition> ammunitionList = new ArrayList<>();
+    protected Vector2f position;
+    protected boolean spawnBullet;
 
     public Weapon(Texture sprite, Vector2f position, float layer) {
         super(sprite, position, layer);
@@ -29,31 +35,92 @@ public class Weapon extends DrawableEntity {
 
     public void update(Vector2f forward, Level level){
         this.forward = forward;
+        // Using iterator so that we can remove bullets
+        Iterator<Ammunition> i = ammunitionList.iterator();
+        while (i.hasNext()){
+            Ammunition bullet = i.next();
+            if (bullet.dead) {
+                i.remove();
+            }
+            else {
+                bullet.update(level);
+            }
+        }
+
+        if(spawnBullet) {
+            ammunitionList.add(spawnBullet());
+            spawnBullet = false;
+        }
+
+        if(!isFiring)
+            shootTimer.cancel();
+    }
+
+    @Override
+    public void render(Matrix4f projection){
+        super.render(projection);
+        for(Ammunition bullet: ammunitionList){
+            bullet.render(projection);
+        }
     }
 
     public void fire(){
-        //TODO:Add rounds per minute (rpm) limit in the individual weapon.
-        if(magazine > 0) {
-            magazine--;
-            System.out.println(magazine + "/" + ammo);
+        if (magazine < 1) {
+            // TODO: Notify the player of empty magazine
+        } else {
+            if(!isReloading && !isFiring) {
+                isFiring = true;
+                shootTimer = new Timer();
+                shootTimer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if(magazine > 0) {
+                            spawnBullet = true;
+                            magazine--;
+                            System.out.println(magazine + "/" + ammo);
+                        }
+                    }
+                },0 , (long)(1000/((float)(roundsPerMinute/60))));
+            }
         }
     }
 
     public void reload(){
-        // Reload time is in the individual weapon,
-        if(magazine != magazineSize) {
-            if(ammo > 0) {
-                ammo -= (magazineSize - magazine);
-                magazine += (magazineSize - magazine);
-                if(ammo <= 0) {
-                    magazine += ammo;
-                    ammo = 0;
-                    System.out.println(magazine + "/" + ammo);
+        if(ammo > 0) {
+            isReloading = true;
+            // TODO: Play animation with reloadTime duration.
+            reloadTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    isReloading = false;
+                    if(magazine != magazineSize) {
+                        if(ammo > 0) {
+                            ammo -= (magazineSize - magazine);
+                            magazine += (magazineSize - magazine);
+                            if(ammo <= 0) {
+                                magazine += ammo;
+                                ammo = 0;
+                                System.out.println(magazine + "/" + ammo);
+                            }
+                            if(magazine >= magazineSize)
+                                magazine = magazineSize;
+                        }
+                    }
+                    System.out.println("Reloaded!");
                 }
-                if(magazine >= magazineSize)
-                    magazine = magazineSize;
-            }
+            }, (long) (reloadTime * 1000));
         }
+
+    }
+
+    private Bullet spawnBullet(){
+        Vector2f bulletPos = new Vector2f(
+                position.x + this.width / 2.0f
+                        - ResourceHandler.bulletTexture.getWidthAfterScale() / 2.0f,
+                position.y + this.height / 2.0f
+                        - ResourceHandler.bulletTexture.getHeightAfterScale() / 2.0f);
+        Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
+        return new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10);
     }
 
     public void addAmmo(int value){
@@ -77,10 +144,14 @@ public class Weapon extends DrawableEntity {
     }
 
     public boolean isAutomatic(){
-        return automatic;
+        return isAutomatic;
     }
 
-    public void cleanUp(){
+    public void setFiringBool(boolean value) {
+        isFiring = value;
+    }
+
+    public void cleanUp() {
         reloadTimer.cancel();
         shootTimer.cancel();
     }
