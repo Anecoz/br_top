@@ -15,6 +15,26 @@ public class VertexArray {
     protected int vao, vbo, tbo;
     protected int count;
 
+    // Without texcoords
+    public VertexArray(float[] vertices, int floatPerVertex) {
+        count = vertices.length/3;
+
+        vao = glGenVertexArrays();
+        glBindVertexArray(vao);
+
+        vbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        vertBuffer.put(vertices);
+        vertBuffer.flip();
+        glBufferData(GL_ARRAY_BUFFER, vertBuffer, GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(Shader.VERTEX_ATTRIB, floatPerVertex, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(Shader.VERTEX_ATTRIB);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
     public VertexArray(float[] vertices, float[] texCoords, int floatPerVertex) {
         count = vertices.length/3;
 

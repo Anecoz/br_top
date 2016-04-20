@@ -11,6 +11,7 @@ public class ShaderHandler {
     public static Shader levelShader;
     public static Shader standardShader;
     public static Shader textShader;
+    public static Shader inventoryShader;
 
     private static String WEAPON_DIR = "weapons/";
 
@@ -22,6 +23,11 @@ public class ShaderHandler {
         levelShader = new Shader("level.vert", "level.frag");
         standardShader = new Shader(WEAPON_DIR + "standard.vert", WEAPON_DIR + "standard.frag");
         textShader = new Shader("font.vert", "font.frag");
+        inventoryShader = new Shader("inventory.vert", "inventory.frag");
+
+        inventoryShader.comeHere();
+        inventoryShader.uploadTexture(0, "itemTex");
+        inventoryShader.pissOff();
 
         textShader.comeHere();
         standardShader.uploadTexture(0, "fontAtlas");
@@ -43,5 +49,6 @@ public class ShaderHandler {
         levelShader.cleanUp();
         standardShader.cleanUp();
         textShader.cleanUp();
+        inventoryShader.cleanUp();
     }
 }

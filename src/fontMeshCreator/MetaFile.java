@@ -1,5 +1,7 @@
 package fontMeshCreator;
 
+import logic.GameState;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -46,7 +48,7 @@ public class MetaFile {
 	 *            - the font file.
 	 */
 	protected MetaFile(File file) {
-		this.aspectRatio = (double) 1280 / (double) 720;
+		this.aspectRatio = (double) GameState.WIDTH / (double) GameState.HEIGHT;
 		openFile(file);
 		loadPaddingData();
 		loadLineSizes();

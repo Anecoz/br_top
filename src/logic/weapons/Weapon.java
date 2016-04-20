@@ -6,6 +6,7 @@ import input.KeyInput;
 import input.MouseButtonInput;
 import logic.DrawableEntity;
 import logic.Level;
+import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.ResourceHandler;
@@ -15,7 +16,7 @@ import java.util.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
-public class Weapon extends DrawableEntity {
+public class Weapon extends InventoryItem {
 
     protected float reloadTime;
     protected int magazineSize;     // Max magazine size

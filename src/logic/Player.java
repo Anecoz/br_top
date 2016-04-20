@@ -4,6 +4,7 @@ import graphics.animation.Animation;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
+import logic.inventory.Inventory;
 import logic.weapons.AssaultRifle;
 import logic.collision.CollisionHandler;
 import logic.weapons.Pistol;
@@ -26,6 +27,7 @@ public class Player extends DrawableEntity {
     private AssaultRifle assaultRifle;
     private Animation walkingAnimation;
     private boolean running = false;
+    private Inventory inventory;
 
     private List<Weapon> weaponList = new ArrayList<>();
     private Weapon equipedWeapon;
@@ -41,12 +43,15 @@ public class Player extends DrawableEntity {
         weaponList.add(assaultRifle);
         equipedWeapon = pistol;
         walkingAnimation.start();
+        inventory = new Inventory();
+        inventory.add(pistol);
     }
 
     @Override
     public void render(Matrix4f projection) {
         super.render(projection);
         equipedWeapon.render(projection);
+        inventory.render();
     }
 
     public void update(Level level, Matrix4f proj) {
@@ -121,7 +126,7 @@ public class Player extends DrawableEntity {
         double mouseY = MousePosInput.getY();
         double centerX = this.position.x + this.width/2.0f;
         double centerY = this.position.y + this.height/2.0f;
-        Vector2f worldMouse = MathUtils.screenSpaceToWorld(new Vector2f((float) mouseX, (float) mouseY), 1280, 720, proj);
+        Vector2f worldMouse = MathUtils.screenSpaceToWorld(new Vector2f((float) mouseX, (float) mouseY), GameState.WIDTH, GameState.HEIGHT, proj);
         // Get vector
         this.forward.x = worldMouse.x - (float) centerX;
         this.forward.y = worldMouse.y - (float) centerY;
