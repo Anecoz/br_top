@@ -182,7 +182,7 @@ public class GameState {
                     frames = 0;
                 }
                 //TEMP//////////////////////////
-                if (KeyInput.isKeyDown(GLFW_KEY_SPACE)) {
+                if (KeyInput.isKeyDown(GLFW_KEY_SPACE) && gameState == GameStates.GAME_LOBBY) {
                     gameState = GameStates.GAME_INIT;
                 }
                 if (KeyInput.isKeyDown(GLFW_KEY_ESCAPE)) {

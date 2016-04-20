@@ -137,7 +137,6 @@ public class Weapon extends DrawableEntity {
                             if(ammo <= 0) {
                                 magazine += ammo;
                                 ammo = 0;
-                                System.out.println(magazine + "/" + ammo);
                             }
                             if(magazine >= magazineSize)
                                 magazine = magazineSize;
