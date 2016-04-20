@@ -53,7 +53,7 @@ public class Player extends DrawableEntity {
         updateMovement(level);
         checkWeaponSwap();
         checkRunningStatus();
-        checkFire();
+        equipedWeapon.checkFire();
 
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
@@ -103,26 +103,6 @@ public class Player extends DrawableEntity {
         }
         if(KeyInput.isKeyClicked(GLFW_KEY_2)) {
             equipedWeapon = pistol;
-        }
-    }
-
-    private void checkFire() {
-        if(equipedWeapon.isAutomatic()){
-            if (MouseButtonInput.isMouseLeftDown()) {
-                equipedWeapon.fire();
-            } else {
-                equipedWeapon.setFiringBool(false);
-            }
-        } else {
-            if (MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_1)) {
-                equipedWeapon.fire();
-            } else {
-                equipedWeapon.setFiringBool(false);
-            }
-        }
-
-        if(KeyInput.isKeyClicked(GLFW_KEY_R)) {
-            equipedWeapon.reload();
         }
     }
 

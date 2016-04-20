@@ -1,6 +1,8 @@
 package logic.weapons;
 
 import graphics.lowlevel.Texture;
+import input.KeyInput;
+import input.MouseButtonInput;
 import logic.DrawableEntity;
 import logic.Level;
 import org.joml.Matrix4f;
@@ -8,6 +10,9 @@ import org.joml.Vector2f;
 import utils.ResourceHandler;
 
 import java.util.*;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class Weapon extends DrawableEntity {
 
@@ -61,6 +66,26 @@ public class Weapon extends DrawableEntity {
         super.render(projection);
         for(Ammunition bullet: ammunitionList){
             bullet.render(projection);
+        }
+    }
+
+    public void checkFire() {
+        if(isAutomatic){
+            if (MouseButtonInput.isMouseLeftDown()) {
+                fire();
+            } else {
+                isFiring = false;
+            }
+        } else {
+            if (MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_1)) {
+                fire();
+            } else {
+                isFiring = false;
+            }
+        }
+
+        if(KeyInput.isKeyClicked(GLFW_KEY_R)) {
+            reload();
         }
     }
 
