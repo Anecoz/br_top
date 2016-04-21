@@ -1,7 +1,6 @@
 package logic.weapons;
 
 import graphics.lowlevel.Texture;
-import logic.DrawableEntity;
 import logic.Level;
 import logic.collision.CollisionBox;
 import logic.collision.CollisionHandler;
@@ -9,7 +8,6 @@ import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import tiled.core.Tile;
 
 import java.awt.*;
 

@@ -4,7 +4,6 @@ import fontMeshCreator.GUIText;
 import graphics.lowlevel.Texture;
 import input.KeyInput;
 import input.MouseButtonInput;
-import logic.DrawableEntity;
 import logic.Level;
 import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;

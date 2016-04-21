@@ -49,7 +49,9 @@ public class AudioMaster {
         for(int buffer : buffers){
             AL10.alDeleteBuffers(buffer);
         }
-        device.destroy();
-        context.destroy();
+        if(device != null)
+            device.destroy();
+        if(context != null)
+            context.destroy();
     }
 }

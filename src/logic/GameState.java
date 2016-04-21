@@ -28,7 +28,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class GameState {
 
     public enum GameStates{
-        START, GAME_LOBBY, GAME_INIT, GAME_RUNNING, GAME_OVER, END
+        GAME_START, GAME_LOBBY, GAME_INIT, GAME_RUNNING, GAME_OVER, GAME_END,
+        GAME_EXIT
     }
 
     private GLFWErrorCallback errorCallback;
@@ -51,10 +52,10 @@ public class GameState {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
 
-    GameStates gameState;
+    public static GameStates gameState;
 
     public GameState(){
-        gameState = GameStates.START;
+        gameState = GameStates.GAME_START;
         shaderHandler = new ShaderHandler();
         resourceHandler = new ResourceHandler();
         shadowHandler = new ShadowHandler();
@@ -64,9 +65,13 @@ public class GameState {
         return gameState;
     }
 
+    public void setGameState(GameStates state){
+        gameState = state;
+    }
+
     public void update(){
         switch (gameState){
-            case START:                                 // Only run once!
+            case GAME_START:                                 // Only run once!
                 glInit();
                 menuInit();
                 gameState = GameStates.GAME_LOBBY;
@@ -84,12 +89,11 @@ public class GameState {
             case GAME_OVER:                             // Game is over.
                 gameCleanUp();
                 loop();
+                break;
+            case GAME_END:                                   // Exit program.
                 exitCleanUp();
                 break;
-            case END:                                   // Exit program.
-                break;
         }
-
 
         System.out.println(gameState);
     }
@@ -163,7 +167,8 @@ public class GameState {
         if(gameState == GameStates.GAME_LOBBY || gameState == GameStates.GAME_OVER) {
             // DO an initial update
             // TODO: Add menu logic update here.
-            while (gameState == GameStates.GAME_LOBBY || gameState == GameStates.GAME_OVER) {
+            while ((gameState == GameStates.GAME_LOBBY && glfwWindowShouldClose(window) == GLFW_FALSE) ||
+                    (gameState == GameStates.GAME_OVER && glfwWindowShouldClose(window) == GLFW_FALSE)) {
                 long now = System.nanoTime();
                 delta += (now - lastTime) / ns;
                 lastTime = now;
@@ -185,8 +190,8 @@ public class GameState {
                 if (KeyInput.isKeyDown(GLFW_KEY_SPACE) && gameState == GameStates.GAME_LOBBY) {
                     gameState = GameStates.GAME_INIT;
                 }
-                if (KeyInput.isKeyDown(GLFW_KEY_ESCAPE)) {
-                    gameState = GameStates.END;
+                if (KeyInput.isKeyDown(GLFW_KEY_ESCAPE) || glfwWindowShouldClose(window) == GLFW_TRUE) {
+                    gameState = GameStates.GAME_END;
                 }
                 ////////////////////////////////
             }
@@ -194,7 +199,7 @@ public class GameState {
         else if(gameState == GameStates.GAME_RUNNING) {
             // DO an initial update
             updateLogic();
-            while (gameState == GameStates.GAME_RUNNING) {
+            while (gameState == GameStates.GAME_RUNNING && glfwWindowShouldClose(window) == GLFW_FALSE) {
                 long now = System.nanoTime();
                 delta += (now - lastTime) / ns;
                 lastTime = now;
@@ -214,6 +219,9 @@ public class GameState {
                 //TEMP//////////////////////////
                 if (KeyInput.isKeyDown(GLFW_KEY_O)) {
                     gameState = GameStates.GAME_OVER;
+                }
+                if (KeyInput.isKeyDown(GLFW_KEY_ESCAPE) || glfwWindowShouldClose(window) == GLFW_TRUE) {
+                    gameState = GameStates.GAME_END;
                 }
                 ////////////////////////////////
             }
@@ -251,15 +259,22 @@ public class GameState {
     }
 
     private void gameCleanUp(){
-        ambienceSound.delete();
-        player.cleanUp();
+        if(ambienceSound != null)
+            ambienceSound.delete();
+        if(player != null)
+            player.cleanUp();
     }
 
     private void exitCleanUp(){
+        gameState = GameStates.GAME_EXIT;
+        gameCleanUp();
         AudioMaster.cleanUp();
-        resourceHandler.cleanUp();
-        shadowTexture.cleanUp();
-        shaderHandler.cleanUp();
+        if(resourceHandler != null)
+            resourceHandler.cleanUp();
+        if(shadowTexture != null)
+            shadowTexture.cleanUp();
+        if(shaderHandler != null)
+            shaderHandler.cleanUp();
         TextMaster.cleanUp();
         glfwDestroyWindow(window);
         errorCallback.release();

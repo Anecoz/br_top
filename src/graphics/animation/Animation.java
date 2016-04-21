@@ -62,6 +62,7 @@ public class Animation {
             tex.cleanUp();
         }
         // This'll just go on otherwise
-        timer.cancel();
+        if(timer != null)
+            timer.cancel();
     }
 }

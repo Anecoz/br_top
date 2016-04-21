@@ -13,7 +13,7 @@ public class Main {
         System.out.println("Using LWJGL " + Version.getVersion() + "!");
         GameState gameState = new GameState();
         try {
-            while(gameState.getGameState() != GameState.GameStates.END) {
+            while(gameState.getGameState() != GameState.GameStates.GAME_EXIT) {
                 gameState.update();
             }
         } finally {
