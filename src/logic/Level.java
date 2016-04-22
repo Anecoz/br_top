@@ -94,7 +94,8 @@ public class Level {
             List<InventoryItem> list = droppedItems.get(position);
             InventoryItem item = list.get(list.size() - 1);
             list.remove(item);
-            droppedItems.remove(position);
+            if (list.size() == 0)
+                droppedItems.remove(position);
             return item;
         }
 
