@@ -6,7 +6,7 @@ import graphics.shaders.ShaderHandler;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
-import logic.GameState;
+import logic.Level;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
@@ -27,7 +27,7 @@ public class Inventory {
     private boolean isOpen = false;                     // Whether inventory is currently opened up
 
     private Vector2f position;                          // Position in GUI coordinate system x:[0,1],y:[0,1], o top left
-    private float baseScale = 5.0f;                     // Multiple that dictates size of inventory when rendered
+    private float baseScale = 8.0f;                     // Multiple that dictates size of inventory when rendered
     private boolean isDragging = false;                 // Whether we're currently dragging the inventory around
     private Vector2f offset;                            // Offset to drag the inventory on mouse position.
 
@@ -38,18 +38,36 @@ public class Inventory {
     }
 
     // Called every tick like everything else
-    public void update() {
+    public void update(Level level) {
         // Check if we are opening/closing the inventory, or if we're dragging the inventory with the mouse
-        checkInput();
+        checkInput(level);
     }
 
-    private void checkInput() {
+    private void checkInput(Level level) {
         if (KeyInput.isKeyClicked(GLFW_KEY_G)) {
             isOpen = !isOpen;
         }
 
         Vector2f mousePos = new Vector2f((float)MousePosInput.getX(), (float)MousePosInput.getY());
+        // Check if we right clicked and are trying to throw something out
+        if (MouseButtonInput.isMouseButtonClicked(GLFW_MOUSE_BUTTON_2)) {
+            if (isOpen && MathUtils.screenPointWithinInventory(mousePos, position, baseScale)) {
+                // Get what item we clicked on
+                Vector2f mFix = MathUtils.screenSpaceToGUI(mousePos).sub(position);
+                double itemWidth = (double)baseScale/(double)(Camera.getWinSizeX()*(double)ITEMS_PER_ROW);
+                double itemHeight = (double)baseScale/(double)(Camera.getWinSizeY()*(double)ITEMS_PER_ROW);
+                int indX = (int)Math.floor((double)mFix.x/itemWidth);
+                int indY = (int)Math.floor((double)mFix.y/itemHeight);
 
+                int listIndex = indX + ITEMS_PER_ROW*indY;
+                InventoryItem item = itemList.get(listIndex);
+                item.setPosition(new Vector2f(item.getPosition().x, item.getPosition().y));
+                level.addDroppedItem(item);
+                itemList.remove(item);
+            }
+        }
+
+        // Check the dragging status of the whole window
         if (!isDragging) {
             if (isOpen && MouseButtonInput.isMouseLeftDown() && MathUtils.screenPointWithinInventory(mousePos, position, baseScale)) {
                 offset = MathUtils.screenSpaceToGUI(mousePos).sub(position);
