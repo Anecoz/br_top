@@ -172,7 +172,7 @@ public class Level {
             List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
                 ShaderHandler.standardShader.comeHere();
-                item.getTexture().bind();
+                item.getDisplayTexture().bind();
 
                 ShaderHandler.standardShader.uploadMatrix(projection, "projMatrix");
                 ShaderHandler.standardShader.uploadMatrix(item.getRotation(), "rotationMatrix");

@@ -14,6 +14,8 @@ public class ResourceHandler {
     // Textures
     public static Texture playerTexture;
     public static Texture pistolTexture;
+    public static Texture assaultRifleTexture;
+    public static Texture assaultRifleTextureDisplay;
     public static Texture bulletTexture;
     public static Texture fontAtlasTexture;
 
@@ -36,6 +38,8 @@ public class ResourceHandler {
         // Textures
         playerTexture = new Texture(FileUtils.RES_DIR + "characters/player.png", 1.0f);
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png", 1.0f);
+        assaultRifleTexture = new Texture(FileUtils.RES_DIR + "weapons/assault_rifle.png", 1.0f);
+        assaultRifleTextureDisplay = new Texture(FileUtils.RES_DIR + "weapons/assault_rifle_display.png", 1.0f);
         bulletTexture = new Texture(FileUtils.RES_DIR + "weapons/bullet.png", 0.2f);
         fontAtlasTexture = new Texture(FileUtils.RES_DIR + "fonts/gadugi.png");
 
@@ -53,6 +57,8 @@ public class ResourceHandler {
         // Textures
         playerTexture.cleanUp();
         pistolTexture.cleanUp();
+        assaultRifleTexture.cleanUp();
+        assaultRifleTextureDisplay.cleanUp();
         bulletTexture.cleanUp();
         fontAtlasTexture.cleanUp();
 

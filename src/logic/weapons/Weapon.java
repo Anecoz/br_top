@@ -8,6 +8,7 @@ import logic.Level;
 import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.w3c.dom.Text;
 import utils.ResourceHandler;
 
 import java.util.*;
@@ -33,8 +34,8 @@ public abstract class Weapon extends InventoryItem {
     protected boolean spawnBullet;
     protected static GUIText text;
 
-    public Weapon(Texture sprite, Vector2f position, float layer) {
-        super(sprite, position, layer);
+    public Weapon(Texture sprite, Texture displaySprite, Vector2f position, float layer) {
+        super(sprite, displaySprite, position, layer);
 
         reloadTimer = new Timer();
         shootTimer = new Timer();

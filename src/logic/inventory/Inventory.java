@@ -138,7 +138,7 @@ public class Inventory {
 
             ShaderHandler.inventoryShader.uploadInt(0, "isBackground");
             for (InventoryItem item : itemList) {
-                item.getTexture().bind();
+                item.getDisplayTexture().bind();
                 ShaderHandler.inventoryShader.uploadMatrix(new Matrix4f().translate(worldPos.x, worldPos.y, 0f), "modelMatrix");
                 ShaderHandler.inventoryShader.uploadInt(itemList.indexOf(item), "itemIndex");
                 ShaderHandler.inventoryShader.uploadFloat(baseScale/(float)ITEMS_PER_ROW, "scale");
