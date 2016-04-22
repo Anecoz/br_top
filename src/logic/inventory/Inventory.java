@@ -29,6 +29,7 @@ public class Inventory {
     private Vector2f position;                          // Position in GUI coordinate system x:[0,1],y:[0,1], o top left
     private float baseScale = 5.0f;                     // Multiple that dictates size of inventory when rendered
     private boolean isDragging = false;                 // Whether we're currently dragging the inventory around
+    private Vector2f offset;                            // Offset to drag the inventory on mouse position.
 
     public Inventory() {
         backDropQuad = GraphicsUtils.createInventoryQuad();
@@ -51,6 +52,7 @@ public class Inventory {
 
         if (!isDragging) {
             if (isOpen && MouseButtonInput.isMouseLeftDown() && MathUtils.screenPointWithinInventory(mousePos, position, baseScale)) {
+                offset = MathUtils.screenSpaceToGUI(mousePos).sub(position);
                 isDragging = true;
             }
         }
@@ -61,8 +63,8 @@ public class Inventory {
             }
             else {
                 Vector2f GUIpos = MathUtils.screenSpaceToGUI(new Vector2f((float)MousePosInput.getX(), (float)MousePosInput.getY()));
-                this.position.x = GUIpos.x;
-                this.position.y = GUIpos.y;
+                this.position.x = GUIpos.x - offset.x;
+                this.position.y = GUIpos.y - offset.y;
             }
         }
     }
