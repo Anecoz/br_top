@@ -72,7 +72,7 @@ public class Inventory {
                     if(equipedWeapon == item) {
                         equipedWeapon = null;
                     }
-                    item.setRotation(new Matrix4f().identity());
+                    item.setRotation(new Matrix4f(item.getRotation()));
                     item.setPosition(new Vector2f(item.getPosition().x, item.getPosition().y));
                     level.addDroppedItem(item);
                     itemList.remove(item);
