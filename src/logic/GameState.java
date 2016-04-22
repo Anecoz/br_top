@@ -28,7 +28,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GameState {
 
-    public enum GameStates{
+    public static enum GameStates{
         GAME_START, GAME_LOBBY, GAME_INIT, GAME_RUNNING, GAME_OVER, GAME_END,
         GAME_EXIT
     }
@@ -66,21 +66,17 @@ public class GameState {
         return gameState;
     }
 
-    public void setGameState(GameStates state){
-        gameState = state;
-    }
-
     public void update(){
         switch (gameState){
-            case GAME_START:                                 // Only run once!
-                glInit();
+            case GAME_START:                            // Only run once! Initialize opengl and lwjgl.
+                glInit();                               // And menu.
                 menuInit();
                 gameState = GameStates.GAME_LOBBY;
                 break;
             case GAME_LOBBY:                            // Main Menu loop.
                 loop();
                 break;
-            case GAME_INIT:                             // Only run once!
+            case GAME_INIT:                             // Only run once! Initialize a game.
                 gameInit();
                 gameState = GameStates.GAME_RUNNING;
                 break;
@@ -91,7 +87,7 @@ public class GameState {
                 gameCleanUp();
                 loop();
                 break;
-            case GAME_END:                                   // Exit program.
+            case GAME_END:                              // Exit program.
                 exitCleanUp();
                 break;
         }
