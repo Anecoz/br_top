@@ -262,6 +262,8 @@ public class GameState {
             ambienceSound.delete();
         if(player != null)
             player.cleanUp();
+        if(level != null)
+            level.cleanUp();
     }
 
     private void exitCleanUp(){
@@ -275,7 +277,6 @@ public class GameState {
         if(shaderHandler != null)
             shaderHandler.cleanUp();
         TextMaster.cleanUp();
-        level.cleanUp();
         glfwDestroyWindow(window);
         errorCallback.release();
     }
