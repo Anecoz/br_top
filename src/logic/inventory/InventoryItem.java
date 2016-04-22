@@ -3,6 +3,7 @@ package logic.inventory;
 import graphics.lowlevel.IndexedVertexArray;
 import graphics.lowlevel.Texture;
 import logic.DrawableEntity;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 public abstract class InventoryItem extends DrawableEntity {
@@ -20,5 +21,9 @@ public abstract class InventoryItem extends DrawableEntity {
 
     public IndexedVertexArray getMesh() {
         return this.mesh;
+    }
+
+    public void setRotation(Matrix4f rotation){
+        this.rotation = rotation;
     }
 }

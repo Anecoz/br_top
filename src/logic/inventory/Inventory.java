@@ -67,17 +67,12 @@ public class Inventory {
             if (isOpen && MathUtils.screenPointWithinInventory(mousePos, position, baseScale)) {
                 // Get what item we clicked on
                 int listIndex = MathUtils.getInventoryItemIndex(mousePos, position, baseScale, ITEMS_PER_ROW);
-                /*Vector2f mFix = MathUtils.screenSpaceToGUI(mousePos).sub(position);
-                double itemWidth = (double)baseScale/(double)(Camera.getWinSizeX()*(double)ITEMS_PER_ROW);
-                double itemHeight = (double)baseScale/(double)(Camera.getWinSizeY()*(double)ITEMS_PER_ROW);
-                int indX = (int)Math.floor((double)mFix.x/itemWidth);
-                int indY = (int)Math.floor((double)mFix.y/itemHeight);
-                int listIndex = indX + ITEMS_PER_ROW*indY;*/
-
                 if (itemList.size() >= listIndex + 1) {
                     InventoryItem item = itemList.get(listIndex);
-                    if(equipedWeapon == item)
+                    if(equipedWeapon == item) {
                         equipedWeapon = null;
+                    }
+                    item.setRotation(new Matrix4f().identity());
                     item.setPosition(new Vector2f(item.getPosition().x, item.getPosition().y));
                     level.addDroppedItem(item);
                     itemList.remove(item);
