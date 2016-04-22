@@ -30,9 +30,6 @@ public class Player extends DrawableEntity {
     private boolean running = false;
     private Inventory inventory;
 
-    private List<Weapon> weaponList = new ArrayList<>();
-    private Weapon equipedWeapon;
-
     public Player() {
         super(ResourceHandler.playerTexture, new Vector2f(10), -0.3f);
 
@@ -44,9 +41,6 @@ public class Player extends DrawableEntity {
         pistol4 = new Pistol(position, -0.2f, 1.5f, 15, 24);
         pistol5 = new Pistol(position, -0.2f, 1.5f, 15, 24);
         assaultRifle = new AssaultRifle(position, -0.2f, 1.5f, 40, 800);
-        weaponList.add(pistol1);
-        weaponList.add(assaultRifle);
-        equipedWeapon = pistol1;
         walkingAnimation.start();
         inventory = new Inventory();
         inventory.add(pistol1);
@@ -60,7 +54,6 @@ public class Player extends DrawableEntity {
     @Override
     public void render(Matrix4f projection) {
         super.render(projection);
-        equipedWeapon.render(projection);
         inventory.render(projection);
     }
 
@@ -71,12 +64,13 @@ public class Player extends DrawableEntity {
         checkRunningStatus();
         inventory.update(level);
 
-        if (!inventory.getIsDragging())
-            equipedWeapon.checkFire();
+        if (!inventory.getIsDragging() && inventory.getEquipedWeapon() != null)
+            inventory.getEquipedWeapon().checkFire();
 
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
-        equipedWeapon.update(new Vector2f(forward), level);
+        if(inventory.getEquipedWeapon() != null)
+            inventory.getEquipedWeapon().update(new Vector2f(forward), level);
     }
 
     private void updateMovement(Level level) {
@@ -139,10 +133,10 @@ public class Player extends DrawableEntity {
 
     private void checkWeaponSwap(){
         if(KeyInput.isKeyClicked(GLFW_KEY_1)) {
-            equipedWeapon = assaultRifle;
+            //equipedWeapon = assaultRifle;
         }
         if(KeyInput.isKeyClicked(GLFW_KEY_2)) {
-            equipedWeapon = pistol1;
+            //equipedWeapon = pistol1;
         }
     }
 
@@ -173,16 +167,15 @@ public class Player extends DrawableEntity {
                 .translate(center)
                 .rotate(forward.angle(up), 0.0f, 0.0f, -1.0f)
                 .translate(center.negate());
-        equipedWeapon.rotation = new Matrix4f(rotation);
+
+        if(inventory.getEquipedWeapon() != null)
+            inventory.getEquipedWeapon().rotation = new Matrix4f(rotation);
     }
 
     @Override
     public void cleanUp() {
         super.cleanUp();
         walkingAnimation.cleanUp();
-        for(Weapon wep : weaponList){
-            wep.cleanUp();
-        }
         inventory.cleanUp();
     }
 

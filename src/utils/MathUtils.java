@@ -45,6 +45,16 @@ public class MathUtils {
         return out;
     }
 
+    public static int getInventoryItemIndex(Vector2f mousePos, Vector2f position, float baseScale, int itemPerRow) {
+        Vector2f mFix = MathUtils.screenSpaceToGUI(mousePos).sub(position);
+        double itemWidth = (double)baseScale/(double)(Camera.getWinSizeX()*(double)itemPerRow);
+        double itemHeight = (double)baseScale/(double)(Camera.getWinSizeY()*(double)itemPerRow);
+        int indX = (int)Math.floor((double)mFix.x/itemWidth);
+        int indY = (int)Math.floor((double)mFix.y/itemHeight);
+
+        return indX + itemPerRow*indY;
+    }
+
     public static float clamp(float val, float min, float max) {
         if (val <= min)
             return min;
