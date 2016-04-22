@@ -106,20 +106,19 @@ public class Player extends DrawableEntity {
     private void checkPickUp(Level level) {
         // Check whether we're picking something up
         if (KeyInput.isKeyClicked(GLFW_KEY_F)) {
-            InventoryItem item = null;
-            outerloop:
+            InventoryItem item = level.getClosestItemAt(position);
+            /*outerloop:
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
                     item = level.getDroppedItemAt(new Vector2i((int)position.x + x, (int)position.y + y));
                     if (item != null)
                         break outerloop;
                 }
-            }
+            }*/
 
             if (item != null) {
                 item.setPosition(position);
                 inventory.add(item);
-                System.out.println("Got item!");
             }
         }
     }

@@ -34,7 +34,7 @@ public class Inventory {
     public Inventory() {
         backDropQuad = GraphicsUtils.createInventoryQuad();
         itemList = new ArrayList<>();
-        this.position = new Vector2f(0.5f, 0.0f);
+        this.position = new Vector2f(0.5f, 0.5f);
     }
 
     // Called every tick like everything else
