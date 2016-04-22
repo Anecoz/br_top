@@ -69,7 +69,7 @@ public class Player extends DrawableEntity {
         checkPickUp(level);
         checkWeaponSwap();
         checkRunningStatus();
-        inventory.update();
+        inventory.update(level);
 
         if (!inventory.getIsDragging())
             equipedWeapon.checkFire();
@@ -172,7 +172,7 @@ public class Player extends DrawableEntity {
                 .translate(center)
                 .rotate(forward.angle(up), 0.0f, 0.0f, -1.0f)
                 .translate(center.negate());
-        equipedWeapon.rotation = rotation;
+        equipedWeapon.rotation = new Matrix4f(rotation);
     }
 
     @Override
