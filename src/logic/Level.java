@@ -88,6 +88,36 @@ public class Level {
         return map.getBounds();
     }
 
+    public InventoryItem getClosestItemAt(Vector2f playerPos) {
+        // Loop 9 closest
+        InventoryItem item = null;
+        float minDistance = 10000.0f;
+        Vector2i chosenPos= null;
+        Vector2i playerI = new Vector2i((int)playerPos.x, (int)playerPos.y);
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                if (droppedItems.containsKey(new Vector2i(playerI.x + x, playerI.y + y))) {
+                    List<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
+                    for (InventoryItem currItem : list) {
+                        if (playerPos.distance(currItem.getPosition()) < minDistance) {
+                            item = currItem;
+                            minDistance = playerPos.distance(currItem.getPosition());
+                            chosenPos = new Vector2i(playerI.x + x, playerI.y + y);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (item != null) {
+            List<InventoryItem> list = droppedItems.get(chosenPos);
+            list.remove(item);
+            if (list.size() == 0)
+                droppedItems.remove(chosenPos);
+        }
+        return item;
+    }
+
     public InventoryItem getDroppedItemAt(Vector2i position) {
         if (droppedItems.containsKey(position)) {
             // Don't forget to remove from the list
