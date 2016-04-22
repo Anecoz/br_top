@@ -10,7 +10,7 @@ import utils.FileUtils;
 import utils.GraphicsUtils;
 
 // Any entity that can be drawn to screen
-public class DrawableEntity {
+public abstract class DrawableEntity {
 
     protected Texture texture;
     protected Vector2f position;

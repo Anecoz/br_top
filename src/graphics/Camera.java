@@ -10,10 +10,10 @@ import logic.Level;
 // Z: LAYER < 0.9 IS FURTHEST AWAY
 public class Camera {
     private Matrix4f projection;
-    private Vector2f position;
+    private static Vector2f position;
     private float invAr;
-    public static float WIN_SIZE_X = 20.0f;
-    private float WIN_SIZE_Y;
+    private static float WIN_SIZE_X = 20.0f;
+    private static float WIN_SIZE_Y;
     private static final Matrix4f lookAt = new Matrix4f().lookAt(0f, 0f, -0.1f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
 
     public Camera(int Width, int Height) {
@@ -23,9 +23,12 @@ public class Camera {
         projection = new Matrix4f().ortho(0.0f, WIN_SIZE_X, -WIN_SIZE_Y, 0.0f, -1.0f, 1.0f);
     }
 
-    public void setPosition(Vector2f posIn) {
-        this.position = posIn;
+    public static float getWinSizeY() {return WIN_SIZE_Y;}
+    public static float getWinSizeX() {return WIN_SIZE_X;}
+    public static void setPosition(Vector2f posIn) {
+        position = posIn;
     }
+    public static Vector2f getPosition() {return position;}
 
     public Matrix4f getProjection() {
         return projection.mul(lookAt);

@@ -1,7 +1,6 @@
 package logic;
 
 import graphics.Camera;
-import graphics.shaders.Shader;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowTexture;
 import graphics.lowlevel.Texture;
@@ -11,6 +10,7 @@ import static org.lwjgl.opengl.GL13.*;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import static org.lwjgl.opengl.GL11.*;
 import tiled.core.*;
 import tiled.io.TMXMapReader;
 import utils.FileUtils;
@@ -75,12 +75,13 @@ public class Level {
 
     public void render(Matrix4f projMatrix, ShadowTexture shadowMap, Player player) {
         ShaderHandler.levelShader.comeHere();
+        glDisable(GL_MULTISAMPLE);
 
         ShaderHandler.levelShader.uploadMatrix(projMatrix, "projMatrix");
         ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getWidth()/2.0f, player.getPosition().y + player.getHeight()/2.0f), "lightPos");
         ShaderHandler.levelShader.uploadInt(getBounds().width, "worldWidth");
         ShaderHandler.levelShader.uploadInt(getBounds().height, "worldHeight");
-        ShaderHandler.levelShader.uploadInt((int)Camera.WIN_SIZE_X, "windowSize");
+        ShaderHandler.levelShader.uploadInt((int)Camera.getWinSizeX(), "windowSize");
 
         // Textures
         glActiveTexture(GL_TEXTURE0);
@@ -93,6 +94,7 @@ public class Level {
         shadowMap.unbind();
         glActiveTexture(GL_TEXTURE0);
         ShaderHandler.levelShader.pissOff();
+        glEnable(GL_MULTISAMPLE);
     }
 
     private void initTexture() {

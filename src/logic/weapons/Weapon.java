@@ -15,7 +15,7 @@ import java.util.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
-public class Weapon extends InventoryItem {
+public abstract class Weapon extends InventoryItem {
 
     protected float reloadTime;
     protected int magazineSize;     // Max magazine size
@@ -71,7 +71,6 @@ public class Weapon extends InventoryItem {
                 0.3f,
                 false);
         text.setColour(1, 1, 1);
-
     }
 
     @Override

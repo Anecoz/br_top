@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 
 import java.awt.*;
 
-public class Ammunition extends InventoryItem {
+public abstract class Ammunition extends InventoryItem {
 
     protected Vector2f velocity;
     protected int damage;

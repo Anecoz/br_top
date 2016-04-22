@@ -18,5 +18,6 @@ public class Pistol extends Weapon {
         this.isReloading = false;
         this.isFiring = false;
         this.spawnBullet = false;
+        this.displayName = "Peestol";
     }
 }

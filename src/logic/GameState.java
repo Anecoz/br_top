@@ -23,6 +23,7 @@ import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GameState {
@@ -108,8 +109,9 @@ public class GameState {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_SAMPLES, 8);    // TODO: Make an option
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "3D Game Engine", NULL, NULL);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -126,6 +128,7 @@ public class GameState {
         GL.createCapabilities();
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_MULTISAMPLE);
         System.out.println("Vendor: " + glGetString(GL_VENDOR));
         System.out.println("Renderer: " + glGetString(GL_RENDERER));
         System.out.println("Version: " + glGetString(GL_VERSION));
@@ -233,8 +236,8 @@ public class GameState {
 
     private void updateLogic() {
         glfwPollEvents();
-        player.update(level, projMatrix);
         cam.update(player.getPosition(), player.getSpeed(), level);
+        player.update(level, projMatrix);
         projMatrix = cam.getProjection();
     }
 

@@ -1,8 +1,8 @@
 package logic;
 
+import graphics.Camera;
 import graphics.animation.Animation;
 import input.KeyInput;
-import input.MouseButtonInput;
 import input.MousePosInput;
 import logic.inventory.Inventory;
 import logic.weapons.AssaultRifle;
@@ -23,7 +23,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Player extends DrawableEntity {
     private static final float SPEED = 0.1f;
     private Vector2f forward;
-    private Pistol pistol;
+    private Pistol pistol1, pistol2, pistol3, pistol4, pistol5;
     private AssaultRifle assaultRifle;
     private Animation walkingAnimation;
     private boolean running = false;
@@ -37,28 +37,40 @@ public class Player extends DrawableEntity {
 
         forward = new Vector2f(0);
         walkingAnimation = ResourceHandler.playerAnimation;
-        pistol = new Pistol(position, -0.2f, 1.5f, 15, 24);
+        pistol1 = new Pistol(position, -0.2f, 1.5f, 15, 24);
+        pistol2 = new Pistol(position, -0.2f, 1.5f, 15, 24);
+        pistol3 = new Pistol(position, -0.2f, 1.5f, 15, 24);
+        pistol4 = new Pistol(position, -0.2f, 1.5f, 15, 24);
+        pistol5 = new Pistol(position, -0.2f, 1.5f, 15, 24);
         assaultRifle = new AssaultRifle(position, -0.2f, 1.5f, 40, 800);
-        weaponList.add(pistol);
+        weaponList.add(pistol1);
         weaponList.add(assaultRifle);
-        equipedWeapon = pistol;
+        equipedWeapon = pistol1;
         walkingAnimation.start();
         inventory = new Inventory();
-        inventory.add(pistol);
+        inventory.add(pistol1);
+        inventory.add(pistol2);
+        inventory.add(pistol3);
+        inventory.add(pistol4);
+        inventory.add(pistol5);
+        inventory.add(assaultRifle);
     }
 
     @Override
     public void render(Matrix4f projection) {
         super.render(projection);
         equipedWeapon.render(projection);
-        inventory.render();
+        inventory.render(projection);
     }
 
     public void update(Level level, Matrix4f proj) {
         updateMovement(level);
         checkWeaponSwap();
         checkRunningStatus();
-        equipedWeapon.checkFire();
+        inventory.update();
+
+        if (!inventory.getIsDragging())
+            equipedWeapon.checkFire();
 
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
@@ -107,7 +119,7 @@ public class Player extends DrawableEntity {
             equipedWeapon = assaultRifle;
         }
         if(KeyInput.isKeyClicked(GLFW_KEY_2)) {
-            equipedWeapon = pistol;
+            equipedWeapon = pistol1;
         }
     }
 
@@ -148,6 +160,10 @@ public class Player extends DrawableEntity {
         for(Weapon wep : weaponList){
             wep.cleanUp();
         }
+        pistol2.cleanUp();
+        pistol3.cleanUp();
+        pistol4.cleanUp();
+        pistol5.cleanUp();
     }
 
     public float getSpeed() {return SPEED;}

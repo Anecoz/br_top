@@ -18,5 +18,6 @@ public class AssaultRifle  extends Weapon {
         this.isReloading = false;
         this.isFiring = false;
         this.spawnBullet = false;
+        this.displayName = "Ratata";
     }
 }
