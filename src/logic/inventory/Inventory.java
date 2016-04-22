@@ -60,10 +60,12 @@ public class Inventory {
                 int indY = (int)Math.floor((double)mFix.y/itemHeight);
 
                 int listIndex = indX + ITEMS_PER_ROW*indY;
-                InventoryItem item = itemList.get(listIndex);
-                item.setPosition(new Vector2f(item.getPosition().x, item.getPosition().y));
-                level.addDroppedItem(item);
-                itemList.remove(item);
+                if (itemList.size() >= listIndex + 1) {
+                    InventoryItem item = itemList.get(listIndex);
+                    item.setPosition(new Vector2f(item.getPosition().x, item.getPosition().y));
+                    level.addDroppedItem(item);
+                    itemList.remove(item);
+                }
             }
         }
 
