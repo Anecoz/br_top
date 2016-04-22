@@ -117,6 +117,7 @@ public class Player extends DrawableEntity {
             }
 
             if (item != null) {
+                item.setPosition(position);
                 inventory.add(item);
                 System.out.println("Got item!");
             }
