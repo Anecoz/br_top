@@ -1,16 +1,17 @@
 package logic;
 
-import graphics.Camera;
 import graphics.animation.Animation;
 import input.KeyInput;
 import input.MousePosInput;
 import logic.inventory.Inventory;
+import logic.inventory.InventoryItem;
 import logic.weapons.AssaultRifle;
 import logic.collision.CollisionHandler;
 import logic.weapons.Pistol;
 import logic.weapons.Weapon;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 import utils.MathUtils;
 import utils.ResourceHandler;
@@ -65,6 +66,7 @@ public class Player extends DrawableEntity {
 
     public void update(Level level, Matrix4f proj) {
         updateMovement(level);
+        checkPickUp(level);
         checkWeaponSwap();
         checkRunningStatus();
         inventory.update();
@@ -98,6 +100,26 @@ public class Player extends DrawableEntity {
             position.x += SPEED;
             if (CollisionHandler.checkPlayerCollision(this, level))
                 position.x = tmp.x;
+        }
+    }
+
+    private void checkPickUp(Level level) {
+        // Check whether we're picking something up
+        if (KeyInput.isKeyClicked(GLFW_KEY_F)) {
+            InventoryItem item = null;//level.getDroppedItemAt(new Vector2i((int)position.x, (int)position.y));
+            outerloop:
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    item = level.getDroppedItemAt(new Vector2i((int)position.x + x, (int)position.y + y));
+                    if (item != null)
+                        break outerloop;
+                }
+            }
+
+            if (item != null) {
+                inventory.add(item);
+                System.out.println("Got item!");
+            }
         }
     }
 
@@ -160,10 +182,7 @@ public class Player extends DrawableEntity {
         for(Weapon wep : weaponList){
             wep.cleanUp();
         }
-        pistol2.cleanUp();
-        pistol3.cleanUp();
-        pistol4.cleanUp();
-        pistol5.cleanUp();
+        inventory.cleanUp();
     }
 
     public float getSpeed() {return SPEED;}

@@ -8,9 +8,13 @@ import graphics.lowlevel.VertexArray;
 
 import static org.lwjgl.opengl.GL13.*;
 
+import logic.inventory.InventoryItem;
+import logic.weapons.Pistol;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import static org.lwjgl.opengl.GL11.*;
+
+import org.joml.Vector2i;
 import tiled.core.*;
 import tiled.io.TMXMapReader;
 import utils.FileUtils;
@@ -18,6 +22,10 @@ import utils.LevelUtils;
 
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.HashMap;
 
 // Holds information about the tiled level
 public class Level {
@@ -26,11 +34,18 @@ public class Level {
     private VertexArray vertexArray;
     private Texture textureAtlas;
     private TileLayer tileLayer;
+    private HashMap<Vector2i, List<InventoryItem>> droppedItems;   // Items that lay out on the level
 
     public Level(String filename) {
         try {
             File mapFile = new File(FileUtils.RES_DIR + filename);
             map = new TMXMapReader().readMap(mapFile.getAbsolutePath());
+            droppedItems = new HashMap<>();
+
+            List<InventoryItem> tmp = new ArrayList<>();
+            tmp.add(new Pistol(new Vector2f(15.0f, 10.0f), -0.2f, 1.5f, 15, 24));
+            droppedItems.put(new Vector2i(15, 10), tmp);
+
             initMap();
             initTexture();
         }
@@ -73,6 +88,28 @@ public class Level {
         return map.getBounds();
     }
 
+    public InventoryItem getDroppedItemAt(Vector2i position) {
+        if (droppedItems.containsKey(position)) {
+            // Don't forget to remove from the list
+            List<InventoryItem> list = droppedItems.get(position);
+            InventoryItem item = list.get(list.size() - 1);
+            list.remove(item);
+            droppedItems.remove(position);
+            return item;
+        }
+
+        return null;
+    }
+
+    public void addDroppedItem(InventoryItem item) {
+        // First check if there already is an item at that position
+        Vector2i position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
+        if (!droppedItems.containsKey(position))
+            droppedItems.put(position, new ArrayList<>());
+
+        droppedItems.get(position).add(item);
+    }
+
     public void render(Matrix4f projMatrix, ShadowTexture shadowMap, Player player) {
         ShaderHandler.levelShader.comeHere();
         glDisable(GL_MULTISAMPLE);
@@ -95,6 +132,26 @@ public class Level {
         glActiveTexture(GL_TEXTURE0);
         ShaderHandler.levelShader.pissOff();
         glEnable(GL_MULTISAMPLE);
+
+        renderDroppedItems(projMatrix);
+    }
+
+    private void renderDroppedItems(Matrix4f projection) {
+        for (HashMap.Entry entry : droppedItems.entrySet()) {
+            List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
+            for (InventoryItem item : list) {
+                ShaderHandler.standardShader.comeHere();
+                item.getTexture().bind();
+
+                ShaderHandler.standardShader.uploadMatrix(projection, "projMatrix");
+                ShaderHandler.standardShader.uploadMatrix(item.getRotation(), "rotationMatrix");
+                ShaderHandler.standardShader.uploadMatrix(new Matrix4f().translate(item.getPosition().x, item.getPosition().y, 0f), "modelMatrix");
+                item.getMesh().draw();
+
+                item.getTexture().unbind();
+                ShaderHandler.standardShader.pissOff();
+            }
+        }
     }
 
     private void initTexture() {
@@ -114,5 +171,16 @@ public class Level {
             float[] vbo = LevelUtils.calcVertices(width, height, 0.0f);
             vertexArray = new VertexArray(vbo, tco, 3);
         }
+    }
+
+    public void cleanUp() {
+        for (HashMap.Entry entry : droppedItems.entrySet()) {
+            List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
+            for (InventoryItem item : list) {
+                item.cleanUp();
+            }
+            list.clear();
+        }
+        droppedItems.clear();
     }
 }

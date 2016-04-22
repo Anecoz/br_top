@@ -119,4 +119,12 @@ public class Inventory {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
+
+    public void cleanUp() {
+        for (InventoryItem item : itemList) {
+            item.cleanUp();
+        }
+
+        itemList.clear();
+    }
 }

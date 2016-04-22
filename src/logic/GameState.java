@@ -279,6 +279,7 @@ public class GameState {
         if(shaderHandler != null)
             shaderHandler.cleanUp();
         TextMaster.cleanUp();
+        level.cleanUp();
         glfwDestroyWindow(window);
         errorCallback.release();
     }

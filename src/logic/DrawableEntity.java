@@ -23,6 +23,7 @@ public abstract class DrawableEntity {
     public float getWidth() {return width;}
     public float getHeight() {return height;}
     public Vector2f getPosition() {return position;}
+    public Matrix4f getRotation() {return rotation;}
 
     /*public DrawableEntity(String texFilePath, Vector2f initPos, float layer) {
         this.texture = new Texture(FileUtils.RES_DIR + texFilePath);
