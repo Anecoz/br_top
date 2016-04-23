@@ -29,7 +29,6 @@ public abstract class Weapon extends InventoryItem {
     protected Timer reloadTimer;
     protected Timer shootTimer;
     protected List<Ammunition> ammunitionList = new ArrayList<>();
-    protected Vector2f position;
     protected boolean spawnBullet;
     protected static GUIText text;
 
