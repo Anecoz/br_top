@@ -29,7 +29,6 @@ public abstract class Weapon extends InventoryItem {
     protected Timer reloadTimer;
     protected Timer shootTimer;
     protected List<Ammunition> ammunitionList = new ArrayList<>();
-    protected Vector2f position;
     protected boolean spawnBullet;
     protected static GUIText text;
 
@@ -150,9 +149,9 @@ public abstract class Weapon extends InventoryItem {
 
     private Bullet spawnBullet(){
         Vector2f bulletPos = new Vector2f(
-                position.x + this.width / 2.0f
+                this.position.x + this.width / 2.0f
                         - ResourceHandler.bulletTexture.getWidthAfterScale() / 2.0f,
-                position.y + this.height / 2.0f
+                this.position.y + this.height / 2.0f
                         - ResourceHandler.bulletTexture.getHeightAfterScale() / 2.0f);
         Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
         return new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10);
