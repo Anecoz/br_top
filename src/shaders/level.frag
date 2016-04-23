@@ -8,12 +8,17 @@ in vec2 fragWorldCoords;
 
 uniform sampler2D atlas;
 uniform sampler2D shadowTex;
-uniform vec2 lightPos;
+uniform vec2 playerPos;
 uniform int worldWidth;
 uniform int worldHeight;
 uniform int windowSize;
 
-const float DAMP_FACTOR = 0.2;
+//uniform vec2 lightArr[50];
+uniform vec2 lightPos;
+uniform int numLights = 0;
+
+const float DAMP_FACTOR = 0;
+const float EPS = 0.003;
 
 // Determines if a world position is inside a shadow caster or not
 int posInsideShadow(vec2 coords) {
@@ -38,7 +43,7 @@ float intbounds(float s, float ds)
 }
 
 // Smarter ray traversal algorithm
-int amanatideTraverse(vec2 initPos, vec2 lightPos) {
+int amanatideTraverse(vec2 initPos, vec2 pos) {
 	vec2 currPos = initPos;
 	// Init phase
 	int X = int(floor(currPos.x));
@@ -48,7 +53,7 @@ int amanatideTraverse(vec2 initPos, vec2 lightPos) {
 	float Ox = currPos.x;
 	float Oy = currPos.y;
 
-	vec2 dir = normalize(lightPos - currPos);
+	vec2 dir = normalize(pos - currPos);
 	float dx = dir.x;
 	float dy = dir.y;
 
@@ -62,7 +67,7 @@ int amanatideTraverse(vec2 initPos, vec2 lightPos) {
 	float tDeltaY = float(StepY)/dy;
 
 	// Loop phase
-	while ( (X != int(floor(lightPos.x))) || (Y != int(floor(lightPos.y))) ) {
+	while ( (X != int(floor(pos.x))) || (Y != int(floor(pos.y))) ) {
 		if(tMaxX < tMaxY) {
             X= X + StepX;
             tMaxX= tMaxX + tDeltaX;
@@ -85,36 +90,55 @@ void main() {
     if (col.a < 0.5) {
         discard;
     }
-
     outColor = col;
+
     // Shadows
-    // Only do it if we are within some bounds of light
-    if (distance(fragWorldCoords, lightPos) < windowSize*2) {
+    // This does the player visibility
+    /*if (distance(fragWorldCoords, playerPos) < windowSize*2) {
         // Check if current frag is on a shadow caster
         if (posInsideShadow(vec2(fragWorldCoords.x/float(worldWidth), fragWorldCoords.y/float(worldHeight))) == 1) {
             outColor = col*DAMP_FACTOR;
         }
-        else if (amanatideTraverse(fragWorldCoords, lightPos) == 1) {
-            // Sample several closeby points as well
-            /*float dist = distance(lightPos, fragWorldCoords)/30.0;
+        if (amanatideTraverse(fragWorldCoords, playerPos) == 1) {
+            outColor = col*DAMP_FACTOR;
+        }
+    }*/
+
+    // This does shadows cast by light source
+    if (numLights > 0) {
+        //vec2 lightPos = lightArr[0];
+        float maxDist = 5.0;
+        float dist = 1.5 - clamp(distance(lightPos, fragWorldCoords)/maxDist, 0.0, 1.0);
+        if (distance(fragWorldCoords, lightPos) < windowSize*2) {
+            if (posInsideShadow(vec2(fragWorldCoords.x/float(worldWidth), fragWorldCoords.y/float(worldHeight))) == 1) {
+                outColor = col*DAMP_FACTOR;
+            }
+            else if (amanatideTraverse(fragWorldCoords, lightPos+EPS) == 1) {
+                outColor *= 0.1;
+            }
+            else {
+                outColor *= pow(dist, 3);
+            }
+        }
+    }
+}
+
+// Sample several closeby points as well
+            /*float dist = distance(playerPos, fragWorldCoords)/30.0;
             float blur = (1.0 / float(windowSize)) * smoothstep(0.0, 1.0, dist);
 
             float sum = 0.0;
 
-            sum += amanatideTraverse(fragWorldCoords + vec2(0.05, 0.0), lightPos);
-            sum += amanatideTraverse(fragWorldCoords + vec2(0.09, 0.0), lightPos);
-            sum += amanatideTraverse(fragWorldCoords + vec2(-0.05, 0.0), lightPos);
-            sum += amanatideTraverse(fragWorldCoords + vec2(-0.09, 0.0), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.05, 0.0), playerPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.09, 0.0), playerPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(-0.05, 0.0), playerPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(-0.09, 0.0), playerPos);
 
-            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, 0.05), lightPos);
-            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, 0.09), lightPos);
-            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, -0.05), lightPos);
-            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, -0.09), lightPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, 0.05), playerPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, 0.09), playerPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, -0.05), playerPos);
+            sum += amanatideTraverse(fragWorldCoords + vec2(0.0, -0.09), playerPos);
 
             sum = sum/8.0;
 
             outColor = col * (1.0/sum);*/
-            outColor = col*DAMP_FACTOR;
-        }
-    }
-}

@@ -1,4 +1,4 @@
-package fontMeshCreator;
+package gui.fontMeshCreator;
 
 import graphics.lowlevel.Texture;
 

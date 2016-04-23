@@ -1,6 +1,7 @@
 package logic;
 
 import graphics.Camera;
+import graphics.lighting.LightHandler;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowTexture;
 import graphics.lowlevel.Texture;
@@ -146,10 +147,12 @@ public class Level {
         glDisable(GL_MULTISAMPLE);
 
         ShaderHandler.levelShader.uploadMatrix(projMatrix, "projMatrix");
-        ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getWidth()/2.0f, player.getPosition().y + player.getHeight()/2.0f), "lightPos");
+        ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getWidth()/2.0f, player.getPosition().y + player.getHeight()/2.0f), "playerPos");
         ShaderHandler.levelShader.uploadInt(getBounds().width, "worldWidth");
         ShaderHandler.levelShader.uploadInt(getBounds().height, "worldHeight");
         ShaderHandler.levelShader.uploadInt((int)Camera.getWinSizeX(), "windowSize");
+        ShaderHandler.levelShader.uploadInt(1, "numLights");
+        ShaderHandler.levelShader.uploadVec(LightHandler.lightList.get(0), "lightPos");
 
         // Textures
         glActiveTexture(GL_TEXTURE0);

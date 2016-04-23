@@ -27,6 +27,16 @@ public class MathUtils {
         return new Vector2f(x, y);
     }
 
+    // Returns whether a given GUI coord is within a bounding box specified by x,y,width and height (in gui coords)
+    public static boolean isWithinGuiBox(Vector2f guiPoint, float x, float y, float width, float height) {
+        boolean out = false;
+        if (guiPoint.x >= x && guiPoint.x <= x + width) {
+            if (guiPoint.y >= y && guiPoint.y <= y + height)
+                out = true;
+        }
+        return out;
+    }
+
     // Returns whether a given mouse coord is within the inventory, specified by the in position
     // Inventorypos is in GUI coordinates, screenpoint is in mouse coordinates
     public static boolean screenPointWithinInventory(Vector2f screenPoint, Vector2f inventoryPos, float baseScale) {

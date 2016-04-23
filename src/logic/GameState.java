@@ -2,12 +2,14 @@ package logic;
 
 import audio.AudioMaster;
 import audio.AudioSource;
-import fontMeshCreator.GUIText;
-import fontRendering.TextMaster;
+import graphics.lighting.LightHandler;
+import gui.fontMeshCreator.GUIText;
+import gui.fontRendering.TextMaster;
 import graphics.Camera;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowHandler;
 import graphics.shadows.ShadowTexture;
+import gui.menus.Button;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
@@ -17,6 +19,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import utils.ResourceHandler;
+
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
@@ -49,6 +53,9 @@ public class GameState {
     private AudioSource ambienceSound;
     private ShaderHandler shaderHandler;
     private ResourceHandler resourceHandler;
+
+    private Button button;
+    private GUIText text;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -136,9 +143,15 @@ public class GameState {
         resourceHandler.init();
         shaderHandler.init();
 
-        GUIText text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 4, ResourceHandler.font, new Vector2f(0f, 0f), 1f, true);
+        text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 3, ResourceHandler.font, new Vector2f(0f, 0f), 1f, true);
+        button = new Button("Go on, click me!", new Vector2f(0.5f, 0.5f)) {
+            @Override
+            public void callback() {
+                System.out.println("Clicked!");
+            }
+        };
         text.setColour(1f, 1f, 1f);
-        text.setRenderParams(0.3f, 0.3f, 0.5f, 0.2f);
+        text.setRenderParams(0.5f, 0.1f, 0.6f, 0.1f);
     }
 
     private void gameInit() {
@@ -153,6 +166,7 @@ public class GameState {
         ambienceSound.setLooping(true);
         ambienceSound.setVolume(1);
         ambienceSound.play(ResourceHandler.ambienceSoundBuffer);
+        LightHandler.init();
     }
 
     private void loop() {
@@ -173,7 +187,7 @@ public class GameState {
                 lastTime = now;
                 if (delta >= 1.0) {
                     // TODO: Add menu logic update here.
-                    glfwPollEvents();
+                    updateMenu();
                     updates++;
                     delta--;
                 }
@@ -197,6 +211,8 @@ public class GameState {
         }
         else if(gameState == GameStates.GAME_RUNNING) {
             // DO an initial update
+            button.remove();
+            text.remove();
             updateLogic();
             while (gameState == GameStates.GAME_RUNNING && glfwWindowShouldClose(window) == GLFW_FALSE) {
                 long now = System.nanoTime();
@@ -228,6 +244,11 @@ public class GameState {
         else {
             // Normal Update?
         }
+    }
+
+    private void updateMenu() {
+        glfwPollEvents();
+        button.update();
     }
 
     private void updateLogic() {
