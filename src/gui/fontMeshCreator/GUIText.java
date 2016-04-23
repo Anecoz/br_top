@@ -1,8 +1,8 @@
-package fontMeshCreator;
+package gui.fontMeshCreator;
 
 
 
-import fontRendering.TextMaster;
+import gui.fontRendering.TextMaster;
 import graphics.lowlevel.VertexArray;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -25,10 +25,10 @@ public class GUIText {
 	private Vector2f position;
 	private float lineMaxSize;
 	private int numberOfLines;
-    private float width = 0.3f;
-    private float edge = 0.3f;
+    private float width = 0.5f;
+    private float edge = 0.2f;
     private float borderWidth = 0.6f;
-    private float borderEdge = 0.2f;
+    private float borderEdge = 0.4f;
 
 	private VertexArray mesh;
 

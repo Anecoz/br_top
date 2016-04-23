@@ -1,13 +1,13 @@
-package fontRendering;
+package gui.fontRendering;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fontMeshCreator.FontType;
-import fontMeshCreator.GUIText;
-import fontMeshCreator.TextMeshData;
+import gui.fontMeshCreator.FontType;
+import gui.fontMeshCreator.GUIText;
+import gui.fontMeshCreator.TextMeshData;
 import graphics.lowlevel.VertexArray;
 
 public class TextMaster {

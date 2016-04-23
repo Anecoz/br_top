@@ -1,6 +1,6 @@
 package logic.weapons;
 
-import fontMeshCreator.GUIText;
+import gui.fontMeshCreator.GUIText;
 import graphics.lowlevel.Texture;
 import input.KeyInput;
 import input.MouseButtonInput;
@@ -8,7 +8,6 @@ import logic.Level;
 import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.w3c.dom.Text;
 import utils.ResourceHandler;
 
 import java.util.*;

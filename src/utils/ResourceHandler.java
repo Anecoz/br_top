@@ -1,7 +1,7 @@
 package utils;
 
 import audio.AudioMaster;
-import fontMeshCreator.FontType;
+import gui.fontMeshCreator.FontType;
 import graphics.animation.Animation;
 import graphics.lowlevel.Texture;
 
@@ -41,7 +41,7 @@ public class ResourceHandler {
         assaultRifleTexture = new Texture(FileUtils.RES_DIR + "weapons/assault_rifle.png", 1.0f);
         assaultRifleTextureDisplay = new Texture(FileUtils.RES_DIR + "weapons/assault_rifle_display.png", 1.0f);
         bulletTexture = new Texture(FileUtils.RES_DIR + "weapons/bullet.png", 0.2f);
-        fontAtlasTexture = new Texture(FileUtils.RES_DIR + "fonts/gadugi.png");
+        fontAtlasTexture = new Texture(FileUtils.RES_DIR + "fonts/candara.png");
 
         // Sound Buffers
         ambienceSoundBuffer = AudioMaster.loadSound(FileUtils.RES_DIR + "sounds/Ambience_Bird.wav");
@@ -50,7 +50,7 @@ public class ResourceHandler {
         playerAnimation = new Animation(FileUtils.RES_DIR + "characters/playerSpriteSheet.png", 100, 100, 8);
 
         // Fonts
-        font = new FontType(ResourceHandler.fontAtlasTexture, new File(FileUtils.RES_DIR + "fonts/gadugi.fnt"));
+        font = new FontType(ResourceHandler.fontAtlasTexture, new File(FileUtils.RES_DIR + "fonts/candara.fnt"));
     }
 
     public void cleanUp(){
