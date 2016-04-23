@@ -1,5 +1,6 @@
 package logic;
 
+import graphics.lighting.LightHandler;
 import graphics.lowlevel.IndexedVertexArray;
 import graphics.lowlevel.Texture;
 import graphics.shaders.ShaderHandler;
@@ -52,6 +53,8 @@ public abstract class DrawableEntity {
         ShaderHandler.standardShader.uploadMatrix(projection, "projMatrix");
         ShaderHandler.standardShader.uploadMatrix(rotation, "rotationMatrix");
         ShaderHandler.standardShader.uploadMatrix(new Matrix4f().translate(position.x, position.y, 0f), "modelMatrix");
+        ShaderHandler.standardShader.uploadInt(1, "numLights");
+        ShaderHandler.standardShader.uploadVec(LightHandler.lightList.get(0), "lightPos");
         mesh.draw();
 
         texture.unbind();

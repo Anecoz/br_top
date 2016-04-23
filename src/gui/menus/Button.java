@@ -71,4 +71,8 @@ public abstract class Button {
             guiText.setRenderParams(0.4f, 0.3f, 0.6f, 0.4f);
         }
     }
+
+    public void remove() {
+        guiText.remove();
+    }
 }

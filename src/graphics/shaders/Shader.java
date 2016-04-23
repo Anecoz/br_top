@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import utils.ShaderUtils;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.List;
 
@@ -47,6 +48,16 @@ public class Shader {
         FloatBuffer fb = BufferUtils.createFloatBuffer(3);
         vec.get(fb);
         glUniform3fv(loc, fb);
+    }
+
+    public void uploadVecArr(List<Vector2f> arr, String uniformName) {
+        int loc = glGetUniformLocation(id, uniformName);
+        FloatBuffer fb = BufferUtils.createFloatBuffer(2 * arr.size());
+        for (Vector2f vec : arr) {
+            fb.put(vec.x);
+            fb.put(vec.y);
+        }
+        glUniform2fv(loc, fb);
     }
 
     public void uploadMatrix(Matrix4f mat, String uniformName) {

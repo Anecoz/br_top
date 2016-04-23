@@ -2,6 +2,7 @@ package logic;
 
 import audio.AudioMaster;
 import audio.AudioSource;
+import graphics.lighting.LightHandler;
 import gui.fontMeshCreator.GUIText;
 import gui.fontRendering.TextMaster;
 import graphics.Camera;
@@ -18,6 +19,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import utils.ResourceHandler;
+
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
@@ -52,6 +55,7 @@ public class GameState {
     private ResourceHandler resourceHandler;
 
     private Button button;
+    private GUIText text;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -139,7 +143,7 @@ public class GameState {
         resourceHandler.init();
         shaderHandler.init();
 
-        GUIText text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 3, ResourceHandler.font, new Vector2f(0f, 0f), 1f, true);
+        text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 3, ResourceHandler.font, new Vector2f(0f, 0f), 1f, true);
         button = new Button("Go on, click me!", new Vector2f(0.5f, 0.5f)) {
             @Override
             public void callback() {
@@ -162,6 +166,7 @@ public class GameState {
         ambienceSound.setLooping(true);
         ambienceSound.setVolume(1);
         ambienceSound.play(ResourceHandler.ambienceSoundBuffer);
+        LightHandler.init();
     }
 
     private void loop() {
@@ -206,6 +211,8 @@ public class GameState {
         }
         else if(gameState == GameStates.GAME_RUNNING) {
             // DO an initial update
+            button.remove();
+            text.remove();
             updateLogic();
             while (gameState == GameStates.GAME_RUNNING && glfwWindowShouldClose(window) == GLFW_FALSE) {
                 long now = System.nanoTime();
