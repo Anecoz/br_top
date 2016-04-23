@@ -13,6 +13,7 @@ import gui.menus.Button;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
+import logic.menu.*;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -33,7 +34,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class GameState {
 
     public static enum GameStates{
-        GAME_START, GAME_LOBBY, GAME_INIT, GAME_RUNNING, GAME_OVER, GAME_END,
+        GAME_START, GAME_MAIN, GAME_LOBBY, GAME_OPTION, GAME_PAUSE, GAME_INIT, GAME_RUNNING, GAME_OVER, GAME_END,
         GAME_EXIT
     }
 
@@ -53,9 +54,12 @@ public class GameState {
     private AudioSource ambienceSound;
     private ShaderHandler shaderHandler;
     private ResourceHandler resourceHandler;
-
-    private Button button;
-    private GUIText text;
+    private MainMenu mainMenu;
+    private LobbyMenu lobbyMenu;
+    private OptionsMenu optionsMenu;
+    private EndMenu endMenu;
+    private PauseMenu pauseMenu;
+    public static boolean loop = true;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -78,12 +82,25 @@ public class GameState {
             case GAME_START:                            // Only run once! Initialize opengl and lwjgl.
                 glInit();                               // And menu.
                 menuInit();
-                gameState = GameStates.GAME_LOBBY;
+                gameState = GameStates.GAME_MAIN;
                 break;
-            case GAME_LOBBY:                            // Main Menu loop.
+            case GAME_MAIN:                             // Main menu loop.
+                menuCleanUp();
+                mainMenu = new MainMenu();
+                loop();
+                break;
+            case GAME_LOBBY:                            // Lobby menu loop.
+                menuCleanUp();
+                lobbyMenu = new LobbyMenu();
+                loop();
+                break;
+            case GAME_OPTION:                           // Options menu loop.
+                menuCleanUp();
+                optionsMenu = new OptionsMenu();
                 loop();
                 break;
             case GAME_INIT:                             // Only run once! Initialize a game.
+                menuCleanUp();
                 gameInit();
                 gameState = GameStates.GAME_RUNNING;
                 break;
@@ -98,7 +115,7 @@ public class GameState {
                 exitCleanUp();
                 break;
         }
-
+        loop = true;
         System.out.println(gameState);
     }
 
@@ -142,16 +159,6 @@ public class GameState {
         AudioMaster.init();
         resourceHandler.init();
         shaderHandler.init();
-
-        text = new GUIText("Welcome to Kapperino Kapperoni... Kappa", 3, ResourceHandler.font, new Vector2f(0f, 0f), 1f, true);
-        button = new Button("Go on, click me!", new Vector2f(0.5f, 0.5f)) {
-            @Override
-            public void callback() {
-                System.out.println("Clicked!");
-            }
-        };
-        text.setColour(1f, 1f, 1f);
-        text.setRenderParams(0.5f, 0.1f, 0.6f, 0.1f);
     }
 
     private void gameInit() {
@@ -177,82 +184,86 @@ public class GameState {
         int updates = 0;
         int frames = 0;
 
-        if(gameState == GameStates.GAME_LOBBY || gameState == GameStates.GAME_OVER) {
+        if (gameState == GameStates.GAME_RUNNING) {
             // DO an initial update
-            // TODO: Add menu logic update here.
-            while ((gameState == GameStates.GAME_LOBBY && glfwWindowShouldClose(window) == GLFW_FALSE) ||
-                    (gameState == GameStates.GAME_OVER && glfwWindowShouldClose(window) == GLFW_FALSE)) {
-                long now = System.nanoTime();
-                delta += (now - lastTime) / ns;
-                lastTime = now;
-                if (delta >= 1.0) {
-                    // TODO: Add menu logic update here.
-                    updateMenu();
-                    updates++;
-                    delta--;
-                }
-                renderMenu();
-                frames++;
-                if (System.currentTimeMillis() - timer > 1000) {
-                    timer += 1000;
-                    glfwSetWindowTitle(window, updates + " ups, " + frames + " fps");
-                    updates = 0;
-                    frames = 0;
-                }
-                //TEMP//////////////////////////
-                if (KeyInput.isKeyDown(GLFW_KEY_SPACE) && gameState == GameStates.GAME_LOBBY) {
-                    gameState = GameStates.GAME_INIT;
-                }
-                if (KeyInput.isKeyDown(GLFW_KEY_ESCAPE) || glfwWindowShouldClose(window) == GLFW_TRUE) {
-                    gameState = GameStates.GAME_END;
-                }
-                ////////////////////////////////
-            }
-        }
-        else if(gameState == GameStates.GAME_RUNNING) {
-            // DO an initial update
-            button.remove();
-            text.remove();
             updateLogic();
-            while (gameState == GameStates.GAME_RUNNING && glfwWindowShouldClose(window) == GLFW_FALSE) {
-                long now = System.nanoTime();
-                delta += (now - lastTime) / ns;
-                lastTime = now;
-                if (delta >= 1.0) {
-                    updateLogic();
-                    updates++;
-                    delta--;
+        }
+        while (loop && glfwWindowShouldClose(window) == GLFW_FALSE) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            if (delta >= 1.0) {
+                switch (gameState) {
+                    case GAME_MAIN:
+                        mainMenu.update();
+                        break;
+                    case GAME_LOBBY:
+                        lobbyMenu.update();
+                        break;
+                    case GAME_OPTION:
+                        optionsMenu.update();
+                        break;
+                    case GAME_RUNNING:
+                        updateLogic();
+                        break;
+                    case GAME_PAUSE:
+                        if (pauseMenu != null)
+                            pauseMenu.update();
+                        updateLogic();
+                        break;
+                    case GAME_OVER:
+                        if (endMenu == null)
+                            endMenu = new EndMenu();
+                        endMenu.update();
+                        break;
+                    default:
+                        break;
                 }
-                renderGame();
-                frames++;
-                if (System.currentTimeMillis() - timer > 1000) {
-                    timer += 1000;
-                    glfwSetWindowTitle(window, updates + " ups, " + frames + " fps");
-                    updates = 0;
-                    frames = 0;
-                }
-                //TEMP//////////////////////////
-                if (KeyInput.isKeyDown(GLFW_KEY_O)) {
-                    gameState = GameStates.GAME_OVER;
-                }
-                if (KeyInput.isKeyDown(GLFW_KEY_ESCAPE) || glfwWindowShouldClose(window) == GLFW_TRUE) {
-                    gameState = GameStates.GAME_END;
-                }
-                ////////////////////////////////
+                glfwPollEvents();
+                updates++;
+                delta--;
             }
+            if (gameState == GameStates.GAME_RUNNING || gameState == GameStates.GAME_PAUSE)
+                renderGame();
+            else
+                renderMenu();
+            frames++;
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                glfwSetWindowTitle(window, updates + " ups, " + frames + " fps");
+                updates = 0;
+                frames = 0;
+            }
+            //TEMP/////////////////////////////////////////////////////////////////////////////////////////
+            if (KeyInput.isKeyClicked(GLFW_KEY_O)) {
+                gameState = GameStates.GAME_OVER;
+                loop = false;
+            }
+            if (glfwWindowShouldClose(window) == GLFW_TRUE) {
+                gameState = GameStates.GAME_END;
+                loop = false;
+            }
+            if (gameState != GameStates.GAME_PAUSE && gameState != GameStates.GAME_RUNNING &&
+                    KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) {
+                gameState = GameStates.GAME_END;
+                loop = false;
+            }
+            if ((gameState == GameStates.GAME_PAUSE && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) ||
+                    (gameState == GameStates.GAME_RUNNING && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE))) {
+                if (pauseMenu == null) {
+                    pauseMenu = new PauseMenu();
+                    gameState = GameStates.GAME_PAUSE;
+                } else {
+                    pauseMenu.destroy();
+                    pauseMenu = null;
+                    gameState = GameStates.GAME_RUNNING;
+                }
+            }
+            //TEMP/////////////////////////////////////////////////////////////////////////////////////////
         }
-        else {
-            // Normal Update?
-        }
-    }
-
-    private void updateMenu() {
-        glfwPollEvents();
-        button.update();
     }
 
     private void updateLogic() {
-        glfwPollEvents();
         cam.update(player.getPosition(), player.getSpeed(), level);
         player.update(level, projMatrix);
         projMatrix = cam.getProjection();
@@ -273,9 +284,27 @@ public class GameState {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         TextMaster.render();
-        // Add menu renders
 
         glfwSwapBuffers(window);
+    }
+
+    private void menuCleanUp(){
+        if(mainMenu != null)
+            mainMenu.destroy();
+        if(lobbyMenu != null)
+            lobbyMenu.destroy();
+        if(endMenu != null)
+            endMenu.destroy();
+        if(optionsMenu != null)
+            optionsMenu.destroy();
+        if(pauseMenu != null)
+            pauseMenu.destroy();
+
+        mainMenu = null;
+        lobbyMenu = null;
+        endMenu = null;
+        optionsMenu = null;
+        pauseMenu = null;
     }
 
     private void gameCleanUp(){
@@ -289,6 +318,7 @@ public class GameState {
 
     private void exitCleanUp(){
         gameState = GameStates.GAME_EXIT;
+        menuCleanUp();
         gameCleanUp();
         AudioMaster.cleanUp();
         if(resourceHandler != null)

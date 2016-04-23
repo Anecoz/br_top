@@ -16,14 +16,15 @@ public abstract class InventoryItem extends DrawableEntity {
         this.displayTexture = displayTexture;
     }
 
-    public void setPosition(Vector2f pos) {this.position = pos;}
+    public void setPosition(Vector2f pos) {
+        this.position = pos;}
 
     public Texture getTexture() {
         return this.texture;
     }
 
     public Texture getDisplayTexture() {
-        return displayTexture;
+        return this.displayTexture;
     }
 
     public IndexedVertexArray getMesh() {

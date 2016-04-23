@@ -73,6 +73,18 @@ public abstract class Button {
         }
     }
 
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setPosition(Vector2f pos) {
+        position = pos;
+    }
+
     public void remove() {
         guiText.remove();
     }
