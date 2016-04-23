@@ -13,7 +13,17 @@ public class MainMenu extends MenuItem {
         Button playButton = new Button("PLAY", new Vector2f(0.45f, 0.3f)) {
             @Override
             public void callback() {
+                GameState.gameStateOld = GameState.gameState;
                 GameState.gameState = GameState.GameStates.GAME_INIT;
+                GameState.loop = false;
+            }
+        };
+
+        Button optionButton = new Button("OPTIONS", new Vector2f(0.45f, 0.35f)) {
+            @Override
+            public void callback() {
+                GameState.gameStateOld = GameState.gameState;
+                GameState.gameState = GameState.GameStates.GAME_OPTION;
                 GameState.loop = false;
             }
         };
@@ -21,6 +31,7 @@ public class MainMenu extends MenuItem {
         Button exitButton = new Button("EXIT",  new Vector2f(0.45f, 0.4f)) {
             @Override
             public void callback() {
+                GameState.gameStateOld = GameState.gameState;
                 GameState.gameState = GameState.GameStates.GAME_END;
                 GameState.loop = false;
             }
@@ -32,6 +43,7 @@ public class MainMenu extends MenuItem {
         mainText.setRenderParams(0.5f, 0.1f, 0.6f, 0.1f);
 
         // Add the buttons and texts to MenuItems lists to update them.
+        buttonList.add(optionButton);
         buttonList.add(playButton);
         buttonList.add(exitButton);
         textList.add(mainText);

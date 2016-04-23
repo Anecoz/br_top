@@ -13,6 +13,7 @@ public class LobbyMenu extends MenuItem {
         Button playButton = new Button("PLAY", new Vector2f(0.45f, 0.3f)) {
             @Override
             public void callback() {
+                GameState.gameStateOld = GameState.gameState;
                 GameState.gameState = GameState.GameStates.GAME_INIT;
                 GameState.loop = false;
             }
@@ -21,6 +22,7 @@ public class LobbyMenu extends MenuItem {
         Button backButton = new Button("EXIT",  new Vector2f(0.45f, 0.4f)) {
             @Override
             public void callback() {
+                GameState.gameStateOld = GameState.gameState;
                 GameState.gameState = GameState.GameStates.GAME_END;
                 GameState.loop = false;
             }

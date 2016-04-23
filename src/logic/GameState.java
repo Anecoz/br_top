@@ -60,11 +60,13 @@ public class GameState {
     private EndMenu endMenu;
     private PauseMenu pauseMenu;
     public static boolean loop = true;
+    public static boolean isGameRunning = false;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
 
     public static GameStates gameState;
+    public static GameStates gameStateOld;
 
     public GameState(){
         gameState = GameStates.GAME_START;
@@ -99,15 +101,22 @@ public class GameState {
                 optionsMenu = new OptionsMenu();
                 loop();
                 break;
+            case GAME_PAUSE:
+                menuCleanUp();
+                loop();
+                break;
             case GAME_INIT:                             // Only run once! Initialize a game.
                 menuCleanUp();
                 gameInit();
                 gameState = GameStates.GAME_RUNNING;
                 break;
             case GAME_RUNNING:                          // Game running loop.
+                menuCleanUp();
+                isGameRunning = true;
                 loop();
                 break;
             case GAME_OVER:                             // Game is over.
+                isGameRunning = false;
                 gameCleanUp();
                 loop();
                 break;
@@ -116,7 +125,6 @@ public class GameState {
                 break;
         }
         loop = true;
-        System.out.println(gameState);
     }
 
     private void glInit() {
@@ -184,7 +192,10 @@ public class GameState {
         int updates = 0;
         int frames = 0;
 
-        if (gameState == GameStates.GAME_RUNNING) {
+        System.out.println("Current State: " + gameState);
+        System.out.println("Old State    : " + gameStateOld);
+
+        if (isGameRunning) {
             // DO an initial update
             updateLogic();
         }
@@ -201,14 +212,18 @@ public class GameState {
                         lobbyMenu.update();
                         break;
                     case GAME_OPTION:
-                        optionsMenu.update();
+                        if(optionsMenu != null)
+                            optionsMenu.update();
+                        if(isGameRunning)
+                            updateLogic();
                         break;
                     case GAME_RUNNING:
                         updateLogic();
                         break;
                     case GAME_PAUSE:
-                        if (pauseMenu != null)
-                            pauseMenu.update();
+                        if (pauseMenu == null)
+                            pauseMenu = new PauseMenu();
+                        pauseMenu.update();
                         updateLogic();
                         break;
                     case GAME_OVER:
@@ -223,7 +238,7 @@ public class GameState {
                 updates++;
                 delta--;
             }
-            if (gameState == GameStates.GAME_RUNNING || gameState == GameStates.GAME_PAUSE)
+            if (isGameRunning)
                 renderGame();
             else
                 renderMenu();
@@ -243,13 +258,11 @@ public class GameState {
                 gameState = GameStates.GAME_END;
                 loop = false;
             }
-            if (gameState != GameStates.GAME_PAUSE && gameState != GameStates.GAME_RUNNING &&
-                    KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) {
+            if (!isGameRunning && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) {
                 gameState = GameStates.GAME_END;
                 loop = false;
             }
-            if ((gameState == GameStates.GAME_PAUSE && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) ||
-                    (gameState == GameStates.GAME_RUNNING && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE))) {
+            if (isGameRunning && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) {
                 if (pauseMenu == null) {
                     pauseMenu = new PauseMenu();
                     gameState = GameStates.GAME_PAUSE;

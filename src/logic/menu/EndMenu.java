@@ -13,6 +13,7 @@ public class EndMenu extends MenuItem {
         Button mainButton = new Button("MAIN MENU",  new Vector2f(0.45f, 0.4f)) {
             @Override
             public void callback() {
+                GameState.gameStateOld = GameState.gameState;
                 GameState.gameState = GameState.GameStates.GAME_MAIN;
                 GameState.loop = false;
             }

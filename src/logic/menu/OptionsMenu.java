@@ -13,7 +13,8 @@ public class OptionsMenu extends MenuItem {
         Button backButton = new Button("BACK",  new Vector2f(0.45f, 0.4f)) {
             @Override
             public void callback() {
-                GameState.gameState = GameState.GameStates.GAME_END;
+                GameState.gameState = GameState.gameStateOld;
+                GameState.gameStateOld = GameState.GameStates.GAME_OPTION;
                 GameState.loop = false;
             }
         };
