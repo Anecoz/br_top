@@ -68,6 +68,7 @@ public abstract class Button {
         }
         // Not hovering, clicking or anything else
         else {
+            pressing = false;
             guiText.setRenderParams(0.4f, 0.3f, 0.6f, 0.4f);
         }
     }

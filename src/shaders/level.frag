@@ -94,7 +94,7 @@ void main() {
 
     // Shadows
     // This does the player visibility
-    /*if (distance(fragWorldCoords, playerPos) < windowSize*2) {
+    if (distance(fragWorldCoords, playerPos) < windowSize*2) {
         // Check if current frag is on a shadow caster
         if (posInsideShadow(vec2(fragWorldCoords.x/float(worldWidth), fragWorldCoords.y/float(worldHeight))) == 1) {
             outColor = col*DAMP_FACTOR;
@@ -102,7 +102,7 @@ void main() {
         if (amanatideTraverse(fragWorldCoords, playerPos) == 1) {
             outColor = col*DAMP_FACTOR;
         }
-    }*/
+    }
 
     // This does shadows cast by light source
     if (numLights > 0) {
