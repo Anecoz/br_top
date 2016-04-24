@@ -17,12 +17,12 @@ public class Texture {
     private int texture;
     private int type = GL_TEXTURE_2D;
 
-    /*public Texture(int width, int height, int id, int type) {
+    public Texture(int width, int height, int id, int type) {
         this.width = width;
         this.height = height;
         this.texture = id;
         this.type = type;
-    }*/
+    }
 
     public Texture(String path, float scale) {
         this.scale = scale;

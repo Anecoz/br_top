@@ -1,25 +1,46 @@
 package graphics.shadows;
 
-
+import static org.lwjgl.opengl.GL11.*;
 import logic.Level;
+import logic.Player;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import tiled.core.Tile;
 import utils.GraphicsUtils;
 
+import java.util.List;
+
 // Holds information about whether tiles close to player are shadow casting or not
 public class ShadowHandler {
-    private ShadowTexture shadowTexture;
+    public static ShadowCasterTexture shadowCasterTexture;
 
     public ShadowHandler() {
 
     }
 
-    public ShadowTexture calcShadowTexture(Level level) {
-        shadowTexture = new ShadowTexture();
+    public static void init() {
+        ShadowMap.init();
+    }
+
+    public static void calcShadowMap(List<Vector2f> lightArr, Matrix4f proj, Level level, Player player) {
+        ShadowMap.calcShadowMap(lightArr, proj, level, player);
+    }
+
+    public static void bindShadowMap() {
+        glBindTexture(GL_TEXTURE_2D, ShadowMap.shadowMapID);
+    }
+
+    public static void unbindShadowMap() {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public static void calcShadowCaster(Level level) {
+        shadowCasterTexture = new ShadowCasterTexture();
         int width = (int)level.getBounds().getWidth();
         int height = (int)level.getBounds().getHeight();
-        shadowTexture.init(width, height);
+        shadowCasterTexture.init(width, height);
 
-        // Loop through tiles close to player and get shadow info
+        // Loop through tiles close to player and get collision info
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++) {
                 Tile currTile = level.getTileAt(x, y);
@@ -27,12 +48,14 @@ public class ShadowHandler {
                 if (currTile == null)
                     continue;
 
-                shadowTexture.addAt(x, y, (level.isShadowCastingTile(currTile)) ? 1 : 0);
+                shadowCasterTexture.addAt(x, y, (level.isShadowCastingTile(currTile)) ? 1 : 0);
             }
 
         // When done, convert to a texture
-        shadowTexture.convertToTexture();
+        shadowCasterTexture.convertToTexture();
         GraphicsUtils.printError("after convert");
-        return shadowTexture;
+        //return shadowCasterTexture;
     }
+
+
 }

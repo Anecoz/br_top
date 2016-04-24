@@ -10,13 +10,13 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 // G: world y coordinate
 // B: isShadowCaster
 // A: not used
-public class ShadowTexture {
+public class ShadowCasterTexture {
     private int[] data;
     private int texId;
     private int width;
     private int height;
 
-    public ShadowTexture() {
+    public ShadowCasterTexture() {
 
     }
 

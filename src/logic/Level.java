@@ -3,12 +3,12 @@ package logic;
 import graphics.Camera;
 import graphics.lighting.LightHandler;
 import graphics.shaders.ShaderHandler;
-import graphics.shadows.ShadowTexture;
 import graphics.lowlevel.Texture;
 import graphics.lowlevel.VertexArray;
 
 import static org.lwjgl.opengl.GL13.*;
 
+import graphics.shadows.ShadowHandler;
 import logic.inventory.InventoryItem;
 import logic.weapons.Pistol;
 import org.joml.Matrix4f;
@@ -24,7 +24,6 @@ import utils.LevelUtils;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
 
@@ -142,7 +141,7 @@ public class Level {
         droppedItems.get(position).add(item);
     }
 
-    public void render(Matrix4f projMatrix, ShadowTexture shadowMap, Player player) {
+    public void render(Matrix4f projMatrix, Player player) {
         ShaderHandler.levelShader.comeHere();
         glDisable(GL_MULTISAMPLE);
 
@@ -150,19 +149,21 @@ public class Level {
         ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getWidth()/2.0f, player.getPosition().y + player.getHeight()/2.0f), "playerPos");
         ShaderHandler.levelShader.uploadInt(getBounds().width, "worldWidth");
         ShaderHandler.levelShader.uploadInt(getBounds().height, "worldHeight");
-        ShaderHandler.levelShader.uploadInt((int)Camera.getWinSizeX(), "windowSize");
+        ShaderHandler.levelShader.uploadFloat(Camera.getWinSizeX(), "windowSizeX");
+        ShaderHandler.levelShader.uploadFloat(Camera.getWinSizeY(), "windowSizeY");
         ShaderHandler.levelShader.uploadInt(1, "numLights");
         ShaderHandler.levelShader.uploadVec(LightHandler.lightList.get(0), "lightPos");
+        ShaderHandler.levelShader.uploadVec(Camera.getPosition(), "camPos");
 
         // Textures
         glActiveTexture(GL_TEXTURE0);
         textureAtlas.bind();
         glActiveTexture(GL_TEXTURE1);
-        shadowMap.bind();
+        ShadowHandler.bindShadowMap();
         vertexArray.draw();
 
         textureAtlas.unbind();
-        shadowMap.unbind();
+        ShadowHandler.unbindShadowMap();
         glActiveTexture(GL_TEXTURE0);
         ShaderHandler.levelShader.pissOff();
         glEnable(GL_MULTISAMPLE);
@@ -174,16 +175,7 @@ public class Level {
         for (HashMap.Entry entry : droppedItems.entrySet()) {
             List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
-                ShaderHandler.standardShader.comeHere();
-                item.getDisplayTexture().bind();
-
-                ShaderHandler.standardShader.uploadMatrix(projection, "projMatrix");
-                ShaderHandler.standardShader.uploadMatrix(item.getRotation(), "rotationMatrix");
-                ShaderHandler.standardShader.uploadMatrix(new Matrix4f().translate(item.getPosition().x, item.getPosition().y, 0f), "modelMatrix");
-                item.getMesh().draw();
-
-                item.getTexture().unbind();
-                ShaderHandler.standardShader.pissOff();
+                item.renderDisplay(projection);
             }
         }
     }
