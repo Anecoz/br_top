@@ -13,6 +13,7 @@ import org.joml.Vector2f;
 import org.lwjgl.opengl.GL13;
 import utils.FileUtils;
 import utils.GraphicsUtils;
+import utils.ResourceHandler;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
@@ -33,11 +34,6 @@ public abstract class DrawableEntity {
     public Vector2f getPosition() {return position;}
     public Matrix4f getRotation() {return rotation;}
 
-    /*public DrawableEntity(String texFilePath, Vector2f initPos, float layer) {
-        this.texture = new Texture(FileUtils.RES_DIR + texFilePath);
-        init(layer, initPos);
-    }*/
-
     public DrawableEntity(Texture texture, Vector2f initPos, float layer) {
         this.texture = texture;
         init(layer, initPos);
@@ -49,7 +45,8 @@ public abstract class DrawableEntity {
         this.scale = this.texture.getScale();
 
         this.position = initPos;
-        mesh = GraphicsUtils.createModelQuad(width, height, layer);
+        if (!(this instanceof Player) && !(this instanceof OtherPlayer))
+            this.mesh = GraphicsUtils.createModelQuad(width, height, layer);
         this.rotation = new Matrix4f();
     }
 
@@ -96,7 +93,7 @@ public abstract class DrawableEntity {
     }
 
     public void cleanUp() {
-        mesh.cleanUp();
+        //mesh.cleanUp();
         //texture.cleanUp();
     }
 }

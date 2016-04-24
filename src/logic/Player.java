@@ -29,6 +29,7 @@ public class Player extends DrawableEntity {
     private Animation walkingAnimation;
     private boolean running = false;
     private Inventory inventory;
+    public String displayName = "Kappa";
 
     public Player() {
         super(ResourceHandler.playerTexture, new Vector2f(10), -0.3f);
@@ -49,6 +50,8 @@ public class Player extends DrawableEntity {
         inventory.add(pistol4);
         inventory.add(pistol5);
         inventory.add(assaultRifle);
+
+        this.mesh = ResourceHandler.playerQuad;
     }
 
     @Override

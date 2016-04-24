@@ -1,6 +1,7 @@
 package utils;
 
 import audio.AudioMaster;
+import graphics.lowlevel.IndexedVertexArray;
 import gui.fontMeshCreator.FontType;
 import graphics.animation.Animation;
 import graphics.lowlevel.Texture;
@@ -30,6 +31,9 @@ public class ResourceHandler {
     // Fonts
     public static FontType font;
 
+    // Meshes
+    public static IndexedVertexArray playerQuad;
+
     public ResourceHandler(){
 
     }
@@ -51,6 +55,9 @@ public class ResourceHandler {
 
         // Fonts
         font = new FontType(ResourceHandler.fontAtlasTexture, new File(FileUtils.RES_DIR + "fonts/candara.fnt"));
+
+        // Meshes
+        playerQuad = GraphicsUtils.createModelQuad(playerTexture.getWidthAfterScale(), playerTexture.getHeightAfterScale(), -0.3f);
     }
 
     public void cleanUp(){
@@ -64,5 +71,8 @@ public class ResourceHandler {
 
         // Animations
         playerAnimation.cleanUp();
+
+        // Meshes
+        playerQuad.cleanUp();
     }
 }
