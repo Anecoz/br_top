@@ -1,15 +1,13 @@
 package utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 public class Config {
 
     private static Properties config;
     private static InputStream in;
+    private static FileOutputStream out;
 
     public static float CONFIG_VOLUME = 0.5f;
     public static int CONFIG_VSYNC = 1;
@@ -22,6 +20,8 @@ public class Config {
     }
 
     public static void loadConfig(){
+
+        // Load config file
         config = new Properties();
         try {
             in = new FileInputStream("src/config/config.cfg");
@@ -34,6 +34,30 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Add missing properties
+        if(config.getProperty("volume") == null)
+            config.setProperty("volume", Float.toString(CONFIG_VOLUME));
+        if(config.getProperty("vsync") == null)
+            config.setProperty("vsync", Integer.toString(CONFIG_VSYNC));
+        if(config.getProperty("samples") == null)
+            config.setProperty("samples", Integer.toString(CONFIG_SAMPLES));
+        if(config.getProperty("width") == null)
+            config.setProperty("width", Integer.toString(CONFIG_RES_WIDTH));
+        if(config.getProperty("height") == null)
+            config.setProperty("height", Integer.toString(CONFIG_RES_HEIGHT));
+
+        try {
+            out = new FileOutputStream("src/config/config.cfg");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            config.store(out, null);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
         // Assign keys to variables.
         CONFIG_VOLUME = Float.parseFloat(config.getProperty("volume"));
         CONFIG_VSYNC = Integer.parseInt(config.getProperty("vsync"));
