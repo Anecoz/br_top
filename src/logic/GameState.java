@@ -254,6 +254,7 @@ public class GameState {
                 gameState = GameStates.GAME_OVER;
                 loop = false;
             }
+            //TEMP/////////////////////////////////////////////////////////////////////////////////////////
             if (glfwWindowShouldClose(window) == GLFW_TRUE) {
                 gameState = GameStates.GAME_END;
                 loop = false;
@@ -272,7 +273,6 @@ public class GameState {
                     gameState = GameStates.GAME_RUNNING;
                 }
             }
-            //TEMP/////////////////////////////////////////////////////////////////////////////////////////
         }
     }
 

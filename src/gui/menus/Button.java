@@ -20,8 +20,8 @@ import utils.ResourceHandler;
 public abstract class Button {
     private String text;                // Displayed text on the button
     private Vector2f position;          // Position given in GUI coordinates
-    private float width = 0.1f;         // Width in GUI coords
-    private float height = 0.05f;       // Height in GUI coords
+    private float width = 0.07f;         // Width in GUI coords
+    private float height = 0.02f;       // Height in GUI coords
     private boolean pressing = false;   // If we have pressed down on the button but not let go yet
     protected GUIText guiText;               // Handle to the text
 

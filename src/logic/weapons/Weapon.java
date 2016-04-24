@@ -188,5 +188,6 @@ public abstract class Weapon extends InventoryItem {
     public void cleanUp() {
         reloadTimer.cancel();
         shootTimer.cancel();
+        text.remove();
     }
 }
