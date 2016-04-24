@@ -11,6 +11,7 @@ import logic.weapons.Weapon;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import utils.GraphicsUtils;
 import utils.MathUtils;
 
@@ -43,7 +44,6 @@ public class Inventory {
     public void update(Level level) {
         // Check if we are opening/closing the inventory, or if we're dragging the inventory with the mouse
         checkInput(level);
-
     }
 
     private void checkInput(Level level) {
@@ -73,7 +73,7 @@ public class Inventory {
                         equipedWeapon = null;
                     }
                     item.setRotation(new Matrix4f().identity());
-                    item.setPosition(new Vector2f(item.getPosition().x, item.getPosition().y));
+                    item.setPosition(new Vector2f(item.getPosition()));
                     level.addDroppedItem(item);
                     itemList.remove(item);
                 }
@@ -154,6 +154,7 @@ public class Inventory {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
     }
 
     private void finishRender() {

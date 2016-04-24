@@ -15,6 +15,21 @@ public class GraphicsUtils {
         }
     }
 
+    public static IndexedVertexArray createSimpleQuad() {
+        float[] vertices = new float[] {
+                0.0f, 0.0f,
+                0.0f, 1.0f,
+                1.0f, 0.0f,
+                1.0f, 1.0f
+        };
+
+        byte[] indices = new byte[] {
+                0, 1, 2,
+                2, 1, 3
+        };
+        return new IndexedVertexArray(vertices, indices, 2);
+    }
+
     public static IndexedVertexArray createInventoryQuad() {
         //float AR = ()
         float[] vertices = new float[] {

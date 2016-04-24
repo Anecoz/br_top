@@ -8,7 +8,7 @@ import gui.fontRendering.TextMaster;
 import graphics.Camera;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowHandler;
-import graphics.shadows.ShadowTexture;
+import graphics.shadows.ShadowCasterTexture;
 import gui.menus.Button;
 import input.KeyInput;
 import input.MouseButtonInput;
@@ -20,8 +20,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import utils.ResourceHandler;
-
-import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
@@ -42,15 +40,13 @@ public class GameState {
     private static KeyInput keyInput;
     private static MouseButtonInput mouseButtonInput;
     private static MousePosInput mousePosInput;
-    private static final int VSYNC = 1;
+    private static final int VSYNC = 0;
 
     private long window;
     private Matrix4f projMatrix;
     private Level level;
     private Camera cam;
     private Player player;
-    private ShadowHandler shadowHandler;
-    private ShadowTexture shadowTexture;
     private AudioSource ambienceSound;
     private ShaderHandler shaderHandler;
     private ResourceHandler resourceHandler;
@@ -72,7 +68,6 @@ public class GameState {
         gameState = GameStates.GAME_START;
         shaderHandler = new ShaderHandler();
         resourceHandler = new ResourceHandler();
-        shadowHandler = new ShadowHandler();
     }
 
     public GameStates getGameState(){
@@ -173,7 +168,7 @@ public class GameState {
         cam = new Camera(WIDTH, HEIGHT);
         level = new Level("maps/map_01.tmx");
         projMatrix = cam.getProjection();
-        shadowTexture = shadowHandler.calcShadowTexture(level);
+        ShadowHandler.calcShadowCaster(level);
         player = new Player();
         AudioMaster.setListenerData(player.getPosition(),new Vector2f(player.getSpeed(), player.getSpeed()));
         ambienceSound = new AudioSource();
@@ -182,6 +177,7 @@ public class GameState {
         ambienceSound.setVolume(1);
         ambienceSound.play(ResourceHandler.ambienceSoundBuffer);
         LightHandler.init();
+        ShadowHandler.init();
     }
 
     private void loop() {
@@ -285,9 +281,10 @@ public class GameState {
     private void renderGame() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        level.render(projMatrix, shadowTexture, player);
-        player.render(projMatrix);
+        ShadowHandler.calcShadowMap(LightHandler.lightList, projMatrix, level, player);
 
+        level.render(projMatrix, player);
+        player.render(projMatrix);
         TextMaster.render();
 
         glfwSwapBuffers(window);
@@ -336,8 +333,6 @@ public class GameState {
         AudioMaster.cleanUp();
         if(resourceHandler != null)
             resourceHandler.cleanUp();
-        if(shadowTexture != null)
-            shadowTexture.cleanUp();
         if(shaderHandler != null)
             shaderHandler.cleanUp();
         TextMaster.cleanUp();

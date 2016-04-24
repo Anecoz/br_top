@@ -166,7 +166,7 @@ public class Player extends DrawableEntity {
     @Override
     public void cleanUp() {
         super.cleanUp();
-        walkingAnimation.cleanUp();
+        //walkingAnimation.cleanUp();
         inventory.cleanUp();
     }
 

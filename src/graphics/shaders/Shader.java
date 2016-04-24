@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 import utils.ShaderUtils;
 
 import java.nio.Buffer;
@@ -58,6 +59,7 @@ public class Shader {
             fb.put(vec.y);
         }
         glUniform2fv(loc, fb);
+        //GL20.glUniform2fv(loc, arr.size(), fb);
     }
 
     public void uploadMatrix(Matrix4f mat, String uniformName) {
