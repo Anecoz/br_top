@@ -28,5 +28,7 @@ public abstract class MenuItem {
         for(GUIText text : textList){
             text.remove();
         }
+        buttonList.clear();
+        textList.clear();
     }
 }

@@ -3,13 +3,10 @@ package logic;
 import audio.AudioMaster;
 import audio.AudioSource;
 import graphics.lighting.LightHandler;
-import gui.fontMeshCreator.GUIText;
 import gui.fontRendering.TextMaster;
 import graphics.Camera;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowHandler;
-import graphics.shadows.ShadowCasterTexture;
-import gui.menus.Button;
 import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
@@ -24,6 +21,7 @@ import utils.Config;
 import utils.ResourceHandler;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -126,60 +124,22 @@ public class GameState {
         if ( glfwInit() != GLFW_TRUE )
             throw new IllegalStateException("Unable to initialize GLFW");
 
-        WIDTH = Config.CONFIG_RES_WIDTH;
-        HEIGHT = Config.CONFIG_RES_HEIGHT;
-
         // Configure our window
         createWindow(false);
-        /*glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_SAMPLES, Config.CONFIG_SAMPLES);
-
-        window = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", NULL, NULL);
-        if ( window == NULL )
-            throw new RuntimeException("Failed to create the GLFW window");
-
-        glfwSetKeyCallback(window, keyInput = new KeyInput());
-        glfwSetMouseButtonCallback(window, mouseButtonInput = new MouseButtonInput());
-        glfwSetCursorPosCallback(window, mousePosInput = new MousePosInput());
-
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
-        glfwMakeContextCurrent(window);
-        glfwSwapInterval(Config.CONFIG_VSYNC);
-        glfwShowWindow(window);
-
-        GL.createCapabilities();
-        glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_MULTISAMPLE);
-        System.out.println("Vendor: " + glGetString(GL_VENDOR));
-        System.out.println("Renderer: " + glGetString(GL_RENDERER));
-        System.out.println("Version: " + glGetString(GL_VERSION));*/
     }
 
-    public static void createWindow(boolean fullscreen) {
-        if(fullscreen){
-
-        } else {
-
-        }
+    public static void createWindow(boolean fullScreen) {
+        WIDTH = Config.CONFIG_RES_WIDTH;
+        HEIGHT = Config.CONFIG_RES_HEIGHT;
         // Configure our window
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_SAMPLES, Config.CONFIG_SAMPLES);
 
-        long newWindow = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", NULL, NULL);
-        if ( newWindow == NULL )
-            throw new RuntimeException("Failed to create the GLFW window");
-        try {
-            if(window != 0)
-                glfwDestroyWindow(window);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+        long newWindow = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", fullScreen ? glfwGetPrimaryMonitor() : NULL, window);
+        if(window != 0)
+            glfwDestroyWindow(window);
         window = newWindow;
 
         glfwSetKeyCallback(window, keyInput = new KeyInput());
@@ -187,7 +147,8 @@ public class GameState {
         glfwSetCursorPosCallback(window, mousePosInput = new MousePosInput());
 
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
+        if(!fullScreen)
+            glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
         glfwMakeContextCurrent(window);
         glfwSwapInterval(Config.CONFIG_VSYNC);
         glfwShowWindow(window);
@@ -201,7 +162,7 @@ public class GameState {
         System.out.println("Version: " + glGetString(GL_VERSION));
     }
 
-    private void menuInit(){
+    public static void menuInit(){
         TextMaster.init();
         AudioMaster.init();
         ResourceHandler.init();
@@ -368,7 +329,7 @@ public class GameState {
         pauseMenu = null;
     }
 
-    private void gameCleanUp(){
+    private void gameCleanUp() {
         if(ambienceSound != null)
             ambienceSound.delete();
         if(player != null)
@@ -377,7 +338,14 @@ public class GameState {
             level.cleanUp();
     }
 
-    private void exitCleanUp(){
+    public static void resetCleanup() {
+        AudioMaster.cleanUp();
+        ResourceHandler.cleanUp();
+        ShaderHandler.cleanUp();
+        TextMaster.cleanUp();
+    }
+
+    private void exitCleanUp() {
         gameState = GameStates.GAME_EXIT;
         menuCleanUp();
         gameCleanUp();

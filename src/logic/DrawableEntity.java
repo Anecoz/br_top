@@ -11,6 +11,7 @@ import logic.weapons.Bullet;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL13;
+import utils.Config;
 import utils.FileUtils;
 import utils.GraphicsUtils;
 import utils.ResourceHandler;

@@ -1,9 +1,13 @@
 package logic.menu;
 
+import graphics.lighting.LightHandler;
+import graphics.shadows.ShadowHandler;
 import gui.fontMeshCreator.GUIText;
 import gui.menus.Button;
 import logic.GameState;
+import networking.ClientStateHandler;
 import org.joml.Vector2f;
+import org.lwjgl.opengl.GL;
 import utils.Config;
 import utils.ResourceHandler;
 
@@ -44,8 +48,6 @@ public class OptionsMenu extends OptionsItem {
             @Override
             public void callback() {
                 swapVsync();
-                vsyncValue = new GUIText(Integer.toString(Config.CONFIG_VSYNC),
-                        1, ResourceHandler.font, valuePosition, 1f, true);
                 GameState.loop = false;
             }
         };
@@ -54,8 +56,6 @@ public class OptionsMenu extends OptionsItem {
             @Override
             public void callback() {
                 swapMultiSample();
-                multiSampleValue = new GUIText(Integer.toString(Config.CONFIG_SAMPLES),
-                        1, ResourceHandler.font, new Vector2f(valuePosition.x, valuePosition.y + offset), 1f, true);
                 GameState.loop = false;
             }
         };
@@ -64,9 +64,6 @@ public class OptionsMenu extends OptionsItem {
             @Override
             public void callback() {
                 swapResolution();
-                String resolution = Integer.toString(Config.CONFIG_RES_WIDTH) + "x" + Integer.toString(Config.CONFIG_RES_HEIGHT);
-                resolutionValue = new GUIText(resolution,
-                        1, ResourceHandler.font, new Vector2f(valuePosition.x - offset, valuePosition.y + offset * 2), 1f, false);
                 GameState.loop = false;
             }
         };
@@ -75,7 +72,11 @@ public class OptionsMenu extends OptionsItem {
             @Override
             public void callback() {
                 Config.saveConfig();
-                GameState.createWindow(false);
+                if(!GameState.isGameRunning) {
+                    GameState.resetCleanup();
+                    GameState.createWindow(false);
+                    GameState.menuInit();
+                }
                 GameState.loop = false;
             }
         };

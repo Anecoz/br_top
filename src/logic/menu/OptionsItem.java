@@ -29,12 +29,15 @@ public class OptionsItem extends MenuItem {
     }
 
     public static void swapResolution(){
-        if(Config.CONFIG_RES_HEIGHT == 600) {
+        if(Config.CONFIG_RES_HEIGHT == 576) {
+            Config.CONFIG_RES_WIDTH = 1920;
+            Config.CONFIG_RES_HEIGHT = 1080;
+        } else if(Config.CONFIG_RES_HEIGHT == 1080) {
             Config.CONFIG_RES_WIDTH = 1280;
             Config.CONFIG_RES_HEIGHT = 720;
         } else {
-            Config.CONFIG_RES_WIDTH = 800;
-            Config.CONFIG_RES_HEIGHT = 600;
+            Config.CONFIG_RES_WIDTH = 1024;
+            Config.CONFIG_RES_HEIGHT = 576;
         }
     }
 }
