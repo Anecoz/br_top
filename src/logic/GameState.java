@@ -20,6 +20,7 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import utils.Config;
 import utils.ResourceHandler;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -49,8 +50,6 @@ public class GameState {
     private Camera cam;
     private Player player;
     private AudioSource ambienceSound;
-    private ShaderHandler shaderHandler;
-    private ResourceHandler resourceHandler;
     private MainMenu mainMenu;
     private LobbyMenu lobbyMenu;
     private OptionsMenu optionsMenu;
@@ -67,8 +66,6 @@ public class GameState {
 
     public GameState(){
         gameState = GameStates.GAME_START;
-        shaderHandler = new ShaderHandler();
-        resourceHandler = new ResourceHandler();
     }
 
     public GameStates getGameState(){
@@ -159,10 +156,11 @@ public class GameState {
     }
 
     private void menuInit(){
+        Config.loadConfig();
         TextMaster.init();
         AudioMaster.init();
-        resourceHandler.init();
-        shaderHandler.init();
+        ResourceHandler.init();
+        ShaderHandler.init();
     }
 
     private void gameInit() {
@@ -339,10 +337,8 @@ public class GameState {
         menuCleanUp();
         gameCleanUp();
         AudioMaster.cleanUp();
-        if(resourceHandler != null)
-            resourceHandler.cleanUp();
-        if(shaderHandler != null)
-            shaderHandler.cleanUp();
+        ResourceHandler.cleanUp();
+        ShaderHandler.cleanUp();
         TextMaster.cleanUp();
         glfwDestroyWindow(window);
         errorCallback.release();

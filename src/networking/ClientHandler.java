@@ -45,7 +45,7 @@ public class ClientHandler {
 
         // For now, just connect to localhost immediately (server must be running of course)
         try {
-            client.connect(5000, "localhost", Network.port);
+            client.connect(5000, "85.229.139.37", Network.port);
         }
         catch (IOException e ) {
             e.printStackTrace();

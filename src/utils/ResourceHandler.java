@@ -38,7 +38,7 @@ public class ResourceHandler {
 
     }
 
-    public void init(){
+    public static void init(){
         // Textures
         playerTexture = new Texture(FileUtils.RES_DIR + "characters/player.png", 1.0f);
         pistolTexture = new Texture(FileUtils.RES_DIR + "weapons/pistol.png", 1.0f);
@@ -60,7 +60,7 @@ public class ResourceHandler {
         playerQuad = GraphicsUtils.createModelQuad(playerTexture.getWidthAfterScale(), playerTexture.getHeightAfterScale(), -0.3f);
     }
 
-    public void cleanUp(){
+    public static void cleanUp(){
         // Textures
         playerTexture.cleanUp();
         pistolTexture.cleanUp();

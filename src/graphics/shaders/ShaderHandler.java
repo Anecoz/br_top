@@ -21,7 +21,7 @@ public class ShaderHandler {
 
     }
 
-    public void init() {
+    public static void init() {
         levelShader = new Shader("level.vert", "level.frag");
         standardShader = new Shader(WEAPON_DIR + "standard.vert", WEAPON_DIR + "standard.frag");
         textShader = new Shader("font.vert", "font.frag");
@@ -55,7 +55,7 @@ public class ShaderHandler {
         levelShader.pissOff();
     }
 
-    public void cleanUp() {
+    public static void cleanUp() {
         levelShader.cleanUp();
         standardShader.cleanUp();
         textShader.cleanUp();
