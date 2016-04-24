@@ -21,6 +21,7 @@ public class OtherPlayer extends DrawableEntity {
         this.walkingAnimation = ResourceHandler.playerAnimation;
 
         this.walkingAnimation.start();
+        this.texture = walkingAnimation.getFrame();
         this.mesh = ResourceHandler.playerQuad;
     }
 
@@ -28,6 +29,6 @@ public class OtherPlayer extends DrawableEntity {
 
     public void setPosition(Vector2f pos) {
         this.position = pos;
-        this.texture = this.walkingAnimation.getFrame();
+        //this.texture = this.walkingAnimation.getFrame();
     }
 }

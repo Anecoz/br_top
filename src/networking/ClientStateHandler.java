@@ -25,6 +25,15 @@ public class ClientStateHandler {
         playerList.add(new OtherPlayer(initPos, id, displayName));
     }
 
+    public static void removePlayer(int id) {
+        for (OtherPlayer player : playerList) {
+            if (player.getId() == id) {
+                playerList.remove(player);
+                break;
+            }
+        }
+    }
+
     public static void updateOtherPlayerPos(int id, Vector2f pos) {
         for (OtherPlayer player : playerList) {
             if (player.getId() == id) {
