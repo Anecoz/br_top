@@ -5,6 +5,7 @@ import graphics.lowlevel.Texture;
 import logic.DrawableEntity;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import utils.ResourceHandler;
 
 public abstract class InventoryItem extends DrawableEntity {
     protected String displayName;

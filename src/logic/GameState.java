@@ -14,6 +14,7 @@ import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
 import logic.menu.*;
+import networking.ClientStateHandler;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -178,6 +179,10 @@ public class GameState {
         ambienceSound.play(ResourceHandler.ambienceSoundBuffer);
         LightHandler.init();
         ShadowHandler.init();
+
+        // TESTING NETWORKING
+        ClientStateHandler.init();
+        ClientStateHandler.registerPlayer(player, player.getPosition());
     }
 
     private void loop() {
@@ -275,6 +280,8 @@ public class GameState {
     private void updateLogic() {
         cam.update(player.getPosition(), player.getSpeed(), level);
         player.update(level, projMatrix);
+        ClientStateHandler.updatePlayerPos(player.getPosition());
+        ClientStateHandler.updatePlayerPos(player.getPosition());
         projMatrix = cam.getProjection();
     }
 
@@ -285,6 +292,7 @@ public class GameState {
 
         level.render(projMatrix, player);
         player.render(projMatrix);
+        ClientStateHandler.render(projMatrix);
         TextMaster.render();
 
         glfwSwapBuffers(window);
