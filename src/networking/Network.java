@@ -20,8 +20,24 @@ public class Network {
         kryo.register(String[].class);
         kryo.register(RegisterCurrentPlayers.class);
         kryo.register(UpdatePlayerPosition.class);
-        kryo.register(UpdatePosition.class);
+        kryo.register(UpdateOtherPosition.class);
         kryo.register(PlayerDisconnect.class);
+        kryo.register(UpdatePlayerForward.class);
+        kryo.register(UpdateOtherForward.class);
+    }
+
+    // FROM:    CLIENT
+    // TO:      SERVER
+    // desc:    Client sends this to server to update own forward
+    static public class UpdatePlayerForward {
+        public Vector2f forward;
+    }
+
+    // FROM:    CLIENT
+    // TO:      SERVER
+    // desc:    Tells the server about our new position
+    static public class UpdatePlayerPosition {
+        public Vector2f pos;
     }
 
     // FROM:    CLIENT
@@ -50,18 +66,19 @@ public class Network {
         public String[] displayNames;
     }
 
-    // FROM:    CLIENT
-    // TO:      SERVER
-    // desc:    Tells the server about our new position
-    static public class UpdatePlayerPosition {
+    // FROM:    SERVER
+    // TO:      CLIENT
+    // desc:    Sent to all (but yourself) to update other positions.
+    static public class UpdateOtherPosition {
         public Vector2f pos;
+        public int id;
     }
 
     // FROM:    SERVER
     // TO:      CLIENT
-    // desc:    Sent to all (but yourself) to update other positions.
-    static public class UpdatePosition {
-        public Vector2f pos;
+    // desc:    Sent to all (but yourself) to update some other players forward.
+    static public class UpdateOtherForward {
+        public Vector2f forward;
         public int id;
     }
 

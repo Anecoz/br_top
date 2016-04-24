@@ -58,6 +58,13 @@ public class GameServer {
                     sendNewPosition(playerId, up.pos, connection);
                 }
 
+                else if (object instanceof UpdatePlayerForward) {
+                    if (connection.id == -1)
+                        return;
+                    UpdatePlayerForward up = (UpdatePlayerForward) object;
+                    sendNewForward(connection.id, up.forward, connection);
+                }
+
             }
 
             public void disconnected(Connection c) {
@@ -109,8 +116,16 @@ public class GameServer {
         }
     }
 
+    private void sendNewForward(int id, Vector2f forward, GameConnection connection) {
+        UpdateOtherForward up = new UpdateOtherForward();
+        up.id = id;
+        up.forward = forward;
+
+        server.sendToAllExceptTCP(connection.getID(), up);
+    }
+
     private void sendNewPosition(int id, Vector2f pos, GameConnection connection) {
-        UpdatePosition up = new UpdatePosition();
+        UpdateOtherPosition up = new UpdateOtherPosition();
         up.id = id;
         up.pos = pos;
 

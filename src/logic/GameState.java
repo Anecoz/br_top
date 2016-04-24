@@ -281,7 +281,7 @@ public class GameState {
         cam.update(player.getPosition(), player.getSpeed(), level);
         player.update(level, projMatrix);
         ClientStateHandler.updatePlayerPos(player.getPosition());
-        ClientStateHandler.updatePlayerPos(player.getPosition());
+        ClientStateHandler.updatePlayerForward(player.getForward());
         projMatrix = cam.getProjection();
     }
 

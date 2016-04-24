@@ -176,4 +176,5 @@ public class Player extends DrawableEntity {
     }
 
     public float getSpeed() {return SPEED;}
+    public Vector2f getForward() {return forward;}
 }

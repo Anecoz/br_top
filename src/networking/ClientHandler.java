@@ -32,9 +32,14 @@ public class ClientHandler {
                     addNewPlayer(reg.id, reg.pos, reg.displayName);
                 }
 
-                else if (object instanceof UpdatePosition) {
-                    UpdatePosition up = (UpdatePosition) object;
+                else if (object instanceof UpdateOtherPosition) {
+                    UpdateOtherPosition up = (UpdateOtherPosition) object;
                     updateOtherPlayerPosition(up.pos, up.id);
+                }
+
+                else if (object instanceof UpdateOtherForward) {
+                    UpdateOtherForward up = (UpdateOtherForward) object;
+                    updateOtherPlayerForward(up.forward, up.id);
                 }
 
                 else if (object instanceof RegisterCurrentPlayers) {
@@ -62,8 +67,14 @@ public class ClientHandler {
         }
     }
 
+    /*----------------------OTHER PLAYER STUFF----------------*/
+
     private static void disconnectPlayer(int id) {
         ClientStateHandler.removePlayer(id);
+    }
+
+    private static void updateOtherPlayerForward(Vector2f forward, int id) {
+        ClientStateHandler.updateOtherPlayerForward(id, forward);
     }
 
     private static void addAllCurrentPlayers(int[] ids, String[] names, Vector2f[] positions) {
@@ -80,6 +91,8 @@ public class ClientHandler {
         ClientStateHandler.addNewPlayer(id, pos, displayName);
     }
 
+
+    /*----------------------THIS PLAYER STUFF----------------*/
     public static void registerPlayer(String name, Vector2f pos) {
         RegisterToServer reg = new RegisterToServer();
         reg.displayName = name;
@@ -90,6 +103,12 @@ public class ClientHandler {
     public static void updatePlayerPos(Vector2f pos) {
         UpdatePlayerPosition up = new UpdatePlayerPosition();
         up.pos = pos;
+        client.sendTCP(up);
+    }
+
+    public static void updatePlayerForward(Vector2f forward) {
+        UpdatePlayerForward up = new UpdatePlayerForward();
+        up.forward = forward;
         client.sendTCP(up);
     }
 }
