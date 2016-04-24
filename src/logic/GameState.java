@@ -42,7 +42,6 @@ public class GameState {
     private static KeyInput keyInput;
     private static MouseButtonInput mouseButtonInput;
     private static MousePosInput mousePosInput;
-    private static final int VSYNC = 0;
 
     private long window;
     private Matrix4f projMatrix;
@@ -58,13 +57,14 @@ public class GameState {
     public static boolean loop = true;
     public static boolean isGameRunning = false;
 
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    public static int WIDTH = 800;
+    public static int HEIGHT = 600;
 
     public static GameStates gameState;
     public static GameStates gameStateOld;
 
     public GameState(){
+        Config.loadConfig();
         gameState = GameStates.GAME_START;
     }
 
@@ -130,7 +130,10 @@ public class GameState {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_SAMPLES, 8);    // TODO: Make an option
+        glfwWindowHint(GLFW_SAMPLES, Config.CONFIG_SAMPLES);
+
+        WIDTH = Config.CONFIG_RES_WIDTH;
+        HEIGHT = Config.CONFIG_RES_HEIGHT;
 
         window = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", NULL, NULL);
         if ( window == NULL )
@@ -143,7 +146,7 @@ public class GameState {
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(VSYNC);
+        glfwSwapInterval(Config.CONFIG_VSYNC);
         glfwShowWindow(window);
 
         GL.createCapabilities();
@@ -156,7 +159,6 @@ public class GameState {
     }
 
     private void menuInit(){
-        Config.loadConfig();
         TextMaster.init();
         AudioMaster.init();
         ResourceHandler.init();
@@ -173,7 +175,7 @@ public class GameState {
         ambienceSound = new AudioSource();
         ambienceSound.setPosition(player.getPosition());
         ambienceSound.setLooping(true);
-        ambienceSound.setVolume(1);
+        ambienceSound.setVolume(Config.CONFIG_VOLUME);
         ambienceSound.play(ResourceHandler.ambienceSoundBuffer);
         LightHandler.init();
         ShadowHandler.init();

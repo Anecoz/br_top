@@ -8,7 +8,6 @@ import java.util.List;
 
 public abstract class MenuItem {
 
-    // TODO: ADD BUTTONLIST
     protected List<Button> buttonList = new ArrayList<>();
     protected List<GUIText> textList = new ArrayList<>();
 
