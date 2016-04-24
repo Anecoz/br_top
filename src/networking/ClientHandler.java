@@ -36,6 +36,16 @@ public class ClientHandler {
                     UpdatePosition up = (UpdatePosition) object;
                     updateOtherPlayerPosition(up.pos, up.id);
                 }
+
+                else if (object instanceof RegisterCurrentPlayers) {
+                    RegisterCurrentPlayers reg = (RegisterCurrentPlayers) object;
+                    addAllCurrentPlayers(reg.ids, reg.displayNames, reg.positions);
+                }
+
+                else if (object instanceof PlayerDisconnect) {
+                    PlayerDisconnect disc = (PlayerDisconnect) object;
+                    disconnectPlayer(disc.id);
+                }
             }
 
             public void disconnected(Connection connection) {
@@ -49,6 +59,16 @@ public class ClientHandler {
         }
         catch (IOException e ) {
             e.printStackTrace();
+        }
+    }
+
+    private static void disconnectPlayer(int id) {
+        ClientStateHandler.removePlayer(id);
+    }
+
+    private static void addAllCurrentPlayers(int[] ids, String[] names, Vector2f[] positions) {
+        for (int i = 0; i < ids.length; i++) {
+            ClientStateHandler.addNewPlayer(ids[i], positions[i], names[i]);
         }
     }
 

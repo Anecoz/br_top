@@ -15,8 +15,13 @@ public class Network {
         kryo.register(Vector2f.class);
         kryo.register(RegisterToServer.class);
         kryo.register(RegisterPlayer.class);
+        kryo.register(int[].class);
+        kryo.register(Vector2f[].class);
+        kryo.register(String[].class);
+        kryo.register(RegisterCurrentPlayers.class);
         kryo.register(UpdatePlayerPosition.class);
         kryo.register(UpdatePosition.class);
+        kryo.register(PlayerDisconnect.class);
     }
 
     // FROM:    CLIENT
@@ -36,6 +41,15 @@ public class Network {
         public String displayName;
     }
 
+    // FROM:    SERVER
+    // TO:      CLIENT
+    // desc:    Server sends this to a newly connected player, so that he gets all current ones aswell
+    static public class RegisterCurrentPlayers {
+        public int[] ids;
+        public Vector2f[] positions;
+        public String[] displayNames;
+    }
+
     // FROM:    CLIENT
     // TO:      SERVER
     // desc:    Tells the server about our new position
@@ -48,6 +62,13 @@ public class Network {
     // desc:    Sent to all (but yourself) to update other positions.
     static public class UpdatePosition {
         public Vector2f pos;
+        public int id;
+    }
+
+    // FROM:    SERVER
+    // TO:      CLIENT
+    // desc:    Sent whenever a player has disconnected from the server
+    static public class PlayerDisconnect {
         public int id;
     }
 }

@@ -6,14 +6,15 @@ import com.esotericsoftware.kryonet.Server;
 import org.joml.Vector2f;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static networking.Network.*;
 
 // The game server
 public class GameServer {
 
-    //private HashMap<Vector2f, Integer> playerMap;   // Keeps track of positions and
     private int counter = 0;                        // Increment this for each new connection (for now at least)
     private Server server;
 
@@ -32,7 +33,6 @@ public class GameServer {
                 GameConnection connection = (GameConnection)c;
 
                 if (object instanceof RegisterToServer) {
-                    System.out.println("Someone trying to register to server");
                     // Check if already registered
                     if (connection.id != -1)
                         return;
@@ -40,8 +40,12 @@ public class GameServer {
                     // If not, go!
                     RegisterToServer reg = (RegisterToServer)object;
                     connection.id = counter;
+                    connection.pos = reg.initPos;
+                    connection.displayName = reg.displayName;
                     counter++;
                     sendNewRegister(connection.id, reg.initPos, reg.displayName, connection);
+                    // Also notify of all current other players
+                    sendAllPlayers(connection);
                 }
                 else if (object instanceof UpdatePlayerPosition) {
                     // Is something fucky?
@@ -51,7 +55,6 @@ public class GameServer {
                     int playerId = connection.id;
 
                     UpdatePlayerPosition up = (UpdatePlayerPosition) object;
-                    //System.out.println("Update pos received, id is: " + playerId + " and pos: " + up.pos.x + ", " + up.pos.y);
                     sendNewPosition(playerId, up.pos, connection);
                 }
 
@@ -59,8 +62,7 @@ public class GameServer {
 
             public void disconnected(Connection c) {
                 GameConnection connection = (GameConnection) c;
-                System.out.println("Someone disconnected from server :(");
-                // TODO: ANnounce that a player has left and update client accordingly
+                disconnectPlayer(connection);
             }
         });
 
@@ -72,7 +74,39 @@ public class GameServer {
         }
 
         server.start();
-        System.out.println("Server started");
+    }
+
+    private void disconnectPlayer(GameConnection connection) {
+        PlayerDisconnect disc = new PlayerDisconnect();
+        disc.id = connection.id;
+        server.sendToAllExceptTCP(connection.getID(), disc);
+    }
+
+    private void sendAllPlayers(GameConnection playerConn) {
+        RegisterCurrentPlayers reg = new RegisterCurrentPlayers();
+
+        Connection[] connections = server.getConnections();
+        if (connections.length != 1) {
+            int[] ids = new int[connections.length - 1];
+            String[] names = new String[connections.length - 1];
+            Vector2f[] positions = new Vector2f[connections.length - 1];
+
+            int counter = 0;
+            for (int i = 0; i < connections.length; i++) {
+                GameConnection connection = (GameConnection)connections[i];
+                if (connection.id != playerConn.id) {
+                    ids[counter] = connection.id;
+                    names[counter] = connection.displayName;
+                    positions[counter] = connection.pos;
+                    counter++;
+                }
+            }
+
+            reg.ids = ids;
+            reg.positions = positions;
+            reg.displayNames = names;
+            server.sendToTCP(playerConn.getID(), reg);
+        }
     }
 
     private void sendNewPosition(int id, Vector2f pos, GameConnection connection) {
@@ -93,8 +127,11 @@ public class GameServer {
     }
 
     // By using our own connection, we can keep track of the player connections
+    // Basically represents a player on the server
     private static class GameConnection extends Connection {
         public int id = -1;
+        public Vector2f pos;
+        public String displayName;
     }
 
     public static void main(String[] args) {
