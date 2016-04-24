@@ -43,7 +43,7 @@ public class GameState {
     private static MouseButtonInput mouseButtonInput;
     private static MousePosInput mousePosInput;
 
-    private long window;
+    private static long window;
     private Matrix4f projMatrix;
     private Level level;
     private Camera cam;
@@ -126,18 +126,61 @@ public class GameState {
         if ( glfwInit() != GLFW_TRUE )
             throw new IllegalStateException("Unable to initialize GLFW");
 
+        WIDTH = Config.CONFIG_RES_WIDTH;
+        HEIGHT = Config.CONFIG_RES_HEIGHT;
+
+        // Configure our window
+        createWindow(false);
+        /*glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_SAMPLES, Config.CONFIG_SAMPLES);
+
+        window = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", NULL, NULL);
+        if ( window == NULL )
+            throw new RuntimeException("Failed to create the GLFW window");
+
+        glfwSetKeyCallback(window, keyInput = new KeyInput());
+        glfwSetMouseButtonCallback(window, mouseButtonInput = new MouseButtonInput());
+        glfwSetCursorPosCallback(window, mousePosInput = new MousePosInput());
+
+        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
+        glfwMakeContextCurrent(window);
+        glfwSwapInterval(Config.CONFIG_VSYNC);
+        glfwShowWindow(window);
+
+        GL.createCapabilities();
+        glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_MULTISAMPLE);
+        System.out.println("Vendor: " + glGetString(GL_VENDOR));
+        System.out.println("Renderer: " + glGetString(GL_RENDERER));
+        System.out.println("Version: " + glGetString(GL_VERSION));*/
+    }
+
+    public static void createWindow(boolean fullscreen) {
+        if(fullscreen){
+
+        } else {
+
+        }
         // Configure our window
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_SAMPLES, Config.CONFIG_SAMPLES);
 
-        WIDTH = Config.CONFIG_RES_WIDTH;
-        HEIGHT = Config.CONFIG_RES_HEIGHT;
-
-        window = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", NULL, NULL);
-        if ( window == NULL )
+        long newWindow = glfwCreateWindow(WIDTH, HEIGHT, "BR Top", NULL, NULL);
+        if ( newWindow == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
+        try {
+            if(window != 0)
+                glfwDestroyWindow(window);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        window = newWindow;
 
         glfwSetKeyCallback(window, keyInput = new KeyInput());
         glfwSetMouseButtonCallback(window, mouseButtonInput = new MouseButtonInput());
@@ -193,8 +236,8 @@ public class GameState {
         int updates = 0;
         int frames = 0;
 
-        System.out.println("Current State: " + gameState);
-        System.out.println("Old State    : " + gameStateOld);
+        //System.out.println("Current State: " + gameState);
+        //System.out.println("Old State    : " + gameStateOld);
 
         if (isGameRunning) {
             // DO an initial update

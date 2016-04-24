@@ -16,7 +16,6 @@ public class Config {
     public static int CONFIG_RES_HEIGHT = 600;
 
     public Config(){
-
     }
 
     public static void loadConfig(){
@@ -54,7 +53,8 @@ public class Config {
         }
         try {
             config.store(out, null);
-        } catch(IOException e) {
+            out.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -64,5 +64,24 @@ public class Config {
         CONFIG_SAMPLES = Integer.parseInt(config.getProperty("samples"));
         CONFIG_RES_WIDTH = Integer.parseInt(config.getProperty("width"));
         CONFIG_RES_HEIGHT = Integer.parseInt(config.getProperty("height"));
+    }
+
+    public static void saveConfig() {
+        config.setProperty("volume", Float.toString(CONFIG_VOLUME));
+        config.setProperty("vsync", Integer.toString(CONFIG_VSYNC));
+        config.setProperty("samples", Integer.toString(CONFIG_SAMPLES));
+        config.setProperty("width", Integer.toString(CONFIG_RES_WIDTH));
+        config.setProperty("height", Integer.toString(CONFIG_RES_HEIGHT));
+        try {
+            out = new FileOutputStream("src/config/config.cfg");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            config.store(out, null);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
