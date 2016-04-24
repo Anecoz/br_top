@@ -264,7 +264,7 @@ public class GameState {
                 gameState = GameStates.GAME_END;
                 loop = false;
             }
-            if (isGameRunning && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) {
+            if (isGameRunning && gameState != GameStates.GAME_OPTION && KeyInput.isKeyClicked(GLFW_KEY_ESCAPE)) {
                 if (pauseMenu == null) {
                     pauseMenu = new PauseMenu();
                     gameState = GameStates.GAME_PAUSE;
