@@ -64,7 +64,9 @@ public class Player extends DrawableEntity {
         checkRunningStatus();
         inventory.update(level);
 
-        if (!inventory.getIsDragging() && inventory.getEquipedWeapon() != null)
+        if (!inventory.getIsDragging() && inventory.getEquipedWeapon() != null
+                && GameState.gameState != GameState.GameStates.GAME_PAUSE
+                && GameState.gameState != GameState.GameStates.GAME_OPTION)
             inventory.getEquipedWeapon().checkFire();
 
         this.texture = walkingAnimation.getFrame();
