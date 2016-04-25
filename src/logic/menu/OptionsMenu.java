@@ -1,13 +1,9 @@
 package logic.menu;
 
-import graphics.lighting.LightHandler;
-import graphics.shadows.ShadowHandler;
 import gui.fontMeshCreator.GUIText;
 import gui.menus.Button;
 import logic.GameState;
-import networking.ClientStateHandler;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL;
 import utils.Config;
 import utils.ResourceHandler;
 

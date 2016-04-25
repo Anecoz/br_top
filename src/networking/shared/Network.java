@@ -1,4 +1,4 @@
-package networking;
+package networking.shared;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
@@ -13,17 +13,18 @@ public class Network {
     static public void register(EndPoint endPoint) {
         Kryo kryo = endPoint.getKryo();
         kryo.register(Vector2f.class);
-        kryo.register(RegisterToServer.class);
-        kryo.register(RegisterPlayer.class);
+        kryo.register(RegisterPlayerToServer.class);
+        kryo.register(DisconnectPlayer.class);
+        kryo.register(RegisterOtherPlayer.class);
         kryo.register(int[].class);
         kryo.register(Vector2f[].class);
         kryo.register(String[].class);
-        kryo.register(RegisterCurrentPlayers.class);
+        kryo.register(RegisterCurrentOtherPlayers.class);
         kryo.register(UpdatePlayerPosition.class);
-        kryo.register(UpdateOtherPosition.class);
-        kryo.register(PlayerDisconnect.class);
+        kryo.register(UpdateOtherPlayerPosition.class);
+        kryo.register(OtherPlayerDisconnect.class);
         kryo.register(UpdatePlayerForward.class);
-        kryo.register(UpdateOtherForward.class);
+        kryo.register(UpdateOtherPlayerForward.class);
     }
 
     // FROM:    CLIENT
@@ -43,15 +44,23 @@ public class Network {
     // FROM:    CLIENT
     // TO:      SERVER
     // desc:    Client sends this to server to register. Gets an id on server and is broadcast to all other players
-    static public class RegisterToServer {
+    static public class RegisterPlayerToServer {
         public String displayName;
         public Vector2f initPos;
+    }
+
+    // FROM:    CLIENT
+    // TO:      SERVER
+    // desc:    Client sends this to server to notify that we have disconnected (for instance gone to main menu)
+    static public class DisconnectPlayer {
+        // We actually don't need anything in here, server will know what player it is by the id of his connection
+        public String displayName;
     }
 
     // FROM:    SERVER
     // TO:      CLIENT
     // desc:    Server sends this to all other players when a new player should be registered by them
-    static public class RegisterPlayer {
+    static public class RegisterOtherPlayer {
         public int id;
         public Vector2f pos;
         public String displayName;
@@ -60,7 +69,7 @@ public class Network {
     // FROM:    SERVER
     // TO:      CLIENT
     // desc:    Server sends this to a newly connected player, so that he gets all current ones aswell
-    static public class RegisterCurrentPlayers {
+    static public class RegisterCurrentOtherPlayers {
         public int[] ids;
         public Vector2f[] positions;
         public String[] displayNames;
@@ -69,7 +78,7 @@ public class Network {
     // FROM:    SERVER
     // TO:      CLIENT
     // desc:    Sent to all (but yourself) to update other positions.
-    static public class UpdateOtherPosition {
+    static public class UpdateOtherPlayerPosition {
         public Vector2f pos;
         public int id;
     }
@@ -77,7 +86,7 @@ public class Network {
     // FROM:    SERVER
     // TO:      CLIENT
     // desc:    Sent to all (but yourself) to update some other players forward.
-    static public class UpdateOtherForward {
+    static public class UpdateOtherPlayerForward {
         public Vector2f forward;
         public int id;
     }
@@ -85,7 +94,7 @@ public class Network {
     // FROM:    SERVER
     // TO:      CLIENT
     // desc:    Sent whenever a player has disconnected from the server
-    static public class PlayerDisconnect {
+    static public class OtherPlayerDisconnect {
         public int id;
     }
 }

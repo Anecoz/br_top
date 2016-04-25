@@ -11,7 +11,9 @@ import input.KeyInput;
 import input.MouseButtonInput;
 import input.MousePosInput;
 import logic.menu.*;
-import networking.ClientStateHandler;
+import networking.client.ClientMasterHandler;
+import networking.client.ClientReceiver;
+import networking.client.ClientSender;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -185,8 +187,8 @@ public class GameState {
         ShadowHandler.init();
 
         // TESTING NETWORKING
-        ClientStateHandler.init();
-        ClientStateHandler.registerPlayer(player, player.getPosition());
+        ClientReceiver.init();
+        ClientSender.registerPlayer(player.displayName, player.getPosition());
     }
 
     private void loop() {
@@ -232,6 +234,8 @@ public class GameState {
                         updateLogic();
                         break;
                     case GAME_OVER:
+
+                        ClientMasterHandler.disconnect();
                         if (endMenu == null)
                             endMenu = new EndMenu();
                         endMenu.update();
@@ -284,8 +288,8 @@ public class GameState {
     private void updateLogic() {
         cam.update(player.getPosition(), player.getSpeed(), level);
         player.update(level, projMatrix);
-        ClientStateHandler.updatePlayerPos(player.getPosition());
-        ClientStateHandler.updatePlayerForward(player.getForward());
+        ClientSender.updatePlayerPos(player.getPosition());
+        ClientSender.updatePlayerForward(player.getForward());
         projMatrix = cam.getProjection();
     }
 
@@ -296,7 +300,7 @@ public class GameState {
 
         level.render(projMatrix, player);
         player.render(projMatrix);
-        ClientStateHandler.render(projMatrix);
+        ClientReceiver.render(projMatrix);
         TextMaster.render();
 
         glfwSwapBuffers(window);
