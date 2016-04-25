@@ -133,7 +133,7 @@ public class Level {
         return null;
     }
 
-    public static void addDroppedItem(InventoryItem item) {
+    public static synchronized void addDroppedItem(InventoryItem item) {
         // First check if there already is an item at that position
         Vector2i position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
         if (!droppedItems.containsKey(position))
@@ -142,7 +142,7 @@ public class Level {
         droppedItems.get(position).add(item);
     }
 
-    public void render(Matrix4f projMatrix, Player player) {
+    public synchronized void render(Matrix4f projMatrix, Player player) {
         ShaderHandler.levelShader.comeHere();
         glDisable(GL_MULTISAMPLE);
 
@@ -172,7 +172,7 @@ public class Level {
         renderDroppedItems(projMatrix);
     }
 
-    private void renderDroppedItems(Matrix4f projection) {
+    private synchronized void renderDroppedItems(Matrix4f projection) {
         for (HashMap.Entry entry : droppedItems.entrySet()) {
             CopyOnWriteArrayList<InventoryItem> list = (CopyOnWriteArrayList<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
