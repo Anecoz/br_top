@@ -8,6 +8,7 @@ import input.MouseButtonInput;
 import input.MousePosInput;
 import logic.Level;
 import logic.weapons.Weapon;
+import networking.client.ClientSender;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
@@ -76,6 +77,8 @@ public class Inventory {
                     item.setPosition(new Vector2f(item.getPosition()));
                     level.addDroppedItem(item);
                     itemList.remove(item);
+                    // Send network notification that we dropped this shit
+                    ClientSender.addItemToWorld(item);
                 }
             }
         }

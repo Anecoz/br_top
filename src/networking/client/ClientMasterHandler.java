@@ -3,7 +3,11 @@ package networking.client;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import logic.weapons.AssaultRifle;
+import logic.weapons.Pistol;
+import logic.weapons.Weapon;
 import networking.shared.Network;
+import utils.ResourceHandler;
 
 import java.io.IOException;
 
@@ -50,6 +54,30 @@ public class ClientMasterHandler {
                 else if (object instanceof OtherPlayerDisconnect) {
                     OtherPlayerDisconnect disc = (OtherPlayerDisconnect) object;
                     disconnectOtherPlayer(disc.id);
+                }
+
+                else if (object instanceof AddItemToClient) {
+                    AddItemToClient req = (AddItemToClient) object;
+                    if (req.type == ITEM_TYPES.PISTOL) {
+                        addItemToWorld(new Pistol(
+                                req.position,
+                                -0.2f,
+                                1.5f,
+                                req.magazine,
+                                req.ammo,
+                                24));
+                    }
+                    else if (req.type == ITEM_TYPES.ASSAULT_RIFLE) {
+                        addItemToWorld(new AssaultRifle(
+                                req.position,
+                                -0.2f,
+                                1.5f,
+                                req.magazine,
+                                req.ammo,
+                                800
+                        ));
+                    }
+
                 }
             }
 

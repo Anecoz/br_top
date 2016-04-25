@@ -10,11 +10,18 @@ import java.util.List;
 public class Network {
     static public final int port = 54557;
 
+    public enum ITEM_TYPES {
+        ASSAULT_RIFLE, PISTOL, UNKNOWN
+    }
+
     static public void register(EndPoint endPoint) {
         Kryo kryo = endPoint.getKryo();
+        kryo.register(ITEM_TYPES.class);
         kryo.register(Vector2f.class);
         kryo.register(RegisterPlayerToServer.class);
         kryo.register(DisconnectPlayer.class);
+        kryo.register(AddItemToServer.class);
+        kryo.register(AddItemToClient.class);
         kryo.register(RegisterOtherPlayer.class);
         kryo.register(int[].class);
         kryo.register(Vector2f[].class);
@@ -55,6 +62,28 @@ public class Network {
     static public class DisconnectPlayer {
         // We actually don't need anything in here, server will know what player it is by the id of his connection
         public String displayName;
+    }
+
+    // FROM:    CLIENT
+    // TO:      SERVER
+    // desc:    Client sends to notify that an item has been dropped to the world
+    static public class AddItemToServer {
+        public ITEM_TYPES type;
+        public Vector2f position;
+        // if the item is a weapon we need these things
+        public int ammo;
+        public int magazine;
+    }
+
+    // FROM:    SERVER
+    // TO:      CLIENT
+    // desc:    Server sends this to notify clients of a new world item
+    static public class AddItemToClient {
+        public ITEM_TYPES type;
+        public Vector2f position;
+        // if the item is a weapon we need these things
+        public int ammo;
+        public int magazine;
     }
 
     // FROM:    SERVER

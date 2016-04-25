@@ -36,12 +36,12 @@ public class Player extends DrawableEntity {
 
         forward = new Vector2f(0);
         walkingAnimation = ResourceHandler.playerAnimation;
-        pistol1 = new Pistol(position, -0.2f, 1.5f, 15, 24);
-        pistol2 = new Pistol(position, -0.2f, 1.5f, 15, 24);
-        pistol3 = new Pistol(position, -0.2f, 1.5f, 15, 24);
-        pistol4 = new Pistol(position, -0.2f, 1.5f, 15, 24);
-        pistol5 = new Pistol(position, -0.2f, 1.5f, 15, 24);
-        assaultRifle = new AssaultRifle(position, -0.2f, 1.5f, 40, 800);
+        pistol1 = new Pistol(position, -0.2f, 1.5f, 15, 15, 24);
+        pistol2 = new Pistol(position, -0.2f, 1.5f, 15, 15, 24);
+        pistol3 = new Pistol(position, -0.2f, 1.5f, 15, 15, 24);
+        pistol4 = new Pistol(position, -0.2f, 1.5f, 15, 15, 24);
+        pistol5 = new Pistol(position, -0.2f, 1.5f, 15, 15, 24);
+        assaultRifle = new AssaultRifle(position, -0.2f, 1.5f, 40, 40, 800);
         walkingAnimation.start();
         inventory = new Inventory();
         inventory.add(pistol1);
@@ -110,6 +110,8 @@ public class Player extends DrawableEntity {
             if (item != null) {
                 item.setPosition(position);
                 inventory.add(item);
+                // Send network notification that we picked this shit up
+
             }
         }
     }

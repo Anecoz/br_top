@@ -1,6 +1,8 @@
 package networking.client;
 
+import logic.Level;
 import logic.OtherPlayer;
+import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
@@ -15,6 +17,10 @@ public class ClientReceiver {
     public static void init() {
         playerList = new ArrayList<>();
         ClientMasterHandler.init();
+    }
+
+    public static void addItemToWorld(InventoryItem item) {
+        Level.addDroppedItem(item);
     }
 
     public static void addAllCurrentOtherPlayers(int[] ids, String[] names, Vector2f[] positions) {

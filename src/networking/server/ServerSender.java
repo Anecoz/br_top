@@ -3,6 +3,8 @@ package networking.server;
 // Handles all functionality regarding stuff that needs to be sent from server to clients
 
 import com.esotericsoftware.kryonet.Connection;
+import networking.server.serverlogic.ServerPickupItem;
+import networking.server.serverlogic.ServerWeapon;
 import networking.shared.Network;
 import org.joml.Vector2f;
 
@@ -73,5 +75,18 @@ public class ServerSender {
         OtherPlayerDisconnect disc = new OtherPlayerDisconnect();
         disc.id = connection.id;
         server.sendToAllExceptTCP(connection.getID(), disc);
+    }
+
+    // Notify everyone (except the connection) of a new added world item
+    public static void sendNewWorldItem(GameConnection connection, ServerPickupItem item) {
+        AddItemToClient req = new AddItemToClient();
+        if (item.type == ITEM_TYPES.ASSAULT_RIFLE || item.type == ITEM_TYPES.PISTOL) {
+            ServerWeapon wep = (ServerWeapon) item;
+            req.ammo = wep.ammo;
+            req.magazine = wep.magazine;
+            req.position = wep.position;
+        }
+        req.type = item.type;
+        server.sendToAllExceptTCP(connection.getID(), req);
     }
 }

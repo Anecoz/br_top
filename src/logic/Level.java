@@ -34,7 +34,7 @@ public class Level {
     private VertexArray vertexArray;
     private Texture textureAtlas;
     private TileLayer tileLayer;
-    private HashMap<Vector2i, List<InventoryItem>> droppedItems;   // Items that lay out on the level
+    private static HashMap<Vector2i, List<InventoryItem>> droppedItems;   // Items that lay out on the level
 
     public Level(String filename) {
         try {
@@ -43,7 +43,7 @@ public class Level {
             droppedItems = new HashMap<>();
 
             List<InventoryItem> tmp = new ArrayList<>();
-            tmp.add(new Pistol(new Vector2f(15.0f, 10.0f), -0.2f, 1.5f, 15, 24));
+            tmp.add(new Pistol(new Vector2f(15.0f, 10.0f), -0.2f, 1.5f, 15, 15, 24));
             droppedItems.put(new Vector2i(15, 10), tmp);
 
             initMap();
@@ -132,7 +132,7 @@ public class Level {
         return null;
     }
 
-    public void addDroppedItem(InventoryItem item) {
+    public static void addDroppedItem(InventoryItem item) {
         // First check if there already is an item at that position
         Vector2i position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
         if (!droppedItems.containsKey(position))

@@ -33,6 +33,8 @@ public class ResourceHandler {
 
     // Meshes
     public static IndexedVertexArray playerQuad;
+    public static IndexedVertexArray assaultRifleQuad;
+    public static IndexedVertexArray pistolQuad;
 
     public ResourceHandler(){
 
@@ -58,6 +60,8 @@ public class ResourceHandler {
 
         // Meshes
         playerQuad = GraphicsUtils.createModelQuad(playerTexture.getWidthAfterScale(), playerTexture.getHeightAfterScale(), -0.3f);
+        assaultRifleQuad = GraphicsUtils.createModelQuad(assaultRifleTexture.getWidthAfterScale(), assaultRifleTexture.getHeightAfterScale(), -0.2f);
+        pistolQuad = GraphicsUtils.createModelQuad(pistolTexture.getWidthAfterScale(), pistolTexture.getHeightAfterScale(), -0.2f);
     }
 
     public static void cleanUp(){
@@ -74,5 +78,7 @@ public class ResourceHandler {
 
         // Meshes
         playerQuad.cleanUp();
+        pistolQuad.cleanUp();
+        assaultRifleQuad.cleanUp();
     }
 }

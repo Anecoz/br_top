@@ -3,6 +3,8 @@ package networking.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import networking.server.serverlogic.ServerPickupItem;
+import networking.server.serverlogic.ServerWeapon;
 import networking.shared.Network;
 import org.joml.Vector2f;
 
@@ -23,6 +25,7 @@ public class GameServer {
             }
         };
 
+        ServerReceiver.init();
         Network.register(server);
 
         server.addListener(new Listener() {
@@ -69,6 +72,18 @@ public class GameServer {
                     ServerSender.disconnectPlayer(connection);
                 }
 
+                else if (object instanceof AddItemToServer) {
+                    // Add the item to the server
+                    if (connection.id == -1)
+                        return;
+                    AddItemToServer req = (AddItemToServer) object;
+                    if (req.type == ITEM_TYPES.ASSAULT_RIFLE || req.type == ITEM_TYPES.PISTOL) {
+                        ServerWeapon item = new ServerWeapon(req.position, req.magazine, req.ammo, req.type);
+                        ServerReceiver.addItemToWorld(item);
+                        // Send out an update to let players know of the new item
+                        ServerSender.sendNewWorldItem(connection, item);
+                    }
+                }
             }
 
             public void disconnected(Connection c) {
