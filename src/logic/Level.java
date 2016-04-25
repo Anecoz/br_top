@@ -98,7 +98,7 @@ public class Level {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 if (droppedItems.containsKey(new Vector2i(playerI.x + x, playerI.y + y))) {
-                    List<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
+                    CopyOnWriteArrayList<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
                     for (InventoryItem currItem : list) {
                         if (playerPos.distance(currItem.getPosition()) < minDistance) {
                             item = currItem;
@@ -111,7 +111,7 @@ public class Level {
         }
 
         if (item != null) {
-            List<InventoryItem> list = droppedItems.get(chosenPos);
+            CopyOnWriteArrayList<InventoryItem> list = droppedItems.get(chosenPos);
             list.remove(item);
             if (list.size() == 0)
                 droppedItems.remove(chosenPos);
@@ -122,7 +122,7 @@ public class Level {
     public InventoryItem getDroppedItemAt(Vector2i position) {
         if (droppedItems.containsKey(position)) {
             // Don't forget to remove from the list
-            List<InventoryItem> list = droppedItems.get(position);
+            CopyOnWriteArrayList<InventoryItem> list = droppedItems.get(position);
             InventoryItem item = list.get(list.size() - 1);
             list.remove(item);
             if (list.size() == 0)
@@ -133,7 +133,7 @@ public class Level {
         return null;
     }
 
-    public static void addDroppedItem(InventoryItem item) {
+    public static synchronized void addDroppedItem(InventoryItem item) {
         // First check if there already is an item at that position
         Vector2i position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
         if (!droppedItems.containsKey(position))
@@ -142,7 +142,7 @@ public class Level {
         droppedItems.get(position).add(item);
     }
 
-    public void render(Matrix4f projMatrix, Player player) {
+    public synchronized void render(Matrix4f projMatrix, Player player) {
         ShaderHandler.levelShader.comeHere();
         glDisable(GL_MULTISAMPLE);
 
@@ -172,9 +172,9 @@ public class Level {
         renderDroppedItems(projMatrix);
     }
 
-    private void renderDroppedItems(Matrix4f projection) {
+    private synchronized void renderDroppedItems(Matrix4f projection) {
         for (HashMap.Entry entry : droppedItems.entrySet()) {
-            List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
+            CopyOnWriteArrayList<InventoryItem> list = (CopyOnWriteArrayList<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
                 item.renderDisplay(projection);
             }
@@ -202,7 +202,7 @@ public class Level {
 
     public void cleanUp() {
         for (HashMap.Entry entry : droppedItems.entrySet()) {
-            List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
+            CopyOnWriteArrayList<InventoryItem> list = (CopyOnWriteArrayList<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
                 item.cleanUp();
             }
