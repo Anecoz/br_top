@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 // Holds information about the tiled level
 public class Level {
@@ -34,13 +35,13 @@ public class Level {
     private VertexArray vertexArray;
     private Texture textureAtlas;
     private TileLayer tileLayer;
-    private static HashMap<Vector2i, List<InventoryItem>> droppedItems;   // Items that lay out on the level
+    private static ConcurrentHashMap<Vector2i, List<InventoryItem>> droppedItems;   // Items that lay out on the level
 
     public Level(String filename) {
         try {
             File mapFile = new File(FileUtils.RES_DIR + filename);
             map = new TMXMapReader().readMap(mapFile.getAbsolutePath());
-            droppedItems = new HashMap<>();
+            droppedItems = new ConcurrentHashMap<>();
 
             List<InventoryItem> tmp = new ArrayList<>();
             tmp.add(new Pistol(new Vector2f(15.0f, 10.0f), -0.2f, 1.5f, 15, 15, 24));
