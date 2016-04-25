@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 // Holds information about the tiled level
 public class Level {
@@ -34,7 +35,7 @@ public class Level {
     private VertexArray vertexArray;
     private Texture textureAtlas;
     private TileLayer tileLayer;
-    private static HashMap<Vector2i, List<InventoryItem>> droppedItems;   // Items that lay out on the level
+    private static HashMap<Vector2i, CopyOnWriteArrayList<InventoryItem>> droppedItems;   // Items that lay out on the level
 
     public Level(String filename) {
         try {
@@ -42,7 +43,7 @@ public class Level {
             map = new TMXMapReader().readMap(mapFile.getAbsolutePath());
             droppedItems = new HashMap<>();
 
-            List<InventoryItem> tmp = new ArrayList<>();
+            CopyOnWriteArrayList<InventoryItem> tmp = new CopyOnWriteArrayList<>();
             tmp.add(new Pistol(new Vector2f(15.0f, 10.0f), -0.2f, 1.5f, 15, 15, 24));
             droppedItems.put(new Vector2i(15, 10), tmp);
 
@@ -136,7 +137,7 @@ public class Level {
         // First check if there already is an item at that position
         Vector2i position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
         if (!droppedItems.containsKey(position))
-            droppedItems.put(position, new ArrayList<>());
+            droppedItems.put(position, new CopyOnWriteArrayList<>());
 
         droppedItems.get(position).add(item);
     }
