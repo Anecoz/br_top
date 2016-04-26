@@ -5,7 +5,7 @@ import utils.ResourceHandler;
 
 public class Pistol extends Weapon {
 
-    public static int magazineSize = 40;
+    public static int magazineSize = 15;
 
     public Pistol(Vector2f position, float layer, float reloadTime, int currentMagazine, int ammo, int roundsPerMinute, int uniqueId) {
         super(ResourceHandler.pistolTexture, ResourceHandler.pistolTexture, position, layer, uniqueId);
