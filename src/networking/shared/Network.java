@@ -3,6 +3,7 @@ package networking.shared;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class Network {
         kryo.register(RegisterPlayerToServer.class);
         kryo.register(DisconnectPlayer.class);
         kryo.register(AddItemToServer.class);
+        kryo.register(Vector2i.class);
+        kryo.register(ItemPickupRequest.class);
+        kryo.register(ItemPickupSuccess.class);
+        kryo.register(RemoveItemFromClient.class);
         kryo.register(AddItemToClient.class);
         kryo.register(RegisterOtherPlayer.class);
         kryo.register(int[].class);
@@ -70,9 +75,34 @@ public class Network {
     static public class AddItemToServer {
         public ITEM_TYPES type;
         public Vector2f position;
+        public int uniqueId;
         // if the item is a weapon we need these things
         public int ammo;
         public int magazine;
+    }
+
+    // FROM:    CLIENT
+    // TO:      SERVER
+    // desc:    Sends a "I would like to pickup an item at this position with this ID"-request to the server
+    static public class ItemPickupRequest {
+        public Vector2i position;
+        public int uniqueId;
+    }
+
+    // FROM:    SERVER
+    // TO:      CLIENT
+    // desc:    Server sends this to notify client of successfull pickup
+    static public class ItemPickupSuccess {
+        public Vector2i position;
+        public int uniqueId;
+    }
+
+    // FROM:    SERVER
+    // TO:      CLIENT
+    // desc:    Send a client request to remove a specific item from the world
+    static public class RemoveItemFromClient {
+        public Vector2i position;
+        public int uniqueId;
     }
 
     // FROM:    SERVER
@@ -81,6 +111,7 @@ public class Network {
     static public class AddItemToClient {
         public ITEM_TYPES type;
         public Vector2f position;
+        public int uniqueId;
         // if the item is a weapon we need these things
         public int ammo;
         public int magazine;

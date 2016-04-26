@@ -36,17 +36,17 @@ public class Level {
     private VertexArray vertexArray;
     private Texture textureAtlas;
     private TileLayer tileLayer;
-    private static ConcurrentHashMap<Vector2i, CopyOnWriteArrayList<InventoryItem>> droppedItems;   // Items that lay out on the level
+    private HashMap<Vector2i, List<InventoryItem>> droppedItems;    // Items that lay out on the level
+    private static CopyOnWriteArrayList<InventoryItem> itemsToBeAdded; // Used to let network thread add new items to level
+    private static ConcurrentHashMap<Integer, Vector2i> itemsToBeRemoved; // Network thread adds items in here
 
     public Level(String filename) {
         try {
             File mapFile = new File(FileUtils.RES_DIR + filename);
             map = new TMXMapReader().readMap(mapFile.getAbsolutePath());
-            droppedItems = new ConcurrentHashMap<>();
-
-            CopyOnWriteArrayList<InventoryItem> tmp = new CopyOnWriteArrayList<>();
-            tmp.add(new Pistol(new Vector2f(15.0f, 10.0f), -0.2f, 1.5f, 15, 15, 24));
-            droppedItems.put(new Vector2i(15, 10), tmp);
+            droppedItems = new HashMap<>();
+            itemsToBeAdded = new CopyOnWriteArrayList<>();
+            itemsToBeRemoved = new ConcurrentHashMap<>();
 
             initMap();
             initTexture();
@@ -55,6 +55,31 @@ public class Level {
             e.printStackTrace();
             System.err.println("Map loading failed!");
         }
+    }
+
+    public synchronized void update() {
+        // Check if there are items to be added to the level
+        if (itemsToBeAdded.size() > 0) {
+            for (InventoryItem item : itemsToBeAdded) {
+                addDroppedItem(item);
+            }
+            itemsToBeAdded.clear();
+        }
+        // or any items to be removed from the level
+        if (itemsToBeRemoved.size() > 0) {
+            for (ConcurrentHashMap.Entry<Integer, Vector2i> entry : itemsToBeRemoved.entrySet()) {
+                removeItemById(entry.getValue(), entry.getKey());
+            }
+            itemsToBeRemoved.clear();
+        }
+    }
+
+    public synchronized static void addItemToRemoveToQueue(Vector2i position, int uniqueId) {
+        itemsToBeRemoved.put(uniqueId, position);
+    }
+
+    public synchronized static void addPickupToQueue(InventoryItem item) {
+        itemsToBeAdded.add(item);
     }
 
     public VertexArray getMesh() {return vertexArray;}
@@ -94,12 +119,34 @@ public class Level {
         // Loop 9 closest
         InventoryItem item = null;
         float minDistance = 10000.0f;
+        Vector2i playerI = new Vector2i((int)playerPos.x, (int)playerPos.y);
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                if (droppedItems.containsKey(new Vector2i(playerI.x + x, playerI.y + y))) {
+                    List<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
+                    for (InventoryItem currItem : list) {
+                        if (playerPos.distance(currItem.getPosition()) < minDistance) {
+                            item = currItem;
+                            minDistance = playerPos.distance(currItem.getPosition());
+                        }
+                    }
+                }
+            }
+        }
+
+        return item;
+    }
+
+    /*public InventoryItem getClosestItemAtAndRemove(Vector2f playerPos) {
+        // Loop 9 closest
+        InventoryItem item = null;
+        float minDistance = 10000.0f;
         Vector2i chosenPos= null;
         Vector2i playerI = new Vector2i((int)playerPos.x, (int)playerPos.y);
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 if (droppedItems.containsKey(new Vector2i(playerI.x + x, playerI.y + y))) {
-                    CopyOnWriteArrayList<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
+                    List<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
                     for (InventoryItem currItem : list) {
                         if (playerPos.distance(currItem.getPosition()) < minDistance) {
                             item = currItem;
@@ -112,18 +159,55 @@ public class Level {
         }
 
         if (item != null) {
-            CopyOnWriteArrayList<InventoryItem> list = droppedItems.get(chosenPos);
+            List<InventoryItem> list = droppedItems.get(chosenPos);
             list.remove(item);
             if (list.size() == 0)
                 droppedItems.remove(chosenPos);
         }
         return item;
+    }*/
+
+    private void removeItemById(Vector2i position, int uniqueId) {
+        InventoryItem toRemove = null;
+        if (droppedItems.containsKey(position)) {
+            List<InventoryItem> list = droppedItems.get(position);
+            for (InventoryItem item : list) {
+                if (item.getUniqueId() == uniqueId) {
+                    toRemove = item;
+                    break;
+                }
+            }
+            if (toRemove != null) {
+                toRemove.cleanUp();
+                list.remove(toRemove);
+                if (list.size() == 0)
+                    droppedItems.remove(position);
+            }
+        }
     }
 
-    public InventoryItem getDroppedItemAt(Vector2i position) {
+    public InventoryItem getDroppedItemById(Vector2i position, int uniqueId) {
+        InventoryItem out = null;
         if (droppedItems.containsKey(position)) {
             // Don't forget to remove from the list
-            CopyOnWriteArrayList<InventoryItem> list = droppedItems.get(position);
+            List<InventoryItem> list = droppedItems.get(position);
+            for (InventoryItem item : list) {
+                if (item.getUniqueId() == uniqueId) {
+                    out = item;
+                    break;
+                }
+            }
+            list.remove(out);
+            if (list.size() == 0)
+                droppedItems.remove(position);
+        }
+        return out;
+    }
+
+    /*public InventoryItem getDroppedItemAt(Vector2i position) {
+        if (droppedItems.containsKey(position)) {
+            // Don't forget to remove from the list
+            List<InventoryItem> list = droppedItems.get(position);
             InventoryItem item = list.get(list.size() - 1);
             list.remove(item);
             if (list.size() == 0)
@@ -132,18 +216,18 @@ public class Level {
         }
 
         return null;
-    }
+    }*/
 
-    public static synchronized void addDroppedItem(InventoryItem item) {
+    public void addDroppedItem(InventoryItem item) {
         // First check if there already is an item at that position
         Vector2i position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
         if (!droppedItems.containsKey(position))
-            droppedItems.put(position, new CopyOnWriteArrayList<>());
+            droppedItems.put(position, new ArrayList<>());
 
         droppedItems.get(position).add(item);
     }
 
-    public synchronized void render(Matrix4f projMatrix, Player player) {
+    public void render(Matrix4f projMatrix, Player player) {
         ShaderHandler.levelShader.comeHere();
         glDisable(GL_MULTISAMPLE);
 
@@ -173,9 +257,9 @@ public class Level {
         renderDroppedItems(projMatrix);
     }
 
-    private synchronized void renderDroppedItems(Matrix4f projection) {
-        for (ConcurrentHashMap.Entry entry : droppedItems.entrySet()) {
-            CopyOnWriteArrayList<InventoryItem> list = (CopyOnWriteArrayList<InventoryItem>)entry.getValue();
+    private void renderDroppedItems(Matrix4f projection) {
+        for (HashMap.Entry entry : droppedItems.entrySet()) {
+            List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
                 item.renderDisplay(projection);
             }
@@ -202,13 +286,14 @@ public class Level {
     }
 
     public void cleanUp() {
-        for (ConcurrentHashMap.Entry entry : droppedItems.entrySet()) {
-            CopyOnWriteArrayList<InventoryItem> list = (CopyOnWriteArrayList<InventoryItem>)entry.getValue();
+        for (HashMap.Entry entry : droppedItems.entrySet()) {
+            List<InventoryItem> list = (List<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
                 item.cleanUp();
             }
             list.clear();
         }
         droppedItems.clear();
+        itemsToBeRemoved.clear();
     }
 }

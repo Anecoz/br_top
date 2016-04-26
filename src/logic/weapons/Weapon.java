@@ -32,8 +32,8 @@ public abstract class Weapon extends InventoryItem {
     protected boolean spawnBullet;
     protected static GUIText text;
 
-    public Weapon(Texture sprite, Texture displaySprite, Vector2f position, float layer) {
-        super(sprite, displaySprite, position, layer);
+    public Weapon(Texture sprite, Texture displaySprite, Vector2f position, float layer, int uniqueId) {
+        super(sprite, displaySprite, position, layer, uniqueId);
 
         reloadTimer = new Timer();
         shootTimer = new Timer();
@@ -154,7 +154,7 @@ public abstract class Weapon extends InventoryItem {
                 this.position.y + this.height / 2.0f
                         - ResourceHandler.bulletTexture.getHeightAfterScale() / 2.0f);
         Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
-        return new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10);
+        return new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10, 0);
     }
 
     public void addAmmo(int value){

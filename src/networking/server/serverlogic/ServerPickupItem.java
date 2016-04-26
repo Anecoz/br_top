@@ -8,9 +8,11 @@ import static networking.shared.Network.*;
 public class ServerPickupItem {
     public Vector2f position;
     public ITEM_TYPES type;
+    public int uniqueId;
 
-    public ServerPickupItem(Vector2f position, ITEM_TYPES type) {
+    public ServerPickupItem(Vector2f position, ITEM_TYPES type, int uniqueId) {
         this.position = position;
         this.type = type;
+        this.uniqueId = uniqueId;
     }
 }

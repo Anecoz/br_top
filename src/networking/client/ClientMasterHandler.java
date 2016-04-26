@@ -65,7 +65,8 @@ public class ClientMasterHandler {
                                 1.5f,
                                 req.magazine,
                                 req.ammo,
-                                24));
+                                24,
+                                req.uniqueId));
                     }
                     else if (req.type == ITEM_TYPES.ASSAULT_RIFLE) {
                         addItemToWorld(new AssaultRifle(
@@ -74,10 +75,19 @@ public class ClientMasterHandler {
                                 1.5f,
                                 req.magazine,
                                 req.ammo,
-                                800
-                        ));
+                                800,
+                                req.uniqueId));
                     }
+                }
 
+                else if (object instanceof ItemPickupSuccess) {
+                    ItemPickupSuccess succ = (ItemPickupSuccess) object;
+                    ClientReceiver.addPickupSuccess(succ.position, succ.uniqueId);
+                }
+
+                else if (object instanceof RemoveItemFromClient) {
+                    RemoveItemFromClient rem = (RemoveItemFromClient) object;
+                    ClientReceiver.removeItemFromWorld(rem.position, rem.uniqueId);
                 }
             }
 

@@ -5,8 +5,8 @@ import utils.ResourceHandler;
 
 public class Bullet extends Ammunition {
 
-    public Bullet(Vector2f position, Vector2f velocity, float layer, int damage){
-        super(ResourceHandler.bulletTexture, ResourceHandler.bulletTexture, position, layer);
+    public Bullet(Vector2f position, Vector2f velocity, float layer, int damage, int uniqueId){
+        super(ResourceHandler.bulletTexture, ResourceHandler.bulletTexture, position, layer, uniqueId);
 
         this.damage = damage;
         this.velocity = velocity;

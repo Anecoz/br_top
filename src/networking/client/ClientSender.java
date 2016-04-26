@@ -4,6 +4,7 @@ import logic.inventory.InventoryItem;
 import logic.weapons.Pistol;
 import logic.weapons.Weapon;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import static networking.client.ClientMasterHandler.client;
 import static networking.shared.Network.*;
@@ -52,7 +53,15 @@ public class ClientSender {
             req.magazine = -1;
             req.type = ITEM_TYPES.UNKNOWN;
         }
+        req.uniqueId = item.getUniqueId();
         req.position = item.getPosition();
+        client.sendTCP(req);
+    }
+
+    public static void sendPickupRequest(InventoryItem item) {
+        ItemPickupRequest req = new ItemPickupRequest();
+        req.position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
+        req.uniqueId = item.getUniqueId();
         client.sendTCP(req);
     }
 }

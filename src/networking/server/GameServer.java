@@ -78,11 +78,18 @@ public class GameServer {
                         return;
                     AddItemToServer req = (AddItemToServer) object;
                     if (req.type == ITEM_TYPES.ASSAULT_RIFLE || req.type == ITEM_TYPES.PISTOL) {
-                        ServerWeapon item = new ServerWeapon(req.position, req.magazine, req.ammo, req.type);
+                        ServerWeapon item = new ServerWeapon(req.position, req.magazine, req.ammo, req.type, req.uniqueId);
                         ServerReceiver.addItemToWorld(item);
                         // Send out an update to let players know of the new item
                         ServerSender.sendNewWorldItem(connection, item);
                     }
+                }
+
+                else if (object instanceof ItemPickupRequest) {
+                    if (connection.id == -1)
+                        return;
+                    ItemPickupRequest req = (ItemPickupRequest)object;
+                    ServerReceiver.handlePickupRequest(connection, req.position, req.uniqueId);
                 }
             }
 

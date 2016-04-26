@@ -288,6 +288,7 @@ public class GameState {
     private void updateLogic() {
         cam.update(player.getPosition(), player.getSpeed(), level);
         player.update(level, projMatrix);
+        level.update();
         ClientSender.updatePlayerPos(player.getPosition());
         ClientSender.updatePlayerForward(player.getForward());
         projMatrix = cam.getProjection();

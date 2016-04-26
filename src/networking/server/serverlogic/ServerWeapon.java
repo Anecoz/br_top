@@ -9,8 +9,8 @@ public class ServerWeapon extends ServerPickupItem {
     public int magazine;
     public int ammo;
 
-    public ServerWeapon(Vector2f position, int magazine, int ammo, ITEM_TYPES type) {
-        super(position, type);
+    public ServerWeapon(Vector2f position, int magazine, int ammo, ITEM_TYPES type, int uniqueId) {
+        super(position, type, uniqueId);
         this.magazine = magazine;
         this.ammo = ammo;
     }
