@@ -39,4 +39,8 @@ public abstract class InventoryItem extends DrawableEntity {
     public void setRotation(Matrix4f rotation){
         this.rotation = rotation;
     }
+
+    public void cleanUp(){
+
+    }
 }

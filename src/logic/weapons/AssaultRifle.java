@@ -5,12 +5,13 @@ import utils.ResourceHandler;
 
 public class AssaultRifle  extends Weapon {
 
-    public AssaultRifle(Vector2f position, float layer, float reloadTime, int magazineSize, int ammo, int roundsPerMinute, int uniqueId) {
+    public static int magazineSize = 40;
+
+    public AssaultRifle(Vector2f position, float layer, float reloadTime, int currentMagazine, int ammo, int roundsPerMinute, int uniqueId) {
         super(ResourceHandler.assaultRifleTexture, ResourceHandler.assaultRifleTextureDisplay, position, layer, uniqueId);
 
         this.reloadTime = reloadTime;
-        this.magazineSize = magazineSize;
-        this.magazine = magazineSize;
+        this.magazine = currentMagazine;
         this.ammo = ammo;
         this.roundsPerMinute = roundsPerMinute;
         this.position = position;

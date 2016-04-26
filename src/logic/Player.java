@@ -42,7 +42,7 @@ public class Player extends DrawableEntity {
         walkingAnimation.start();
         inventory = new Inventory();
 
-        inventory.add(new AssaultRifle(position, -0.2f, 1.5f, 40, 40, 800, 10));
+        inventory.add(new AssaultRifle(position, -0.2f, 1.5f, AssaultRifle.magazineSize, 40, 800, 10));
 
         this.mesh = ResourceHandler.playerQuad;
         pickupQueue = new ConcurrentHashMap<>();

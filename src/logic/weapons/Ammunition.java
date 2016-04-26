@@ -71,8 +71,4 @@ public abstract class Ammunition extends InventoryItem {
     int getDamage(){
         return damage;
     }
-
-    public void destroy(){
-        super.cleanUp();
-    }
 }
