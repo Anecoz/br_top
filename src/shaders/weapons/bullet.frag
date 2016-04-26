@@ -17,19 +17,19 @@ const float blurSize = 1.0/1000.0;
 void main() {
     vec4 texColor = vec4(0.0); //texture2D(texture, fragTexCoords);
     //texColor = texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y));
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - 4.0*blurSize) * 0.05;
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - 3.0*blurSize) * 0.09;
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - 2.0*blurSize) * 0.12;
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - blurSize) * 0.15;
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y)) * 0.16;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - 4.0*blurSize) * 0.05;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - 3.0*blurSize) * 0.09;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - 2.0*blurSize) * 0.12;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) - blurSize) * 0.15;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y)) * 0.16;
     if (texColor.a < 0.5) { // Do this as soon as we know, in order to not waste resources
         discard;
     }
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + blurSize) * 0.15;
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + 2.0*blurSize) * 0.12;
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + 3.0*blurSize) * 0.09;
-    texColor += texture2D(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + 4.0*blurSize) * 0.05;
-    
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + blurSize) * 0.15;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + 2.0*blurSize) * 0.12;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + 3.0*blurSize) * 0.09;
+    texColor += texture(tex, vec2(fragTexCoords.x, 1.0 - fragTexCoords.y) + 4.0*blurSize) * 0.05;
+
     //vec4 timedColor = (fragColor + time);
 
     vec2 position = (gl_FragCoord.xy / screenSize.xy) - vec2(0.5);
