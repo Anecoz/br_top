@@ -9,14 +9,11 @@ import utils.ResourceHandler;
 
 public class OptionsMenu extends OptionsItem {
 
-    private GUIText vsyncValue;
-    private GUIText multiSampleValue;
-    private GUIText resolutionValue;
-    private Vector2f labelPosition = new Vector2f(0.35f, 0.2f);
-    private Vector2f valuePosition = new Vector2f(0.6f, 0.2f);
-    private float offset = 0.05f;
-
     public OptionsMenu() {
+        Vector2f labelPosition = new Vector2f(0.35f, 0.2f);
+        Vector2f valuePosition = new Vector2f(0.6f, 0.2f);
+        float offset = 0.05f;
+
         //// Texts
         GUIText optionsText = new GUIText("OPTIONS", 3, ResourceHandler.font, new Vector2f(0f, 0.1f), 1f, true);
         optionsText.setColour(1f, 1f, 1f);
@@ -24,19 +21,19 @@ public class OptionsMenu extends OptionsItem {
 
         // VSync
         GUIText vsyncLabel = new GUIText("VSYNC", 1, ResourceHandler.font, labelPosition, 1f, false);
-        vsyncValue = new GUIText(Integer.toString(Config.CONFIG_VSYNC),
+        GUIText vsyncValue = new GUIText(Integer.toString(Config.CONFIG_VSYNC),
                 1, ResourceHandler.font, valuePosition, 1f, false);
         // Multisample
         GUIText multiSampleLabel = new GUIText("MULTISAMPLE", 1, ResourceHandler.font,
-                new Vector2f(labelPosition.x, labelPosition.y + offset), 1f, false);
-        multiSampleValue = new GUIText(Integer.toString(Config.CONFIG_SAMPLES),
-                1, ResourceHandler.font, new Vector2f(valuePosition.x, valuePosition.y + offset), 1f, false);
+                new Vector2f(vsyncLabel.getPosition().x, vsyncLabel.getPosition().y + offset), 1f, false);
+        GUIText multiSampleValue = new GUIText(Integer.toString(Config.CONFIG_SAMPLES), 1, ResourceHandler.font,
+                new Vector2f(vsyncValue.getPosition().x, vsyncValue.getPosition().y + offset), 1f, false);
         // Resolution
         GUIText resolutionLabel = new GUIText("RESOLUTION", 1, ResourceHandler.font,
-                new Vector2f(labelPosition.x, labelPosition.y + offset * 2), 1f, false);
+                new Vector2f(multiSampleLabel.getPosition().x, multiSampleLabel.getPosition().y + offset), 1f, false);
         String resolution = Integer.toString(Config.CONFIG_RES_WIDTH) + "x" + Integer.toString(Config.CONFIG_RES_HEIGHT);
-        resolutionValue = new GUIText(resolution,
-                1, ResourceHandler.font, new Vector2f(valuePosition.x - offset, valuePosition.y + offset * 2), 1f, false);
+        GUIText resolutionValue = new GUIText(resolution, 1, ResourceHandler.font,
+                new Vector2f(multiSampleValue.getPosition().x - offset, multiSampleValue.getPosition().y + offset), 1f, false);
 
         //// Buttons
         // VSync

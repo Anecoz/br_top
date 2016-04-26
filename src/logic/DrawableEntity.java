@@ -79,8 +79,9 @@ public abstract class DrawableEntity {
         ShaderHandler.standardShader.uploadFloat(Camera.getWinSizeX(), "windowSizeX");
         ShaderHandler.standardShader.uploadFloat(Camera.getWinSizeY(), "windowSizeY");
         ShaderHandler.standardShader.uploadVec(Camera.getPosition(), "camPos");
-        ShaderHandler.standardShader.uploadInt(1, "numLights");
+        ShaderHandler.standardShader.uploadInt(LightHandler.lightList.size(), "numLights");
         ShaderHandler.standardShader.uploadVec(LightHandler.lightList.get(0), "lightPos");
+
         mesh.draw();
 
         if (display) {
@@ -92,10 +93,5 @@ public abstract class DrawableEntity {
         }
         ShadowHandler.unbindShadowMap();
         ShaderHandler.standardShader.pissOff();
-    }
-
-    public void cleanUp() {
-        //mesh.cleanUp();
-        //texture.cleanUp();
     }
 }

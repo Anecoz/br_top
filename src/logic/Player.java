@@ -22,7 +22,7 @@ import java.util.List;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Player extends DrawableEntity {
-    private static final float SPEED = 0.1f;
+    private static final float SPEED = 0.06f;
     private Vector2f forward;
     private Pistol pistol1, pistol2, pistol3, pistol4, pistol5;
     private AssaultRifle assaultRifle;
@@ -170,10 +170,7 @@ public class Player extends DrawableEntity {
             inventory.getEquipedWeapon().rotation = new Matrix4f(rotation);
     }
 
-    @Override
     public void cleanUp() {
-        super.cleanUp();
-        //walkingAnimation.cleanUp();
         inventory.cleanUp();
     }
 

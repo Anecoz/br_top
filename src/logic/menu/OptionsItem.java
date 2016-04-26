@@ -22,8 +22,6 @@ public class OptionsItem extends MenuItem {
             Config.CONFIG_SAMPLES = 8;
         else if(Config.CONFIG_SAMPLES == 8)
             Config.CONFIG_SAMPLES = 16;
-        else if(Config.CONFIG_SAMPLES == 16)
-            Config.CONFIG_SAMPLES = 32;
         else
             Config.CONFIG_SAMPLES = 2;
     }
