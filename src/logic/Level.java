@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 // Holds information about the tiled level
@@ -35,13 +36,13 @@ public class Level {
     private VertexArray vertexArray;
     private Texture textureAtlas;
     private TileLayer tileLayer;
-    private static HashMap<Vector2i, CopyOnWriteArrayList<InventoryItem>> droppedItems;   // Items that lay out on the level
+    private static ConcurrentHashMap<Vector2i, CopyOnWriteArrayList<InventoryItem>> droppedItems;   // Items that lay out on the level
 
     public Level(String filename) {
         try {
             File mapFile = new File(FileUtils.RES_DIR + filename);
             map = new TMXMapReader().readMap(mapFile.getAbsolutePath());
-            droppedItems = new HashMap<>();
+            droppedItems = new ConcurrentHashMap<>();
 
             CopyOnWriteArrayList<InventoryItem> tmp = new CopyOnWriteArrayList<>();
             tmp.add(new Pistol(new Vector2f(15.0f, 10.0f), -0.2f, 1.5f, 15, 15, 24));
@@ -173,7 +174,7 @@ public class Level {
     }
 
     private synchronized void renderDroppedItems(Matrix4f projection) {
-        for (HashMap.Entry entry : droppedItems.entrySet()) {
+        for (ConcurrentHashMap.Entry entry : droppedItems.entrySet()) {
             CopyOnWriteArrayList<InventoryItem> list = (CopyOnWriteArrayList<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
                 item.renderDisplay(projection);
@@ -201,7 +202,7 @@ public class Level {
     }
 
     public void cleanUp() {
-        for (HashMap.Entry entry : droppedItems.entrySet()) {
+        for (ConcurrentHashMap.Entry entry : droppedItems.entrySet()) {
             CopyOnWriteArrayList<InventoryItem> list = (CopyOnWriteArrayList<InventoryItem>)entry.getValue();
             for (InventoryItem item : list) {
                 item.cleanUp();
