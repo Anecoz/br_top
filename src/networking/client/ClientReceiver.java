@@ -2,9 +2,11 @@ package networking.client;
 
 import logic.Level;
 import logic.OtherPlayer;
+import logic.Player;
 import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ public class ClientReceiver {
     }
 
     public static void addItemToWorld(InventoryItem item) {
-        Level.addDroppedItem(item);
+        Level.addPickupToQueue(item);
     }
 
     public static void addAllCurrentOtherPlayers(int[] ids, String[] names, Vector2f[] positions) {
@@ -56,6 +58,14 @@ public class ClientReceiver {
 
     public static void addOtherPlayer(int id, Vector2f pos, String displayName) {
         playerList.add(new OtherPlayer(pos, id, displayName));
+    }
+
+    public static void addPickupSuccess(Vector2i position, int uniqueId) {
+        Player.addPickupRequest(position, uniqueId);
+    }
+
+    public static void removeItemFromWorld(Vector2i position, int uniqueId) {
+        Level.addItemToRemoveToQueue(position, uniqueId);
     }
 
     public static void render(Matrix4f projection) {

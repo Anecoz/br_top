@@ -7,6 +7,7 @@ import networking.server.serverlogic.ServerPickupItem;
 import networking.server.serverlogic.ServerWeapon;
 import networking.shared.Network;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import static networking.server.GameServer.server;
 import static networking.shared.Network.*;
@@ -87,6 +88,23 @@ public class ServerSender {
             req.position = wep.position;
         }
         req.type = item.type;
+        req.uniqueId = item.uniqueId;
         server.sendToAllExceptTCP(connection.getID(), req);
+    }
+
+    // Notify single player that a item pickup request was granted
+    public static void acceptPickup(GameConnection conn, Vector2i position, int uniqueId) {
+        ItemPickupSuccess succ = new ItemPickupSuccess();
+        succ.position = position;
+        succ.uniqueId = uniqueId;
+        server.sendToTCP(conn.getID(), succ);
+    }
+
+    // Notify all but sending player of a picked up item
+    public static void removeItemFromClient(GameConnection conn, Vector2i position, int uniqueId) {
+        RemoveItemFromClient rem = new RemoveItemFromClient();
+        rem.position = position;
+        rem.uniqueId = uniqueId;
+        server.sendToAllExceptTCP(conn.getID(), rem);
     }
 }
