@@ -11,6 +11,7 @@ import utils.ResourceHandler;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class Bullet extends Ammunition {
 
@@ -24,10 +25,8 @@ public class Bullet extends Ammunition {
     @Override
     public void render(Matrix4f projection){
         ShaderHandler.bulletShader.comeHere();
-        GL13.glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0);
         texture.bind();
-        GL13.glActiveTexture(GL_TEXTURE1);
-        ShadowHandler.bindShadowMap();
 
         ShaderHandler.bulletShader.uploadMatrix(projection, "projMatrix");
         ShaderHandler.bulletShader.uploadMatrix(rotation, "rotationMatrix");
@@ -40,7 +39,6 @@ public class Bullet extends Ammunition {
         mesh.draw();
 
         texture.unbind();
-        ShadowHandler.unbindShadowMap();
         ShaderHandler.bulletShader.pissOff();
     }
 }

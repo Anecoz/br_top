@@ -234,7 +234,6 @@ public class GameState {
                         updateLogic();
                         break;
                     case GAME_OVER:
-
                         ClientMasterHandler.disconnect();
                         if (endMenu == null)
                             endMenu = new EndMenu();

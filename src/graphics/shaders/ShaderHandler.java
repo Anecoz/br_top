@@ -38,19 +38,16 @@ public class ShaderHandler {
         standardShader.uploadTexture(0, "fontAtlas");
         standardShader.pissOff();
 
+        bulletShader.comeHere();
+        bulletShader.uploadTexture(0, "tex");
+        bulletShader.pissOff();
+
         standardShader.comeHere();
         glActiveTexture(GL_TEXTURE0);
         standardShader.uploadTexture(0, "tex");
         glActiveTexture(GL_TEXTURE1);
         standardShader.uploadTexture(1, "shadowTex");
         standardShader.pissOff();
-
-        bulletShader.comeHere();
-        glActiveTexture(GL_TEXTURE0);
-        bulletShader.uploadTexture(0, "tex");
-        glActiveTexture(GL_TEXTURE1);
-        bulletShader.uploadTexture(1, "shadowTex");
-        bulletShader.pissOff();
 
         shadowMapShader.comeHere();
         shadowMapShader.uploadTexture(0, "collisionMap");
