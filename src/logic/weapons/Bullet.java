@@ -22,7 +22,7 @@ public class Bullet extends Ammunition {
         this.velocity = velocity;
     }
 
-    @Override
+    /*@Override
     public void render(Matrix4f projection){
         ShaderHandler.bulletShader.comeHere();
         GL13.glActiveTexture(GL_TEXTURE0);
@@ -44,5 +44,5 @@ public class Bullet extends Ammunition {
         texture.unbind();
         ShadowHandler.unbindShadowMap();
         ShaderHandler.bulletShader.pissOff();
-    }
+    }*/
 }

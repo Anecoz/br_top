@@ -10,7 +10,7 @@ public class ShaderHandler {
 
     public static Shader levelShader;
     public static Shader standardShader;
-    public static Shader bulletShader;
+    //public static Shader bulletShader;
     public static Shader textShader;
     public static Shader inventoryShader;
     public static Shader shadowMapShader;
@@ -25,7 +25,7 @@ public class ShaderHandler {
     public static void init() {
         levelShader = new Shader("level.vert", "level.frag");
         standardShader = new Shader(WEAPON_DIR + "standard.vert", WEAPON_DIR + "standard.frag");
-        bulletShader = new Shader(WEAPON_DIR + "bullet.vert", WEAPON_DIR + "bullet.frag");
+        //bulletShader = new Shader(WEAPON_DIR + "bullet.vert", WEAPON_DIR + "bullet.frag");
         textShader = new Shader("font.vert", "font.frag");
         inventoryShader = new Shader("inventory.vert", "inventory.frag");
         shadowMapShader = new Shader(SHADOW_DIR + "shadowMap.vert", SHADOW_DIR + "shadowMap.frag");
@@ -45,12 +45,12 @@ public class ShaderHandler {
         standardShader.uploadTexture(1, "shadowTex");
         standardShader.pissOff();
 
-        bulletShader.comeHere();
+        /*bulletShader.comeHere();
         glActiveTexture(GL_TEXTURE0);
         bulletShader.uploadTexture(0, "tex");
         glActiveTexture(GL_TEXTURE1);
         bulletShader.uploadTexture(1, "shadowTex");
-        bulletShader.pissOff();
+        bulletShader.pissOff();*/
 
         shadowMapShader.comeHere();
         shadowMapShader.uploadTexture(0, "collisionMap");
@@ -67,7 +67,7 @@ public class ShaderHandler {
     public static void cleanUp() {
         levelShader.cleanUp();
         standardShader.cleanUp();
-        bulletShader.cleanUp();
+        //bulletShader.cleanUp();
         textShader.cleanUp();
         inventoryShader.cleanUp();
     }
