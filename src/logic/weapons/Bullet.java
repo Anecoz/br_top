@@ -1,13 +1,12 @@
 package logic.weapons;
 
-import graphics.Camera;
-import graphics.lighting.LightHandler;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowHandler;
-import logic.inventory.InventoryItem;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL13;
+import utils.Config;
 import utils.ResourceHandler;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -22,7 +21,7 @@ public class Bullet extends Ammunition {
         this.velocity = velocity;
     }
 
-    /*@Override
+    @Override
     public void render(Matrix4f projection){
         ShaderHandler.bulletShader.comeHere();
         GL13.glActiveTexture(GL_TEXTURE0);
@@ -33,16 +32,15 @@ public class Bullet extends Ammunition {
         ShaderHandler.bulletShader.uploadMatrix(projection, "projMatrix");
         ShaderHandler.bulletShader.uploadMatrix(rotation, "rotationMatrix");
         ShaderHandler.bulletShader.uploadMatrix(new Matrix4f().translate(position.x, position.y, 0f), "modelMatrix");
-        ShaderHandler.bulletShader.uploadFloat(Camera.getWinSizeX(), "windowSizeX");
-        ShaderHandler.bulletShader.uploadFloat(Camera.getWinSizeY(), "windowSizeY");
-        ShaderHandler.bulletShader.uploadVec(Camera.getPosition(), "camPos");
-        ShaderHandler.bulletShader.uploadInt(LightHandler.lightList.size(), "numLights");
-        ShaderHandler.bulletShader.uploadVec(LightHandler.lightList.get(0), "lightPos");
+        ShaderHandler.bulletShader.uploadVec(new Vector2f(Config.CONFIG_RES_WIDTH, Config.CONFIG_RES_HEIGHT), "screenSize");
+        ShaderHandler.bulletShader.uploadVec(new Vector4f(0f,0f,0f,0f),"time");
+        ShaderHandler.bulletShader.uploadVec(velocity,"velocity");
+        ShaderHandler.bulletShader.uploadTexture(0, "texture");
 
         mesh.draw();
 
         texture.unbind();
         ShadowHandler.unbindShadowMap();
         ShaderHandler.bulletShader.pissOff();
-    }*/
+    }
 }

@@ -3,6 +3,7 @@ package graphics.shaders;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import utils.ShaderUtils;
@@ -49,6 +50,13 @@ public class Shader {
         FloatBuffer fb = BufferUtils.createFloatBuffer(3);
         vec.get(fb);
         glUniform3fv(loc, fb);
+    }
+
+    public void uploadVec(Vector4f vec, String uniformName) {
+        int loc = glGetUniformLocation(id, uniformName);
+        FloatBuffer fb = BufferUtils.createFloatBuffer(4);
+        vec.get(fb);
+        glUniform4fv(loc, fb);
     }
 
     public void uploadVecArr(List<Vector2f> arr, String uniformName) {

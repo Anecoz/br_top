@@ -154,7 +154,7 @@ public abstract class Weapon extends InventoryItem {
                 this.position.y + this.height / 2.0f
                         - ResourceHandler.bulletTexture.getHeightAfterScale() / 2.0f);
         Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
-        return new Bullet(bulletPos, bulletVel.mul(0.6f), -0.8f, 10, 0);
+        return new Bullet(bulletPos, bulletVel.mul(0.05f), -0.8f, 10, 0);
     }
 
     public void addAmmo(int value){
