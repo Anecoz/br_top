@@ -29,7 +29,7 @@ public class ClientReceiver {
     }
 
     public static void spawnProjectile(Vector2f pos, Vector2f vel, int id) {
-        Weapon.addToAmmoListRequest(new Bullet(pos, vel, id));
+        Level.addToAmmoListRequest(new Bullet(pos, vel, id));
     }
 
     public static void addAllCurrentOtherPlayers(int[] ids, String[] names, Vector2f[] positions) {

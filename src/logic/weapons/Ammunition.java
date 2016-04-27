@@ -15,7 +15,7 @@ public abstract class Ammunition extends InventoryItem {
 
     protected Vector2f velocity;
     protected int damage;
-    protected boolean dead = false;
+    public boolean dead = false;
 
     public Ammunition(Texture sprite, Texture displaySprite, Vector2f position, float layer, int uniqueId) {
         super(sprite, displaySprite, position, layer, uniqueId);

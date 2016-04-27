@@ -80,7 +80,7 @@ public class Player extends DrawableEntity {
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
         if(inventory.getEquipedWeapon() != null)
-            inventory.getEquipedWeapon().update(forward, level);
+            inventory.getEquipedWeapon().update(forward);
     }
 
     private synchronized void checkPickupQueue(Level level) {

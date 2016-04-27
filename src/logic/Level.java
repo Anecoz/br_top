@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL13.*;
 
 import graphics.shadows.ShadowHandler;
 import logic.inventory.InventoryItem;
+import logic.weapons.Ammunition;
 import logic.weapons.Pistol;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -24,6 +25,7 @@ import utils.LevelUtils;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +41,8 @@ public class Level {
     private HashMap<Vector2i, List<InventoryItem>> droppedItems;    // Items that lay out on the level
     private static CopyOnWriteArrayList<InventoryItem> itemsToBeAdded; // Used to let network thread add new items to level
     private static ConcurrentHashMap<Integer, Vector2i> itemsToBeRemoved; // Network thread adds items in here
+    public static  List<Ammunition> ammunitionList = new ArrayList<>(); // Keep track of all projectiles on the map
+    public static CopyOnWriteArrayList<Ammunition> ammunitionQueue = new CopyOnWriteArrayList<>(); // Network thread adds new projectiles in here
 
     // Some optimization vectors
     private Vector2f playerPosUniform = new Vector2f(0);
@@ -61,6 +65,8 @@ public class Level {
     }
 
     public synchronized void update() {
+        checkBulletDead();
+        checkAddToAmmoListQueue();
         // Check if there are items to be added to the level
         if (itemsToBeAdded.size() > 0) {
             for (InventoryItem item : itemsToBeAdded) {
@@ -75,6 +81,35 @@ public class Level {
             }
             itemsToBeRemoved.clear();
         }
+    }
+
+    private void checkBulletDead() {
+        // Using iterator so that we can remove bullets
+        Iterator<Ammunition> i = ammunitionList.iterator();
+        while (i.hasNext()){
+            Ammunition bullet = i.next();
+            if (bullet.dead) {
+                i.remove();
+            }
+            else {
+                bullet.update(this);
+            }
+        }
+    }
+
+    private synchronized void checkAddToAmmoListQueue() {
+        if (ammunitionQueue.size() > 0) {
+            for (Ammunition entry : ammunitionQueue) {
+                if (entry != null) {
+                    ammunitionList.add(entry);
+                }
+            }
+        }
+        ammunitionQueue.clear();
+    }
+
+    public static void addToAmmoListRequest(Ammunition projectile) {
+        ammunitionQueue.add(projectile);
     }
 
     public synchronized static void addItemToRemoveToQueue(Vector2i position, int uniqueId) {
@@ -218,6 +253,10 @@ public class Level {
         glEnable(GL_MULTISAMPLE);
 
         renderDroppedItems(projMatrix);
+
+        for(Ammunition bullet: ammunitionList){
+            bullet.render(projMatrix);
+        }
     }
 
     private void renderDroppedItems(Matrix4f projection) {

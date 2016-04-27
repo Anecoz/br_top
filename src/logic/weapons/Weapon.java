@@ -10,9 +10,7 @@ import networking.client.ClientSender;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.ResourceHandler;
-
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
@@ -30,8 +28,6 @@ public abstract class Weapon extends InventoryItem {
     protected Vector2f forward;
     protected Timer reloadTimer;
     protected Timer shootTimer;
-    protected static  List<Ammunition> ammunitionList = new ArrayList<>();
-    private static CopyOnWriteArrayList<Ammunition> ammunitionQueue = new CopyOnWriteArrayList<>();
     protected boolean spawnBullet;
     protected static GUIText text;
 
@@ -46,25 +42,13 @@ public abstract class Weapon extends InventoryItem {
         forward = new Vector2f(0);
     }
 
-    public void update(Vector2f forward, Level level){
+    public void update(Vector2f forward){
         this.forward.x = forward.x;
         this.forward.y = forward.y;
-        checkAddToAmmoListQueue();
-        // Using iterator so that we can remove bullets
-        Iterator<Ammunition> i = ammunitionList.iterator();
-        while (i.hasNext()){
-            Ammunition bullet = i.next();
-            if (bullet.dead) {
-                i.remove();
-            }
-            else {
-                bullet.update(level);
-            }
-        }
 
         if(spawnBullet) {
             Bullet bullet = spawnBullet();
-            ammunitionList.add(bullet);
+            Level.ammunitionList.add(bullet);
             ClientSender.spawnProjectile(bullet);
             spawnBullet = false;
         }
@@ -86,9 +70,6 @@ public abstract class Weapon extends InventoryItem {
     @Override
     public void render(Matrix4f projection){
         super.render(projection);
-        for(Ammunition bullet: ammunitionList){
-            bullet.render(projection);
-        }
     }
 
     public void checkFire() {
@@ -168,17 +149,6 @@ public abstract class Weapon extends InventoryItem {
         return new Bullet(bulletPos, bulletVel.mul(0.05f), 0);
     }
 
-    private synchronized void checkAddToAmmoListQueue() {
-        if (ammunitionQueue.size() > 0) {
-            for (Ammunition entry : ammunitionQueue) {
-                if (entry != null) {
-                    ammunitionList.add(entry);
-                }
-            }
-        }
-        ammunitionQueue.clear();
-    }
-
     public void addAmmo(int value){
         ammo += value;
     }
@@ -205,10 +175,6 @@ public abstract class Weapon extends InventoryItem {
 
     public void setFiringBool(boolean value) {
         isFiring = value;
-    }
-
-    public static void addToAmmoListRequest(Ammunition projectile) {
-        ammunitionQueue.add(projectile);
     }
 
     public void cleanUp() {
