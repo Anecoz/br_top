@@ -22,7 +22,8 @@ public class Bullet extends Ammunition {
         this.mesh = ResourceHandler.bulletQuad;
     }
 
-    @Override
+    //----- NOTE: IF THIS IS TO BE USED, REMOVE ALL "new" HERE! CHECK HOW DRAWABLEENTITY DOES IT!
+    /*@Override
     public void render(Matrix4f projection){
         ShaderHandler.bulletShader.comeHere();
         glActiveTexture(GL_TEXTURE0);
@@ -40,5 +41,5 @@ public class Bullet extends Ammunition {
 
         texture.unbind();
         ShaderHandler.bulletShader.pissOff();
-    }
+    }*/
 }

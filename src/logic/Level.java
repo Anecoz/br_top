@@ -40,6 +40,9 @@ public class Level {
     private static CopyOnWriteArrayList<InventoryItem> itemsToBeAdded; // Used to let network thread add new items to level
     private static ConcurrentHashMap<Integer, Vector2i> itemsToBeRemoved; // Network thread adds items in here
 
+    // Some optimization vectors
+    private Vector2f playerPosUniform = new Vector2f(0);
+
     public Level(String filename) {
         try {
             File mapFile = new File(FileUtils.RES_DIR + filename);
@@ -119,11 +122,13 @@ public class Level {
         // Loop 9 closest
         InventoryItem item = null;
         float minDistance = 10000.0f;
-        Vector2i playerI = new Vector2i((int)playerPos.x, (int)playerPos.y);
+        //Vector2i playerI = new Vector2i((int)playerPos.x, (int)playerPos.y);
+        int playerIx = (int)playerPos.x;
+        int playerIy = (int)playerPos.y;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                if (droppedItems.containsKey(new Vector2i(playerI.x + x, playerI.y + y))) {
-                    List<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
+                if (droppedItems.containsKey(new Vector2i(playerIx + x, playerIy + y))) {
+                    List<InventoryItem> list = droppedItems.get(new Vector2i(playerIx + x, playerIy + y));
                     for (InventoryItem currItem : list) {
                         if (playerPos.distance(currItem.getPosition()) < minDistance) {
                             item = currItem;
@@ -136,36 +141,6 @@ public class Level {
 
         return item;
     }
-
-    /*public InventoryItem getClosestItemAtAndRemove(Vector2f playerPos) {
-        // Loop 9 closest
-        InventoryItem item = null;
-        float minDistance = 10000.0f;
-        Vector2i chosenPos= null;
-        Vector2i playerI = new Vector2i((int)playerPos.x, (int)playerPos.y);
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                if (droppedItems.containsKey(new Vector2i(playerI.x + x, playerI.y + y))) {
-                    List<InventoryItem> list = droppedItems.get(new Vector2i(playerI.x + x, playerI.y + y));
-                    for (InventoryItem currItem : list) {
-                        if (playerPos.distance(currItem.getPosition()) < minDistance) {
-                            item = currItem;
-                            minDistance = playerPos.distance(currItem.getPosition());
-                            chosenPos = new Vector2i(playerI.x + x, playerI.y + y);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (item != null) {
-            List<InventoryItem> list = droppedItems.get(chosenPos);
-            list.remove(item);
-            if (list.size() == 0)
-                droppedItems.remove(chosenPos);
-        }
-        return item;
-    }*/
 
     private void removeItemById(Vector2i position, int uniqueId) {
         InventoryItem toRemove = null;
@@ -204,20 +179,6 @@ public class Level {
         return out;
     }
 
-    /*public InventoryItem getDroppedItemAt(Vector2i position) {
-        if (droppedItems.containsKey(position)) {
-            // Don't forget to remove from the list
-            List<InventoryItem> list = droppedItems.get(position);
-            InventoryItem item = list.get(list.size() - 1);
-            list.remove(item);
-            if (list.size() == 0)
-                droppedItems.remove(position);
-            return item;
-        }
-
-        return null;
-    }*/
-
     public void addDroppedItem(InventoryItem item) {
         // First check if there already is an item at that position
         Vector2i position = new Vector2i((int)item.getPosition().x, (int)item.getPosition().y);
@@ -231,8 +192,10 @@ public class Level {
         ShaderHandler.levelShader.comeHere();
         glDisable(GL_MULTISAMPLE);
 
+        playerPosUniform.x = player.getPosition().x + player.getWidth()/2.0f;
+        playerPosUniform.y = player.getPosition().y + player.getHeight()/2.0f;
         ShaderHandler.levelShader.uploadMatrix(projMatrix, "projMatrix");
-        ShaderHandler.levelShader.uploadVec(new Vector2f(player.getPosition().x + player.getWidth()/2.0f, player.getPosition().y + player.getHeight()/2.0f), "playerPos");
+        ShaderHandler.levelShader.uploadVec(playerPosUniform, "playerPos");
         ShaderHandler.levelShader.uploadInt(getBounds().width, "worldWidth");
         ShaderHandler.levelShader.uploadInt(getBounds().height, "worldHeight");
         ShaderHandler.levelShader.uploadFloat(Camera.getWinSizeX(), "windowSizeX");

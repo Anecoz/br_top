@@ -34,6 +34,12 @@ public class Player extends DrawableEntity {
 
     private static ConcurrentHashMap<Integer, Vector2i> pickupQueue;
 
+    // Some optimization vectors
+    private Vector2f tmp = new Vector2f(0);
+    private Vector2f mouse = new Vector2f(0);
+    private Vector3f center = new Vector3f(0f, 0f, -0.3f);
+    private Vector2f up = new Vector2f(0f, -1.0f);
+
     public Player() {
         super(ResourceHandler.playerTexture, new Vector2f(10), -0.3f);
 
@@ -74,7 +80,7 @@ public class Player extends DrawableEntity {
         this.texture = walkingAnimation.getFrame();
         updateForward(proj);
         if(inventory.getEquipedWeapon() != null)
-            inventory.getEquipedWeapon().update(new Vector2f(forward), level);
+            inventory.getEquipedWeapon().update(forward, level);
     }
 
     private synchronized void checkPickupQueue(Level level) {
@@ -91,7 +97,8 @@ public class Player extends DrawableEntity {
     }
 
     private void updateMovement(Level level) {
-        Vector2f tmp = new Vector2f(position.x, position.y);
+        tmp.x = position.x;
+        tmp.y = position.y;
         if (KeyInput.isKeyDown(GLFW_KEY_W)) {
             position.y -= SPEED;
             if (CollisionHandler.checkPlayerCollision(this, level))
@@ -117,14 +124,6 @@ public class Player extends DrawableEntity {
     private void checkPickUp(Level level) {
         // Check whether we're picking something up
         if (KeyInput.isKeyClicked(GLFW_KEY_F)) {
-            /*InventoryItem item = level.getClosestItemAt(position);
-
-            if (item != null) {
-                item.setPosition(position);
-                inventory.add(item);
-                // Send network notification that we picked this shit up
-
-            }*/
             // -----WARNING----- THIS DOES __NOT__ REMOVE THE ITEM FROM THE LEVEL, YOU ARE HOLDING A REF HERE
             InventoryItem item = level.getClosestItemAt(position);
             if (item != null) {
@@ -170,21 +169,23 @@ public class Player extends DrawableEntity {
         double mouseY = MousePosInput.getY();
         double centerX = this.position.x + this.width/2.0f;
         double centerY = this.position.y + this.height/2.0f;
-        Vector2f worldMouse = MathUtils.screenSpaceToWorld(new Vector2f((float) mouseX, (float) mouseY), GameState.WIDTH, GameState.HEIGHT, proj);
+        mouse.x = (float)mouseX;
+        mouse.y = (float)mouseY;
+        MathUtils.screenSpaceToWorld(mouse, GameState.WIDTH, GameState.HEIGHT, proj);
         // Get vector
-        this.forward.x = worldMouse.x - (float) centerX;
-        this.forward.y = worldMouse.y - (float) centerY;
+        this.forward.x = mouse.x - (float) centerX;
+        this.forward.y = mouse.y - (float) centerY;
         this.forward.normalize();
         // Update rotation matrix
-        Vector3f center = new Vector3f((float) centerX, (float) centerY, -0.3f);
-        Vector2f up = new Vector2f(0.0f, -1.0f);
-        rotation = new Matrix4f()
+        center.x = (float)centerX;
+        center.y = (float)centerY;
+        rotation.identity()
                 .translate(center)
                 .rotate(forward.angle(up), 0.0f, 0.0f, -1.0f)
                 .translate(center.negate());
 
         if(inventory.getEquipedWeapon() != null)
-            inventory.getEquipedWeapon().rotation = new Matrix4f(rotation);
+            inventory.getEquipedWeapon().rotation = rotation;
     }
 
     public void cleanUp() {

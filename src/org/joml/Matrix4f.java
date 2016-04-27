@@ -3291,6 +3291,12 @@ public class Matrix4f implements Externalizable {
         return v;
     }
 
+    public Vector2f transformPosition(Vector2f v) {
+        v.set(m00 * v.x + m10 * v.y + m30,
+                m01 * v.x + m11 * v.y + m31);
+        return v;
+    }
+
     /**
      * Transform/multiply the given 3D-vector, as if it was a 4D-vector with w=1, by
      * this matrix and store the result in <code>dest</code>.

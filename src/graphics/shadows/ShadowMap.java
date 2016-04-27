@@ -21,6 +21,10 @@ public class ShadowMap {
     private static Fbo fbo;
     private static IndexedVertexArray quad;
 
+    // Some optimization vectors
+    private static Vector2f renderPos = new Vector2f(0);
+    private static Matrix4f modelMatrix = new Matrix4f();
+
     public ShadowMap() {}
 
     public static void init() {
@@ -33,14 +37,14 @@ public class ShadowMap {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         ShaderHandler.shadowMapShader.comeHere();
 
+        renderPos.x = player.getPosition().x + player.getWidth()/2.0f;
+        renderPos.y = player.getPosition().y + player.getHeight()/2.0f;
+        modelMatrix.identity().translate(Camera.getPosition().x, Camera.getPosition().y, 0.0f).scale(Camera.getWinSizeX(), Camera.getWinSizeY(), 1.0f);
         ShaderHandler.shadowMapShader.uploadMatrix(proj, "projMatrix");
-        ShaderHandler.shadowMapShader.uploadMatrix(
-                new Matrix4f()
-                .translate(Camera.getPosition().x, Camera.getPosition().y, 0.0f)
-                .scale(Camera.getWinSizeX(), Camera.getWinSizeY(), 1.0f), "modelMatrix");
+        ShaderHandler.shadowMapShader.uploadMatrix(modelMatrix, "modelMatrix");
         ShaderHandler.shadowMapShader.uploadInt(1, "numLights");
         ShaderHandler.shadowMapShader.uploadVec(lightArr.get(0), "lightPos");
-        ShaderHandler.shadowMapShader.uploadVec(new Vector2f(player.getPosition().x + player.getWidth()/2.0f, player.getPosition().y + player.getHeight()/2.0f), "playerPos");
+        ShaderHandler.shadowMapShader.uploadVec(renderPos, "playerPos");
         ShaderHandler.shadowMapShader.uploadInt(level.getBounds().width, "worldWidth");
         ShaderHandler.shadowMapShader.uploadInt(level.getBounds().height, "worldHeight");
         ShaderHandler.shadowMapShader.uploadInt((int)Camera.getWinSizeX(), "windowSize");

@@ -35,15 +35,20 @@ public abstract class Weapon extends InventoryItem {
     protected boolean spawnBullet;
     protected static GUIText text;
 
+    // Some optimizing things
+    private Vector2f ammoPos = new Vector2f(0.05f, 0.9f);
+
     public Weapon(Texture sprite, Texture displaySprite, Vector2f position, float layer, int uniqueId) {
         super(sprite, displaySprite, position, layer, uniqueId);
 
         reloadTimer = new Timer();
         shootTimer = new Timer();
+        forward = new Vector2f(0);
     }
 
     public void update(Vector2f forward, Level level){
-        this.forward = forward;
+        this.forward.x = forward.x;
+        this.forward.y = forward.y;
         checkAddToAmmoListQueue();
         // Using iterator so that we can remove bullets
         Iterator<Ammunition> i = ammunitionList.iterator();
@@ -72,7 +77,7 @@ public abstract class Weapon extends InventoryItem {
         text = new GUIText(Integer.toString(magazine) + "/ " + Integer.toString(ammo),
                 2,
                 ResourceHandler.font,
-                new Vector2f(0.05f, 0.9f),
+                ammoPos,
                 0.3f,
                 false);
         text.setColour(1, 1, 1);

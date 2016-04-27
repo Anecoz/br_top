@@ -32,6 +32,9 @@ public abstract class DrawableEntity {
     protected float height;
     protected float scale;
 
+    // Some optimization things
+    private Matrix4f modelMatrix = new Matrix4f();
+
     public float getWidth() {return width;}
     public float getHeight() {return height;}
     public Vector2f getPosition() {return position;}
@@ -75,9 +78,10 @@ public abstract class DrawableEntity {
         GL13.glActiveTexture(GL_TEXTURE1);
         ShadowHandler.bindShadowMap();
 
+        modelMatrix.identity().translate(position.x, position.y, 0f);
         ShaderHandler.standardShader.uploadMatrix(projection, "projMatrix");
         ShaderHandler.standardShader.uploadMatrix(rotation, "rotationMatrix");
-        ShaderHandler.standardShader.uploadMatrix(new Matrix4f().translate(position.x, position.y, 0f), "modelMatrix");
+        ShaderHandler.standardShader.uploadMatrix(modelMatrix, "modelMatrix");
         ShaderHandler.standardShader.uploadFloat(Camera.getWinSizeX(), "windowSizeX");
         ShaderHandler.standardShader.uploadFloat(Camera.getWinSizeY(), "windowSizeY");
         ShaderHandler.standardShader.uploadVec(Camera.getPosition(), "camPos");

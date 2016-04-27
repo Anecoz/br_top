@@ -35,6 +35,11 @@ public class Inventory {
     private Vector2f offset;                            // Offset to drag the inventory on mouse position.
     private Weapon equipedWeapon;
 
+    // Some optimization vectors
+    private Vector2f mousePos = new Vector2f(0);
+    private Vector2f renderWorldPos = new Vector2f(0);
+    private Matrix4f modelMatrix = new Matrix4f();
+
     public Inventory() {
         backDropQuad = GraphicsUtils.createInventoryQuad();
         itemList = new ArrayList<>();
@@ -52,7 +57,9 @@ public class Inventory {
             isOpen = !isOpen;
         }
 
-        Vector2f mousePos = new Vector2f((float)MousePosInput.getX(), (float)MousePosInput.getY());
+        //Vector2f mousePos = new Vector2f((float)MousePosInput.getX(), (float)MousePosInput.getY());
+        mousePos.x = (float)MousePosInput.getX();
+        mousePos.y = (float)MousePosInput.getY();
         if (MouseButtonInput.isMouseLeftDown()) {
             if (isOpen && MathUtils.screenPointWithinInventory(mousePos, position, baseScale)) {
                 int listIndex = MathUtils.getInventoryItemIndex(mousePos, position, baseScale, ITEMS_PER_ROW);
@@ -127,12 +134,12 @@ public class Inventory {
             prepareRender();
 
             // Get world coordinates
-            Vector2f worldPos = new Vector2f(
-                    Camera.getPosition().x + position.x*Camera.getWinSizeX(),
-                    Camera.getPosition().y + position.y*Camera.getWinSizeY());
+            renderWorldPos.x = Camera.getPosition().x + position.x*Camera.getWinSizeX();
+            renderWorldPos.y = Camera.getPosition().y + position.y*Camera.getWinSizeY();
 
+            modelMatrix.identity().translate(renderWorldPos.x, renderWorldPos.y, 0f);
             ShaderHandler.inventoryShader.uploadMatrix(proj, "projMatrix");
-            ShaderHandler.inventoryShader.uploadMatrix(new Matrix4f().translate(worldPos.x, worldPos.y, 0f), "modelMatrix");
+            ShaderHandler.inventoryShader.uploadMatrix(modelMatrix, "modelMatrix");
             ShaderHandler.inventoryShader.uploadInt(ITEMS_PER_ROW, "itemsPerRow");
             ShaderHandler.inventoryShader.uploadFloat(baseScale, "scale");
             ShaderHandler.inventoryShader.uploadFloat(baseScale, "baseScale");
@@ -142,7 +149,7 @@ public class Inventory {
             ShaderHandler.inventoryShader.uploadInt(0, "isBackground");
             for (InventoryItem item : itemList) {
                 item.getDisplayTexture().bind();
-                ShaderHandler.inventoryShader.uploadMatrix(new Matrix4f().translate(worldPos.x, worldPos.y, 0f), "modelMatrix");
+                ShaderHandler.inventoryShader.uploadMatrix(modelMatrix, "modelMatrix");
                 ShaderHandler.inventoryShader.uploadInt(itemList.indexOf(item), "itemIndex");
                 ShaderHandler.inventoryShader.uploadFloat(baseScale/(float)ITEMS_PER_ROW, "scale");
                 item.getMesh().draw();
