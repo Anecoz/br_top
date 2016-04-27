@@ -1,25 +1,25 @@
 package logic.weapons;
 
 import graphics.shaders.ShaderHandler;
-import graphics.shadows.ShadowHandler;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL13;
 import utils.Config;
 import utils.ResourceHandler;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class Bullet extends Ammunition {
 
-    public Bullet(Vector2f position, Vector2f velocity, float layer, int damage, int uniqueId){
-        super(ResourceHandler.bulletTexture, ResourceHandler.bulletTexture, position, layer, uniqueId);
+    private final int DAMAGE = 10;
 
-        this.damage = damage;
+    public Bullet(Vector2f position, Vector2f velocity, int uniqueId){
+        super(ResourceHandler.bulletTexture, ResourceHandler.bulletTexture, position, -0.8f, uniqueId);
+
+        this.damage = DAMAGE;
         this.velocity = velocity;
+        this.mesh = ResourceHandler.bulletQuad;
     }
 
     @Override

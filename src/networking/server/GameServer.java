@@ -3,6 +3,7 @@ package networking.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import logic.weapons.Ammunition;
 import networking.server.serverlogic.ServerPickupItem;
 import networking.server.serverlogic.ServerWeapon;
 import networking.shared.Network;
@@ -82,6 +83,9 @@ public class GameServer {
                         ServerReceiver.addItemToWorld(item);
                         // Send out an update to let players know of the new item
                         ServerSender.sendNewWorldItem(connection, item);
+                    } else if (req.type == ITEM_TYPES.BULLET) {
+                        // Send to all clients; To spawn a bullet.
+                        ServerSender.sendSpawnProjectile(connection, req);
                     }
                 }
 

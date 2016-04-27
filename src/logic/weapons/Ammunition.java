@@ -68,7 +68,15 @@ public abstract class Ammunition extends InventoryItem {
                 .translate(center.negate());
     }
 
-    int getDamage(){
-        return damage;
+    public Vector2f getVelocity() {
+        return this.velocity;
+    }
+
+    public int getUniqueId() {
+        return this.uniqueId;
+    }
+
+    public int getDamage(){
+        return this.damage;
     }
 }

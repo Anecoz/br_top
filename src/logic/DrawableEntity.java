@@ -7,6 +7,7 @@ import graphics.lowlevel.Texture;
 import graphics.shaders.ShaderHandler;
 import graphics.shadows.ShadowHandler;
 import logic.inventory.InventoryItem;
+import logic.weapons.Ammunition;
 import logic.weapons.Bullet;
 import logic.weapons.Weapon;
 import org.joml.Matrix4f;
@@ -47,7 +48,8 @@ public abstract class DrawableEntity {
         this.scale = this.texture.getScale();
 
         this.position = initPos;
-        if (!(this instanceof Player) && !(this instanceof OtherPlayer) && !(this instanceof Weapon))
+        if (!(this instanceof Player) && !(this instanceof OtherPlayer)
+                && !(this instanceof Weapon)&& !(this instanceof Ammunition))
             this.mesh = GraphicsUtils.createModelQuad(width, height, layer);
         this.rotation = new Matrix4f();
     }

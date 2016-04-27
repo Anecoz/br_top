@@ -3,6 +3,8 @@ package networking.server;
 // Handles all functionality regarding stuff that needs to be sent from server to clients
 
 import com.esotericsoftware.kryonet.Connection;
+import logic.weapons.Ammunition;
+import logic.weapons.Bullet;
 import networking.server.serverlogic.ServerPickupItem;
 import networking.server.serverlogic.ServerWeapon;
 import networking.shared.Network;
@@ -88,6 +90,16 @@ public class ServerSender {
             req.position = wep.position;
         }
         req.type = item.type;
+        req.uniqueId = item.uniqueId;
+        server.sendToAllExceptTCP(connection.getID(), req);
+    }
+    public static void sendSpawnProjectile(GameConnection connection, AddItemToServer item) {
+        AddItemToClient req = new AddItemToClient();
+        if (item.type == ITEM_TYPES.BULLET) {
+            req.position = item.position;
+            req.velocity = item.velocity;
+            req.type = ITEM_TYPES.BULLET;
+        }
         req.uniqueId = item.uniqueId;
         server.sendToAllExceptTCP(connection.getID(), req);
     }

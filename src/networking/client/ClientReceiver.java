@@ -4,6 +4,9 @@ import logic.Level;
 import logic.OtherPlayer;
 import logic.Player;
 import logic.inventory.InventoryItem;
+import logic.weapons.Ammunition;
+import logic.weapons.Bullet;
+import logic.weapons.Weapon;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -23,6 +26,10 @@ public class ClientReceiver {
 
     public static void addItemToWorld(InventoryItem item) {
         Level.addPickupToQueue(item);
+    }
+
+    public static void spawnProjectile(Vector2f pos, Vector2f vel, int id) {
+        Weapon.addToAmmoListRequest(new Bullet(pos, vel, id));
     }
 
     public static void addAllCurrentOtherPlayers(int[] ids, String[] names, Vector2f[] positions) {

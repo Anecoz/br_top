@@ -35,6 +35,7 @@ public class ResourceHandler {
     public static IndexedVertexArray playerQuad;
     public static IndexedVertexArray assaultRifleQuad;
     public static IndexedVertexArray pistolQuad;
+    public static IndexedVertexArray bulletQuad;
 
     public ResourceHandler(){
 
@@ -62,6 +63,7 @@ public class ResourceHandler {
         playerQuad = GraphicsUtils.createModelQuad(playerTexture.getWidthAfterScale(), playerTexture.getHeightAfterScale(), -0.3f);
         assaultRifleQuad = GraphicsUtils.createModelQuad(assaultRifleTexture.getWidthAfterScale(), assaultRifleTexture.getHeightAfterScale(), -0.2f);
         pistolQuad = GraphicsUtils.createModelQuad(pistolTexture.getWidthAfterScale(), pistolTexture.getHeightAfterScale(), -0.2f);
+        bulletQuad = GraphicsUtils.createModelQuad(bulletTexture.getWidthAfterScale(), bulletTexture.getHeightAfterScale(), -0.2f);
     }
 
     public static void cleanUp(){

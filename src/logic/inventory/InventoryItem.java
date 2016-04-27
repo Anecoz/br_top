@@ -18,7 +18,9 @@ public abstract class InventoryItem extends DrawableEntity {
         this.uniqueId = uniqueId;
     }
 
-    public int getUniqueId() {return this.uniqueId;}
+    public int getUniqueId() {
+        return this.uniqueId;
+    }
 
     public void setPosition(Vector2f pos) {
         this.position = pos;

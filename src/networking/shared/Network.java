@@ -12,7 +12,7 @@ public class Network {
     static public final int port = 54557;
 
     public enum ITEM_TYPES {
-        ASSAULT_RIFLE, PISTOL, UNKNOWN
+        ASSAULT_RIFLE, PISTOL, BULLET, UNKNOWN
     }
 
     static public void register(EndPoint endPoint) {
@@ -79,6 +79,8 @@ public class Network {
         // if the item is a weapon we need these things
         public int ammo;
         public int magazine;
+        // if the item is a ammunition type we need this
+        public Vector2f velocity;
     }
 
     // FROM:    CLIENT
@@ -115,6 +117,8 @@ public class Network {
         // if the item is a weapon we need these things
         public int ammo;
         public int magazine;
+        // if the item is a ammunition type we need this
+        public Vector2f velocity;
     }
 
     // FROM:    SERVER

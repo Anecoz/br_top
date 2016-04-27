@@ -1,6 +1,8 @@
 package networking.client;
 
 import logic.inventory.InventoryItem;
+import logic.weapons.Ammunition;
+import logic.weapons.Bullet;
 import logic.weapons.Pistol;
 import logic.weapons.Weapon;
 import org.joml.Vector2f;
@@ -36,6 +38,23 @@ public class ClientSender {
         client.sendTCP(disc);
     }
 
+    public static void spawnProjectile(Ammunition item) {
+        AddItemToServer req = new AddItemToServer();
+
+        if (item instanceof Bullet) {
+            req.type = ITEM_TYPES.BULLET;
+            req.velocity = item.getVelocity();
+        }else {
+            req.ammo = -1;
+            req.magazine = -1;
+            req.velocity = new Vector2f(-1);
+            req.type = ITEM_TYPES.UNKNOWN;
+        }
+        req.uniqueId = item.getUniqueId();
+        req.position = item.getPosition();
+        client.sendTCP(req);
+    }
+
     public static void addItemToWorld(InventoryItem item) {
         AddItemToServer req = new AddItemToServer();
 
@@ -51,6 +70,7 @@ public class ClientSender {
         else {
             req.ammo = -1;
             req.magazine = -1;
+            req.velocity = new Vector2f(-1);
             req.type = ITEM_TYPES.UNKNOWN;
         }
         req.uniqueId = item.getUniqueId();

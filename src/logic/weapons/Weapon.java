@@ -6,11 +6,13 @@ import input.KeyInput;
 import input.MouseButtonInput;
 import logic.Level;
 import logic.inventory.InventoryItem;
+import networking.client.ClientSender;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import utils.ResourceHandler;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
@@ -28,7 +30,8 @@ public abstract class Weapon extends InventoryItem {
     protected Vector2f forward;
     protected Timer reloadTimer;
     protected Timer shootTimer;
-    protected List<Ammunition> ammunitionList = new ArrayList<>();
+    protected static  List<Ammunition> ammunitionList = new ArrayList<>();
+    private static CopyOnWriteArrayList<Ammunition> ammunitionQueue = new CopyOnWriteArrayList<>();
     protected boolean spawnBullet;
     protected static GUIText text;
 
@@ -41,6 +44,7 @@ public abstract class Weapon extends InventoryItem {
 
     public void update(Vector2f forward, Level level){
         this.forward = forward;
+        checkAddToAmmoListQueue();
         // Using iterator so that we can remove bullets
         Iterator<Ammunition> i = ammunitionList.iterator();
         while (i.hasNext()){
@@ -54,7 +58,9 @@ public abstract class Weapon extends InventoryItem {
         }
 
         if(spawnBullet) {
-            ammunitionList.add(spawnBullet());
+            Bullet bullet = spawnBullet();
+            ammunitionList.add(bullet);
+            ClientSender.spawnProjectile(bullet);
             spawnBullet = false;
         }
 
@@ -154,7 +160,18 @@ public abstract class Weapon extends InventoryItem {
                 this.position.y + this.height / 2.0f
                         - ResourceHandler.bulletTexture.getHeightAfterScale() / 2.0f);
         Vector2f bulletVel = new Vector2f(this.forward.x, this.forward.y);
-        return new Bullet(bulletPos, bulletVel.mul(0.05f), -0.8f, 10, 0);
+        return new Bullet(bulletPos, bulletVel.mul(0.05f), 0);
+    }
+
+    private synchronized void checkAddToAmmoListQueue() {
+        if (ammunitionQueue.size() > 0) {
+            for (Ammunition entry : ammunitionQueue) {
+                if (entry != null) {
+                    ammunitionList.add(entry);
+                }
+            }
+        }
+        ammunitionQueue.clear();
     }
 
     public void addAmmo(int value){
@@ -183,6 +200,10 @@ public abstract class Weapon extends InventoryItem {
 
     public void setFiringBool(boolean value) {
         isFiring = value;
+    }
+
+    public static void addToAmmoListRequest(Ammunition projectile) {
+        ammunitionQueue.add(projectile);
     }
 
     public void cleanUp() {
