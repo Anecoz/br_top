@@ -16,19 +16,30 @@ public abstract class Ammunition extends InventoryItem {
     protected Vector2f velocity;
     protected int damage;
     public boolean dead = false;
+    protected CollisionBox box;
+
+    // Some optimization vectors
+    private Vector2f up = new Vector2f(0f, -1f);
+    private Vector3f center = new Vector3f(0f, 0f, -0.3f);
 
     public Ammunition(Texture sprite, Texture displaySprite, Vector2f position, float layer, int uniqueId) {
         super(sprite, displaySprite, position, layer, uniqueId);
-    }
 
-    public void update(Level level){
-        // Do a collision test with 8 adjacent tiles
-        CollisionBox box = new CollisionBox(
+        box = new CollisionBox(
                 position.x,
                 position.y,
                 this.width,
                 this.height,
-                new Vector2f(this.velocity.x, this.velocity.y));
+                new Vector2f(0)
+        );
+    }
+
+    public void update(Level level){
+        // Do a collision test with 8 adjacent tiles
+        box.x = position.x;
+        box.y = position.y;
+        box.vel.x = this.velocity.x;
+        box.vel.y = this.velocity.y;
 
         int tileX = (int)this.position.x;
         int tileY = (int)this.position.y;
@@ -60,9 +71,9 @@ public abstract class Ammunition extends InventoryItem {
         double centerX = this.position.x + this.width/2.0f;
         double centerY = this.position.y + this.height/2.0f;
 
-        Vector3f center = new Vector3f((float) centerX, (float) centerY, -0.3f);
-        Vector2f up = new Vector2f(0.0f, -1.0f);
-        rotation = new Matrix4f()
+        center.x = (float)centerX;
+        center.y = (float)centerY;
+        rotation.identity()
                 .translate(center)
                 .rotate(velocity.angle(up), 0.0f, 0.0f, -1.0f)
                 .translate(center.negate());
