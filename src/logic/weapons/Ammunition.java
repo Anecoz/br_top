@@ -44,12 +44,14 @@ public abstract class Ammunition extends InventoryItem {
         int tileX = (int)this.position.x;
         int tileY = (int)this.position.y;
         boolean didCollide = false;
+        Rectangle tileRect = new Rectangle(tileX, tileY, 1, 1);
         outerloop:
         for (int x = -1; x <= 1; x++)
             for (int y = -1; y <= 1; y++) {
                 // Is there even a collision here?
                 if (level.getCollAt(tileX + x, tileY + y)) {
-                    Rectangle tileRect = new Rectangle(tileX + x, tileY + y, 1, 1);
+                    tileRect.x = tileX + x;
+                    tileRect.y = tileY + y;
                     float collTime = CollisionHandler.sweptAABBCollision(box, tileRect);
                     // if collision
                     if (collTime > 0.0f && collTime < 1.0f) {
