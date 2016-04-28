@@ -12,7 +12,7 @@ public class Camera {
     private Matrix4f projection = new Matrix4f();
     private static Vector2f position;
     private float invAr;
-    private static float WIN_SIZE_X = 40.0f;
+    private static float WIN_SIZE_X = 20.0f;
     private static float WIN_SIZE_Y;
     private static final Matrix4f lookAt = new Matrix4f().lookAt(0f, 0f, -0.1f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f);
 

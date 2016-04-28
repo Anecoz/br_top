@@ -297,5 +297,6 @@ public class Level {
         }
         droppedItems.clear();
         itemsToBeRemoved.clear();
+        vertexArray.cleanUp();
     }
 }

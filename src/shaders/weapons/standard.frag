@@ -62,9 +62,9 @@ void main() {
              if (posInsideShadow(fragWorldPos, 0) == 1) {
                  outColor *= DAMP_FACTOR;
              }
-             /*else {
+             else {
                  outColor *= pow(dist, 3);
-             }*/
+             }
          }
     }
 }
