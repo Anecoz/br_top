@@ -98,6 +98,7 @@ public class ServerSender {
         if (item.type == ITEM_TYPES.BULLET) {
             req.position = item.position;
             req.velocity = item.velocity;
+            req.damage = item.damage;
             req.type = ITEM_TYPES.BULLET;
         }
         req.uniqueId = item.uniqueId;
