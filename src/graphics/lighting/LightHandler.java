@@ -13,6 +13,6 @@ public class LightHandler {
 
     public static void init() {
         lightList = new ArrayList<>();
-        lightList.add(new Vector2f(10.0f, 10.0f));
+        lightList.add(new Vector2f(18.0f, 14.0f));
     }
 }
