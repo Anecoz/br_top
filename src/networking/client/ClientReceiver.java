@@ -28,8 +28,8 @@ public class ClientReceiver {
         Level.addPickupToQueue(item);
     }
 
-    public static void spawnProjectile(Vector2f pos, Vector2f vel, int id) {
-        Level.addToAmmoListRequest(new Bullet(pos, vel, id));
+    public static void spawnProjectile(Vector2f pos, Vector2f vel, int dmg, int id) {
+        Level.addToAmmoListRequest(new Bullet(pos, vel, dmg, id));
     }
 
     public static void addAllCurrentOtherPlayers(int[] ids, String[] names, Vector2f[] positions) {

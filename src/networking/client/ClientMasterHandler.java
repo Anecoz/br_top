@@ -79,7 +79,7 @@ public class ClientMasterHandler {
                                 req.uniqueId));
                     }
                     else if (req.type == ITEM_TYPES.BULLET) {
-                        spawnProjectile(req.position, req.velocity, req.uniqueId);
+                        spawnProjectile(req.position, req.velocity, req.damage, req.uniqueId);
                     }
                 }
 

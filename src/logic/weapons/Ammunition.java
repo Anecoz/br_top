@@ -16,15 +16,17 @@ public abstract class Ammunition extends InventoryItem {
     protected Vector2f velocity;
     public boolean dead = false;
     protected CollisionBox box;
+    protected int DAMAGE = 0;
 
     // Some optimization vectors
     private Vector2f up = new Vector2f(0f, -1f);
     private Vector3f center = new Vector3f(0f, 0f, -0.3f);
     private Rectangle tileRect = new Rectangle(0, 0, 1, 1);
 
-    public Ammunition(Texture sprite, Texture displaySprite, Vector2f position, float layer, int uniqueId) {
+    public Ammunition(Texture sprite, Texture displaySprite, Vector2f position, int damage, float layer, int uniqueId) {
         super(sprite, displaySprite, position, layer, uniqueId);
 
+        DAMAGE = damage;
         box = new CollisionBox(
                 position.x,
                 position.y,
@@ -81,6 +83,10 @@ public abstract class Ammunition extends InventoryItem {
 
     public Vector2f getVelocity() {
         return this.velocity;
+    }
+
+    public int getDamage() {
+        return DAMAGE;
     }
 
     public CollisionBox getCollisionBox() {

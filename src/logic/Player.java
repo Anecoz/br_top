@@ -129,8 +129,7 @@ public class Player extends DrawableEntity {
             // if collision
             if (collTime > 0.0f && collTime < 1.0f) {
                 projectile.dead = true;
-                removeHealth(inventory.getEquipedWeapon().getDamage()); // TODO: GET WHAT WEAPON FIRED THE PROJECTILE.
-                System.out.println("HEALTH: " + HEALTH);
+                removeHealth(projectile.getDamage()); // TODO: GET THE WEAPON THAT FIRED THE PROJECTILE.
             }
         }
     }

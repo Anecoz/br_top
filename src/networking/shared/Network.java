@@ -81,6 +81,7 @@ public class Network {
         public int magazine;
         // if the item is a ammunition type we need this
         public Vector2f velocity;
+        public int damage;
     }
 
     // FROM:    CLIENT
@@ -119,6 +120,7 @@ public class Network {
         public int magazine;
         // if the item is a ammunition type we need this
         public Vector2f velocity;
+        public int damage;
     }
 
     // FROM:    SERVER

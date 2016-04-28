@@ -44,6 +44,7 @@ public class ClientSender {
         if (item instanceof Bullet) {
             req.type = ITEM_TYPES.BULLET;
             req.velocity = item.getVelocity();
+            req.damage = item.getDamage();
         }else {
             req.ammo = -1;
             req.magazine = -1;
