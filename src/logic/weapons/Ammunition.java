@@ -20,6 +20,7 @@ public abstract class Ammunition extends InventoryItem {
     // Some optimization vectors
     private Vector2f up = new Vector2f(0f, -1f);
     private Vector3f center = new Vector3f(0f, 0f, -0.3f);
+    private Rectangle tileRect = new Rectangle(0, 0, 1, 1);
 
     public Ammunition(Texture sprite, Texture displaySprite, Vector2f position, float layer, int uniqueId) {
         super(sprite, displaySprite, position, layer, uniqueId);
@@ -43,7 +44,6 @@ public abstract class Ammunition extends InventoryItem {
         int tileX = (int)this.position.x;
         int tileY = (int)this.position.y;
         boolean didCollide = false;
-        Rectangle tileRect = new Rectangle(tileX, tileY, 1, 1);
         outerloop:
         for (int x = -1; x <= 1; x++)
             for (int y = -1; y <= 1; y++) {
