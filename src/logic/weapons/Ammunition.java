@@ -14,7 +14,6 @@ import java.awt.*;
 public abstract class Ammunition extends InventoryItem {
 
     protected Vector2f velocity;
-    protected int damage;
     public boolean dead = false;
     protected CollisionBox box;
 
@@ -62,7 +61,6 @@ public abstract class Ammunition extends InventoryItem {
                     }
                 }
             }
-
         if (!didCollide) {
             position.add(velocity);
         }
@@ -85,11 +83,11 @@ public abstract class Ammunition extends InventoryItem {
         return this.velocity;
     }
 
-    public int getUniqueId() {
-        return this.uniqueId;
+    public CollisionBox getCollisionBox() {
+        return box;
     }
 
-    public int getDamage(){
-        return this.damage;
+    public int getUniqueId() {
+        return this.uniqueId;
     }
 }

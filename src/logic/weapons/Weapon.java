@@ -22,6 +22,7 @@ public abstract class Weapon extends InventoryItem {
     protected int magazine;         // Ammunition loaded in weapon
     protected int ammo;             // Current reserve ammunition
     protected int roundsPerMinute;
+    protected int damage;
     protected boolean isReloading;
     protected boolean isFiring;
     protected boolean isAutomatic;
@@ -32,7 +33,7 @@ public abstract class Weapon extends InventoryItem {
     protected static GUIText text;
 
     // Some optimizing things
-    private Vector2f ammoPos = new Vector2f(0.05f, 0.9f);
+    private Vector2f ammoTextPos = new Vector2f(0.05f, 0.9f);
 
     public Weapon(Texture sprite, Texture displaySprite, Vector2f position, float layer, int uniqueId) {
         super(sprite, displaySprite, position, layer, uniqueId);
@@ -61,7 +62,7 @@ public abstract class Weapon extends InventoryItem {
         text = new GUIText(Integer.toString(magazine) + "/ " + Integer.toString(ammo),
                 2,
                 ResourceHandler.font,
-                ammoPos,
+                ammoTextPos,
                 0.3f,
                 false);
         text.setColour(1, 1, 1);
@@ -171,6 +172,10 @@ public abstract class Weapon extends InventoryItem {
 
     public boolean isAutomatic(){
         return isAutomatic;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
     public void setFiringBool(boolean value) {

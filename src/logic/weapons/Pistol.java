@@ -6,6 +6,7 @@ import utils.ResourceHandler;
 public class Pistol extends Weapon {
 
     public static final int MAG_SIZE = 15;
+    private final int DAMAGE = 13;
 
     public Pistol(Vector2f position, float layer, float reloadTime, int currentMagazine, int ammo, int roundsPerMinute, int uniqueId) {
         super(ResourceHandler.pistolTexture, ResourceHandler.pistolTexture, position, layer, uniqueId);
@@ -14,6 +15,7 @@ public class Pistol extends Weapon {
         this.magazine = currentMagazine;
         this.ammo = ammo;
         this.roundsPerMinute = roundsPerMinute;
+        this.damage = DAMAGE;
         this.position = position;
         this.isAutomatic = false;
         this.isReloading = false;

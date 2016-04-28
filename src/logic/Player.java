@@ -1,10 +1,12 @@
 package logic;
 
 import graphics.animation.Animation;
+import gui.fontMeshCreator.GUIText;
 import input.KeyInput;
 import input.MousePosInput;
 import logic.inventory.Inventory;
 import logic.inventory.InventoryItem;
+import logic.weapons.Ammunition;
 import logic.weapons.AssaultRifle;
 import logic.collision.CollisionHandler;
 import logic.weapons.Pistol;
@@ -17,6 +19,7 @@ import org.joml.Vector3f;
 import utils.MathUtils;
 import utils.ResourceHandler;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,11 +29,14 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Player extends DrawableEntity {
     private static final float SPEED = 0.06f;
+    private int HEALTH = 100;
     private Vector2f forward;
     private Animation walkingAnimation;
     private boolean running = false;
     private Inventory inventory;
     public String displayName = "Kappa";
+    private static GUIText healthText;
+    public static Rectangle rectangle;
 
     private static ConcurrentHashMap<Integer, Vector2i> pickupQueue;
 
@@ -39,10 +45,12 @@ public class Player extends DrawableEntity {
     private Vector2f mouse = new Vector2f(0);
     private Vector3f center = new Vector3f(0f, 0f, -0.3f);
     private Vector2f up = new Vector2f(0f, -1.0f);
+    private Vector2f healthTextPos = new Vector2f(0.9f, 0.9f);
 
     public Player() {
         super(ResourceHandler.playerTexture, new Vector2f(10), -0.3f);
 
+        rectangle = new Rectangle((int)position.x, (int)position.y, (int)width, (int)height);
         forward = new Vector2f(0);
         walkingAnimation = ResourceHandler.playerAnimation;
         walkingAnimation.start();
@@ -65,6 +73,8 @@ public class Player extends DrawableEntity {
     }
 
     public void update(Level level, Matrix4f proj) {
+        checkProjectileCollision();
+        updateHealthText();
         updateMovement(level);
         checkPickUp(level);
         checkWeaponSwap();
@@ -81,19 +91,8 @@ public class Player extends DrawableEntity {
         updateForward(proj);
         if(inventory.getEquipedWeapon() != null)
             inventory.getEquipedWeapon().update(forward);
-    }
 
-    private synchronized void checkPickupQueue(Level level) {
-        if (pickupQueue.size() > 0) {
-            for (ConcurrentHashMap.Entry<Integer, Vector2i> entry : pickupQueue.entrySet()) {
-                InventoryItem item = level.getDroppedItemById(entry.getValue(), entry.getKey());
-                if (item != null) {
-                    item.setPosition(position);
-                    inventory.add(item);
-                }
-            }
-        }
-        pickupQueue.clear();
+        checkIfGameOver();
     }
 
     private void updateMovement(Level level) {
@@ -121,6 +120,35 @@ public class Player extends DrawableEntity {
         }
     }
 
+    private void checkProjectileCollision() {
+        rectangle.x = (int)position.x;
+        rectangle.y = (int)position.y;
+
+        for(Ammunition projectile : Level.ammunitionList) {
+            float collTime = CollisionHandler.sweptAABBCollision(projectile.getCollisionBox(), rectangle);
+            // if collision
+            if (collTime > 0.0f && collTime < 1.0f) {
+                projectile.dead = true;
+                removeHealth(inventory.getEquipedWeapon().getDamage()); // TODO: GET WHAT WEAPON FIRED THE PROJECTILE.
+                System.out.println("HEALTH: " + HEALTH);
+            }
+        }
+    }
+
+    private void checkIfGameOver() {
+        if(isDead()) {
+            GameState.gameState = GameState.GameStates.GAME_OVER;
+            GameState.loop = false;
+        }
+    }
+
+    private boolean isDead() {
+        if(HEALTH <= 0)
+            return true;
+        else
+            return false;
+    }
+
     private void checkPickUp(Level level) {
         // Check whether we're picking something up
         if (KeyInput.isKeyClicked(GLFW_KEY_F)) {
@@ -129,6 +157,28 @@ public class Player extends DrawableEntity {
             if (item != null) {
                 ClientSender.sendPickupRequest(item);
             }
+        }
+    }
+
+    private synchronized void checkPickupQueue(Level level) {
+        if (pickupQueue.size() > 0) {
+            for (ConcurrentHashMap.Entry<Integer, Vector2i> entry : pickupQueue.entrySet()) {
+                InventoryItem item = level.getDroppedItemById(entry.getValue(), entry.getKey());
+                if (item != null) {
+                    item.setPosition(position);
+                    inventory.add(item);
+                }
+            }
+        }
+        pickupQueue.clear();
+    }
+
+    private void checkWeaponSwap(){
+        if(KeyInput.isKeyClicked(GLFW_KEY_1)) {
+            //equipedWeapon = assaultRifle;
+        }
+        if(KeyInput.isKeyClicked(GLFW_KEY_2)) {
+            //equipedWeapon = pistol1;
         }
     }
 
@@ -142,15 +192,6 @@ public class Player extends DrawableEntity {
         if (noRunningKeysDown()) {
             running = false;
             walkingAnimation.stop();
-        }
-    }
-
-    private void checkWeaponSwap(){
-        if(KeyInput.isKeyClicked(GLFW_KEY_1)) {
-            //equipedWeapon = assaultRifle;
-        }
-        if(KeyInput.isKeyClicked(GLFW_KEY_2)) {
-            //equipedWeapon = pistol1;
         }
     }
 
@@ -188,10 +229,38 @@ public class Player extends DrawableEntity {
             inventory.getEquipedWeapon().rotation = rotation;
     }
 
-    public void cleanUp() {
-        inventory.cleanUp();
+    private void updateHealthText() {
+        if (healthText != null)
+            healthText.remove();
+        healthText = new GUIText(Integer.toString(HEALTH),
+                2,
+                ResourceHandler.font,
+                healthTextPos,
+                0.3f,
+                false);
+        healthText.setColour(1, 1, 1);
     }
 
-    public float getSpeed() {return SPEED;}
-    public Vector2f getForward() {return forward;}
+    public void addHealth(int value) {
+        HEALTH += value;
+    }
+
+    public void removeHealth(int value) {
+        HEALTH -= value;
+        if(HEALTH < 0)
+            HEALTH = 0;
+    }
+
+    public float getSpeed() {
+        return SPEED;
+    }
+
+    public Vector2f getForward() {
+        return forward;
+    }
+
+    public void cleanUp() {
+        healthText.remove();
+        inventory.cleanUp();
+    }
 }
