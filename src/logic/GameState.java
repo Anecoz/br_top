@@ -173,7 +173,7 @@ public class GameState {
 
     private void gameInit() {
         cam = new Camera(WIDTH, HEIGHT);
-        level = new Level("maps/map_02.tmx");
+        level = new Level("maps/map_01.tmx");
         projMatrix = cam.getProjection();
         ShadowHandler.calcShadowCaster(level);
         player = new Player();
